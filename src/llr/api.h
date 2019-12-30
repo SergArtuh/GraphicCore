@@ -1,0 +1,1 @@
+#define LLR_EXPORT __declspec(dllexport)

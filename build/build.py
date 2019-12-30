@@ -5,6 +5,7 @@ import re
 import subprocess
 
 GLEW_URL = "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip"
+GLEW_DIR = "glew-2.1.0\\"
 
 TEMP_DIR = "temp\\"
 
@@ -15,12 +16,17 @@ PROJECT_DIR= "..\\prj\\"
 
 
 def DownloadURL(url, dest):
-        response = requests.get(url, stream=True)
+        try:
+             response = requests.get(url)
+
+        except requests.exceptions.RequestException as e:
+            print "Fail to download from URL: " + url
+            return False
+
         zip = zipfile.ZipFile(io.BytesIO(response.content))
         dirName = zip.namelist()[0]
-        if not os.path.isdir(dest + dirName):
-                zip.extractall(dest)
-        return dirName
+        zip.extractall(dest)
+        return True
 
 
 def CreateDirectory(directory):
@@ -39,17 +45,14 @@ def CopyDirectory(srcDir, destDir):
     if not os.path.exists(destDir):
         shutil.copytree(srcDir, destDir)
 
-
-def DeleteDirectory(directory):
-        if os.path.exists(directory):
-                shutil.rmtree(directory)
-
 def InstallGLEW():
-        glewDir = DownloadURL(GLEW_URL, TEMP_DIR)
+        if not os.path.exists(TEMP_DIR + GLEW_DIR):
+            if not DownloadURL(GLEW_URL, TEMP_DIR):
+                return
 
-        CopyFile(TEMP_DIR + glewDir + "bin\\Release\\x64\\glew32.dll", BIN_DIR)
-        CopyFile(TEMP_DIR + glewDir + "lib\\Release\\x64\\glew32.lib", LIB_DIR)
-        CopyDirectory(TEMP_DIR + glewDir + "include\\GL", INCLUDE_DIR + "GL")
+            CopyFile(TEMP_DIR + GLEW_DIR + "bin\\Release\\x64\\glew32.dll", BIN_DIR)
+            CopyFile(TEMP_DIR + GLEW_DIR + "lib\\Release\\x64\\glew32.lib", LIB_DIR)
+            CopyDirectory(TEMP_DIR + GLEW_DIR + "include\\GL", INCLUDE_DIR + "GL")
 
 def GetVisualStudioVersion():
     msvcCompiler = find_executable('cl')
@@ -80,7 +83,8 @@ def RunCMake():
     cmakeCmd = ["cmake.exe",
                 "-G", generator,
                 "-S", "..\\",
-                "-B", PROJECT_DIR
+                "-B", PROJECT_DIR,
+                "-DBUILD_SHARED_LIBS=ON"
                 ]
     
     subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=True)
@@ -94,6 +98,8 @@ def RunCMake():
     
     subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=True)
 
+def RunExecutable(cmd):
+    subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=True)
 
 CreateDirectory(TEMP_DIR)
 CreateDirectory(BIN_DIR)
@@ -105,3 +111,5 @@ InstallGLEW()
 RunCMake()
 
 DeleteDirectory(TEMP_DIR)
+
+RunExecutable( BIN_DIR + "llr_tests")
