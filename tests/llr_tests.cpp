@@ -4,4 +4,5 @@
 
 
 TEST(llr_tests, sample) {
+	llr::llr();
 }

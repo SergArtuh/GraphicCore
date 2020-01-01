@@ -14,7 +14,6 @@ namespace llr {
 
 	class LLR_EXPORT llr {
 		public:
-		llr() {
-		}
+			llr();
 	};
 }

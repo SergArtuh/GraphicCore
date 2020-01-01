@@ -1,5 +1,6 @@
 #include "api.h"
 
+#include <GL/glew.h>
 #include <Windows.h>
 
 #include<vector>
@@ -9,24 +10,31 @@
 
 #define MAX_BUFFER_SIZE 2048
 
+#define GL_CHECK if(glGetError() != GL_NO_ERROR) {LLR_ERROR("OpenGL error with error code %x, at %d line %s", glGetError(), __LINE__, __FILE__);}
+
 
 namespace llr {
 
-	void llrDebugMsg(const char* str, const char * msgType, ...) {
+	llr::llr()
+	{
+		glewInit();
+		GL_CHECK
+	}
+
+
+
+
+	void llrDebugMsg(const char* str, const char * msgType, va_list args) {
 		std::vector<char> buffer(MAX_BUFFER_SIZE);
 
 		snprintf(buffer.data(), buffer.size(), "[ LLR %s ]\t", msgType);
 
 		const size_t shift = strlen(buffer.data());
 
-		va_list args;
-		va_start(args, str);
 		vsnprintf(buffer.data() + shift, MAX_BUFFER_SIZE, str, args);
 
 		OutputDebugString(buffer.data());
 		OutputDebugString("\n");
-
-		va_end(args);
 	}
 
 	void llrError(const char* str, ...) {
