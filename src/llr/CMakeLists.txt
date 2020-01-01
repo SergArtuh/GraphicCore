@@ -5,12 +5,16 @@ find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 
 if (GLEW_FOUND AND GLEW_FOUND)
-	file(GLOB sources ./**.cpp ./**.h)
+	set(This llr)
 
-	set ( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
-	add_library(llr SHARED ${sources})
+	file(GLOB sources ./**.cpp )
+	file(GLOB headers ./**.h )
 	
+	set ( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+	add_library(llr SHARED ${sources} ${headers})
+	
+	file(MAKE_DIRECTORY ${INCLUDE_DIRECTORY}/${This})
+	add_custom_command(TARGET ${This} PRE_BUILD COMMAND cp ${headers} ${INCLUDE_DIRECTORY}/${This})
 	
 	target_include_directories(llr PUBLIC ${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
     target_link_libraries(llr PUBLIC ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
@@ -20,6 +24,6 @@ if (GLEW_FOUND AND GLEW_FOUND)
 		LIBRARY DESTINATION ${LIB_DIRECTORY}
 	)
 
-	install(DIRECTORY ./ DESTINATION ${INCLUDE_DIRECTORY}/llr FILES_MATCHING PATTERN "*.h")
+	
 endif()
 
