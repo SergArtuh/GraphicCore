@@ -3,6 +3,8 @@ from distutils.spawn import find_executable
 import requests, zipfile, io, os, shutil
 import re
 import subprocess
+import sys
+import getopt
 
 GLEW_URL = "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip"
 GLEW_DIR = "glew-2.1.0\\"
@@ -15,9 +17,17 @@ INCLUDE_DIR= "..\\include\\"
 PROJECT_DIR= "..\\prj\\"
 
 
+proxy = None
+
 def DownloadURL(url, dest):
         try:
-             response = requests.get(url)
+             if proxy == None:
+                     response = requests.get(url)
+             else:
+                    proxies = { "https": proxy, "http": proxy}
+                    response = requests.get(url, proxies=proxies)
+                    print "debug"
+                    
 
         except requests.exceptions.RequestException as e:
             print "Fail to download from URL: " + url
@@ -101,6 +111,16 @@ def RunCMake():
 def RunExecutable(cmd):
     subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=True)
 
+try:
+        arguments, values = getopt.getopt(sys.argv[1:],['"ho:v"'], ['proxy='])
+except getopt.GetoptError as err:
+        print(err)
+        sys.exit(2)
+ 
+for currentArgument, currentValue in arguments:
+    if currentArgument == "--proxy":
+        proxy = currentValue
+
 CreateDirectory(TEMP_DIR)
 CreateDirectory(BIN_DIR)
 CreateDirectory(LIB_DIR)
@@ -113,3 +133,5 @@ RunCMake()
 DeleteDirectory(TEMP_DIR)
 
 RunExecutable( BIN_DIR + "llr_tests")
+
+
