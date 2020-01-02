@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 
+#include "wnd/window.h"
+
 
 #define MAX_BUFFER_SIZE 2048
 
@@ -15,8 +17,10 @@
 
 namespace llr {
 
-	llr::llr()
+	llr::llr(wnd::Window& window)
 	{
+		window.makeContextCurrent();
+
 		glewInit();
 		GL_CHECK
 	}

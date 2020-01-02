@@ -7,6 +7,9 @@ import subprocess
 GLEW_URL = "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip"
 GLEW_DIR = "glew-2.1.0\\"
 
+GLFW_URL = "https://github.com/glfw/glfw/releases/download/3.3.1/glfw-3.3.1.bin.WIN64.zip"
+GLFW_DIR = "glfw-3.3.1.bin.WIN64\\"
+
 TEMP_DIR = "temp\\"
 
 BIN_DIR= "..\\bin\\"
@@ -14,6 +17,7 @@ LIB_DIR= "..\\lib\\"
 INCLUDE_DIR= "..\\include\\"
 PROJECT_DIR= "..\\prj\\"
 
+msvcCompiler = None
 
 def DownloadURL(url, dest):
         try:
@@ -54,15 +58,27 @@ def InstallGLEW():
             CopyFile(TEMP_DIR + GLEW_DIR + "lib\\Release\\x64\\glew32.lib", LIB_DIR)
             CopyDirectory(TEMP_DIR + GLEW_DIR + "include\\GL", INCLUDE_DIR + "GL")
 
+
+def InstallGLFW():
+        if not os.path.exists(TEMP_DIR + GLFW_DIR):
+            if not DownloadURL(GLFW_URL, TEMP_DIR):
+                return
+
+            CopyFile(TEMP_DIR + GLFW_DIR + "lib-vc2019\\glfw3.dll", BIN_DIR)
+            CopyFile(TEMP_DIR + GLFW_DIR + "lib-vc2019\\glfw3dll.lib", LIB_DIR)
+            CopyDirectory(TEMP_DIR + GLFW_DIR + "include\\GLFW", INCLUDE_DIR + "GLFW")
+
 def GetVisualStudioVersion():
-    msvcCompiler = find_executable('cl')
-    if msvcCompiler:
-        match = re.search(
-            "(\d+).(\d+)", 
-            os.environ.get("VisualStudioVersion", ""))
-        if match:
-            return int(match.groups()[0])
-    return None
+    global msvcCompiler
+    if msvcCompiler is None:
+            msvcExe = find_executable('cl')
+            if msvcExe:
+                match = re.search(
+                    "(\d+).(\d+)", 
+                    os.environ.get("VisualStudioVersion", ""))
+                if match:
+                    msvcCompiler = int(match.groups()[0])
+    return msvcCompiler
 
 def RunCMake():
     visualStudioVersion = GetVisualStudioVersion()
@@ -106,6 +122,7 @@ CreateDirectory(BIN_DIR)
 CreateDirectory(LIB_DIR)
 CreateDirectory(INCLUDE_DIR)
 
+InstallGLFW()
 InstallGLEW()
 
 RunCMake()

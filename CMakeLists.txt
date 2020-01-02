@@ -10,6 +10,8 @@ set(BIN_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(LIB_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(INCLUDE_DIRECTORY ${CMAKE_SOURCE_DIR}/include)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+
 add_subdirectory(src)
 
 add_subdirectory(googletest)
