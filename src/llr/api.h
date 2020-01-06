@@ -1,25 +1,20 @@
 #pragma once
 
-#include "wnd/window.h"
-
 #define LLR_EXPORT __declspec(dllexport)
 
-#define LLR_ERROR(str, ...) llrError((str), __VA_ARGS__)
-#define LLR_WARNING(str, ...) llrWarning((str), __VA_ARGS__)
-#define LLR_INFO(str, ...) llrInfo((str), __VA_ARGS__)
+#define LLR_ERROR(str, ...) llr::errorMsg((str), __VA_ARGS__)
+#define LLR_WARNING(str, ...) llr::warningMsg((str), __VA_ARGS__)
+#define LLR_INFO(str, ...) llr::infoMsg((str), __VA_ARGS__)
 
-namespace wnd {
-	class Window;
-}
+#define GL_CHECK if(glGetError() != GL_NO_ERROR) {LLR_ERROR("OpenGL error with error code %x, at %d line %s", glGetError(), __LINE__, __FILE__);}
+
+#define UNUSED -1
 
 namespace llr {
 
-	void llrError(const char* str, ...);
-	void llrWarning(const char* str, ...);
-	void llrInfo(const char* str, ...);
+	void errorMsg(const char* str, ...);
 
-	class LLR_EXPORT llr {
-		public:
-			llr(wnd::Window & window);
-	};
+	void warningMsg(const char* str, ...);
+
+	void infoMsg(const char* str, ...);
 }

@@ -12,23 +12,10 @@
 
 #define MAX_BUFFER_SIZE 2048
 
-#define GL_CHECK if(glGetError() != GL_NO_ERROR) {LLR_ERROR("OpenGL error with error code %x, at %d line %s", glGetError(), __LINE__, __FILE__);}
-
 
 namespace llr {
 
-	llr::llr(wnd::Window& window)
-	{
-		window.makeContextCurrent();
-
-		glewInit();
-		GL_CHECK
-	}
-
-
-
-
-	void llrDebugMsg(const char* str, const char * msgType, va_list args) {
+	void debugMsg(const char* str, const char * msgType, va_list args) {
 		std::vector<char> buffer(MAX_BUFFER_SIZE);
 
 		snprintf(buffer.data(), buffer.size(), "[ LLR %s ]\t", msgType);
@@ -41,24 +28,24 @@ namespace llr {
 		OutputDebugString("\n");
 	}
 
-	void llrError(const char* str, ...) {
+	void errorMsg(const char* str, ...) {
 		va_list args;
 		va_start(args, str);
-		llrDebugMsg(str, "Error", args);
+		debugMsg(str, "Error", args);
 		va_end(args);
 	}
 
-	void llrWarning(const char* str, ...) {
+	void warningMsg(const char* str, ...) {
 		va_list args;
 		va_start(args, str);
-		llrDebugMsg(str, "Warning", args);
+		debugMsg(str, "Warning", args);
 		va_end(args);
 	}
 
-	void llrInfo(const char* str, ...) {
+	void infoMsg(const char* str, ...) {
 		va_list args;
 		va_start(args, str);
-		llrDebugMsg(str, "Info", args);
+		debugMsg(str, "Info", args);
 		va_end(args);
 	}
 }

@@ -11,15 +11,15 @@ if (GLEW_FOUND AND GLEW_FOUND)
 	file(GLOB headers ./**.h )
 	
 	set ( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-	add_library(llr SHARED ${sources} ${headers})
+	add_library(${This} SHARED ${sources} ${headers})
 	
 	file(MAKE_DIRECTORY ${INCLUDE_DIRECTORY}/${This})
 	add_custom_command(TARGET ${This} PRE_BUILD COMMAND cp ${headers} ${INCLUDE_DIRECTORY}/${This})
 	
-	target_include_directories(llr PUBLIC ${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
-    target_link_libraries(llr PUBLIC ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+	target_include_directories(${This} PUBLIC ${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
+	target_link_libraries(${This} PUBLIC wnd ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 	
-	install(TARGETS llr 
+	install(TARGETS ${This} 
 		RUNTIME DESTINATION ${BIN_DIRECTORY}
 		LIBRARY DESTINATION ${LIB_DIRECTORY}
 	)
