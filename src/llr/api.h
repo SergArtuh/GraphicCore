@@ -6,7 +6,7 @@
 #define LLR_WARNING(str, ...) llr::warningMsg((str), __VA_ARGS__)
 #define LLR_INFO(str, ...) llr::infoMsg((str), __VA_ARGS__)
 
-#define GL_CHECK if(glGetError() != GL_NO_ERROR) {LLR_ERROR("OpenGL error with error code %x, at %d line %s", glGetError(), __LINE__, __FILE__);}
+#define GL_CHECK { GLenum err = glGetError(); if(err != GL_NO_ERROR) {LLR_ERROR("OpenGL error with error code %x, at %d line %s", err, __LINE__, __FILE__);}}
 
 #define UNUSED -1
 

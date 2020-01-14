@@ -1,5 +1,6 @@
 #pragma once
 #include "api.h"
+#include "enum.h"
 
 #include "GL/glew.h"
 
@@ -8,11 +9,12 @@ namespace llr
 		class  IndexBuffer final
 		{
 		public:
-			IndexBuffer(size_t size);
+			IndexBuffer() = default;
+			IndexBuffer(size_t size, EDataType type);
 			~IndexBuffer();
 
 			IndexBuffer(IndexBuffer&);
-			IndexBuffer& operator=(IndexBuffer& r);
+			IndexBuffer& operator=(const IndexBuffer& r);
 			
 
 		public:
@@ -23,11 +25,18 @@ namespace llr
 			
 			GLuint GetId() const {return m_bufferId; }
 
+			size_t GetSize() const;
+
+			EDataType GetDataType() const;
+
 			bool IsValid() const { return m_bufferId != (GLuint)UNUSED; }
 
 		private:
 			GLuint m_bufferId = ((GLuint) UNUSED );
+
 			size_t m_size = 0;
+			EDataType m_dataType = EDataType::NONE;
+
 			size_t * m_instanceCounterRef = nullptr;
 		};
 	}

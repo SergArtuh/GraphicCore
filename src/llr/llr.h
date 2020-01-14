@@ -12,6 +12,8 @@ namespace llr {
 	public:
 		Llr(wnd::Window & window);
 
+		void getFramebufferData(float* o_data);
+
 	private:
 		wnd::Window& m_window;
 

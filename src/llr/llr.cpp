@@ -18,4 +18,11 @@ namespace llr {
 		glewInit();
 		GL_CHECK
 	}
+
+	void Llr::getFramebufferData(float* o_data)
+	{
+		m_window.makeContextCurrent();
+		glReadPixels(0, 0, (GLsizei)m_window.getWidth(), (GLsizei)m_window.getHeight(), GL_RGBA, GL_FLOAT, o_data);
+	}
+
 }

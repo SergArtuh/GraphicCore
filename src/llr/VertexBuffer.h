@@ -1,34 +1,47 @@
 #pragma once
 #include "api.h"
-#include "VertexBuffer.h"
+
+#include "enum.h"
 
 #include "GL/glew.h"
 
 namespace llr
 {
-		class  VertexBuffer final
-		{
-		public:
-			VertexBuffer(size_t size);
-			~VertexBuffer();
+	class  VertexBuffer final {
+	public:
+		VertexBuffer();
+		VertexBuffer(size_t size, EDataType dataType, size_t count = 0);
+		~VertexBuffer();
 
-			VertexBuffer(VertexBuffer&);
-			VertexBuffer & operator=(VertexBuffer& r);
-			
+		VertexBuffer(const VertexBuffer&);
+		VertexBuffer& operator=(const VertexBuffer& r);
 
-		public:
+		size_t GetSizeInBytes() const;
 
-			void Write(const size_t offset, const size_t size, const void * data);
+		size_t GetSize() const;
 
-			void Read(const size_t offset, const size_t size, void * o_data);
-			
-			GLuint GetId() const {return m_bufferId; }
+		size_t GetCount() const;
 
-			bool IsValid() const { return m_bufferId != (GLuint)UNUSED; }
+		EDataType GetDataType() const;
 
-		private:
-			GLuint m_bufferId = ((GLuint) UNUSED );
-			size_t m_size = 0;
-			size_t * m_instanceCounterRef = nullptr;
-		};
-	}
+	public:
+
+		void Write(const size_t offset, const size_t size, const void* data);
+
+		void Read(const size_t offset, const size_t size, void* o_data);
+
+		GLuint GetId() const { return m_bufferId; }
+
+		bool IsValid() const { return m_bufferId != (GLuint)UNUSED; }
+
+	private:
+		GLuint m_bufferId = ((GLuint)UNUSED);
+		size_t* m_instanceCounterRef = nullptr;
+
+		size_t m_size = 0;
+		size_t m_count = 0;
+		EDataType m_dataType = EDataType::NONE;
+		
+	};
+}
+
