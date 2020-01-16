@@ -17,7 +17,7 @@ namespace llr
 		* m_instanceCounterRef = 1;
 		 
 	}
-	IndexBuffer::IndexBuffer(IndexBuffer & r) : m_bufferId(r.m_bufferId), m_size(r.m_size), m_dataType(r.m_dataType), m_instanceCounterRef(r.m_instanceCounterRef) {
+	IndexBuffer::IndexBuffer(const IndexBuffer & r) : m_bufferId(r.m_bufferId), m_size(r.m_size), m_dataType(r.m_dataType), m_instanceCounterRef(r.m_instanceCounterRef) {
 		if (m_instanceCounterRef) {
 			(*m_instanceCounterRef)++;
 		}

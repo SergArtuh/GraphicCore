@@ -24,4 +24,13 @@ namespace gapi {
 			m_geometries.remove(geometry);
 		}
 	}
+
+	const std::list<Geometry*>& Scene::GetGeometries() const
+	{
+		return m_geometries;
+	}
+
+	void Scene::Draw()
+	{
+	}
 }

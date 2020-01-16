@@ -12,6 +12,9 @@ namespace gapi {
 	public:
 		Geometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes);
 
+		const llr::VertexBuffer GetVertexBuffer() const;
+
+		const llr::IndexBuffer GetIndexBuffer() const;
 	private:
 		llr::VertexBuffer m_vertexBuffer;
 		llr::IndexBuffer m_indexBuffer;

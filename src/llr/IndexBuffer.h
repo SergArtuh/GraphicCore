@@ -13,7 +13,7 @@ namespace llr
 			IndexBuffer(size_t size, EDataType type);
 			~IndexBuffer();
 
-			IndexBuffer(IndexBuffer&);
+			IndexBuffer(const IndexBuffer&);
 			IndexBuffer& operator=(const IndexBuffer& r);
 			
 

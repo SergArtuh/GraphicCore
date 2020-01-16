@@ -18,4 +18,12 @@ namespace gapi {
 		m_vertexBuffer.Write(0, vertices3f.size(), vertices3f.data());
 		m_indexBuffer.Write(0, indexes.size(), indexes.data());
 	}
+	const llr::VertexBuffer Geometry::GetVertexBuffer() const
+	{
+		return m_vertexBuffer;
+	}
+	const llr::IndexBuffer Geometry::GetIndexBuffer() const
+	{
+		return m_indexBuffer;
+	}
 }
