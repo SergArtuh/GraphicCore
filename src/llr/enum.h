@@ -11,10 +11,13 @@ namespace llr
 
 	enum class EShaderSourceType {
 		NONE = -1,
-		VERTEX = 0,
+		VERTEX = 1,
 		FRAGMENT,
 		GEOMETRY,
-		COMPUTE
+		COMPUTE,
+
+		FIRST = VERTEX,
+		LAST = FRAGMENT
 	};
 
 }

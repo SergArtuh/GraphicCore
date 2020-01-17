@@ -11,6 +11,7 @@ namespace llr {
 	class LLR_EXPORT Llr final {
 	public:
 		Llr(wnd::Window & window);
+		Llr(const Llr& r) = default;
 
 		void getFramebufferData(float* o_data);
 

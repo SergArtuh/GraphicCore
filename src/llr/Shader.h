@@ -8,16 +8,15 @@
 #include "GL/glew.h"
 
 #include <vector> 
+#include <list>
 #include <map>
-
-#define NO_SHADER_SOURCE g_noShaderSource
 
 namespace llr
 {
 	struct ShaderSource {
 		ShaderSource() : Data(nullptr), Type(EShaderSourceType::NONE){}
-		ShaderSource(const char* data, EShaderSourceType type) : Data(data), Type(type) {}
-		const char* Data;
+		ShaderSource(const char * const data, const EShaderSourceType type) : Data(data), Type(type) {}
+		const char * const Data;
 		EShaderSourceType Type;
 	};
 
@@ -27,16 +26,12 @@ namespace llr
 	class  Shader final
 	{
 	public:
-		Shader(
-			ShaderSource shaderSource0
-			, ShaderSource shaderSource1 = NO_SHADER_SOURCE
-			, ShaderSource shaderSource2 = NO_SHADER_SOURCE
-			, ShaderSource shaderSource3 = NO_SHADER_SOURCE
-		);
+		Shader() = default;
+		Shader(std::list<ShaderSource> shaderSources);
 		
-		Shader(Shader&);
+		Shader(const Shader&);
 
-		Shader& operator=(Shader& r);
+		Shader& operator=(const Shader& r);
 
 		~Shader();
 			

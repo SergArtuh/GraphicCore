@@ -10,6 +10,7 @@ struct  GLFWwindow;
 namespace wnd {
 	class WND_EXPORT Window {
 		public:
+			Window() = default;
 			Window(const size_t w, const size_t h, const char* title);
 			Window(Window& r);
 			~Window();

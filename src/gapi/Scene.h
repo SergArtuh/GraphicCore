@@ -19,6 +19,5 @@ namespace gapi {
 
 	private:
 		std::list< Geometry* > m_geometries;
-		std::multimap<int, RenderPass*> m_renderPasses;
 	};
 }

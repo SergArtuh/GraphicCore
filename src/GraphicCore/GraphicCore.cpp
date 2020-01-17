@@ -1,11 +1,14 @@
 #include "GraphicCore.h"
 
+#include <list>
+#include<stdarg.h>
+
 wnd::Window* CreateWindow(const size_t w, const size_t h, const char* title)
 {
 	return new wnd::Window(w, h, title);
 }
 
-void CreateWindow(wnd::Window* window)
+void DeleteWindow(wnd::Window* window)
 {
 	if (window) {
 		delete window;
@@ -37,12 +40,45 @@ void SceneRemoveGeometry(gapi::Scene* scene, gapi::Geometry* geometry)
 	scene->RemoveGeometry(geometry);
 }
 
-gapi::RenderPass* CreateRenderPass(gapi::Gapi* gapi, llr::Shader* shader) {
-	return gapi->CreateRenderPass( * shader );
+gapi::Shader* CreateShader(gapi::Gapi* gapi, int count, int type, const char* const source, ...) {
+	if (count <= 0) {
+		return nullptr;
+	}
+
+	std::list< gapi::ShaderSource> shaderSources;
+
+	va_list arg;
+	va_start(arg, count);
+	for (int i = 0; i < count; ++i) {
+		auto type = va_arg(arg, int);
+		auto src = va_arg(arg, const char* const);
+		shaderSources.emplace_back(src, type);
+	}
+
+	va_end(arg);
+	return gapi->CreateShader(shaderSources);
+}
+
+void DeleteShader(gapi::Gapi* gapi, gapi::Shader* shader) {
+	gapi->DeleteShader(shader);
+}
+
+gapi::RenderPass* CreateRenderPass(gapi::Gapi* gapi, gapi::Shader * shader) {
+	return gapi->CreateRenderPass( shader );
 }
 
 void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass) {
 	gapi->DeleteRenderPass(renderPass);
+}
+
+void AddRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass)
+{
+	gapi->AddRenderPass(renderPass);
+}
+
+void RemoveRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass)
+{
+	gapi->RemoveRenderPass(renderPass);
 }
 
 gapi::Geometry* CreateGeometry(gapi::Gapi* gapi, float* vertices, size_t vertexN, unsigned int* indexes, size_t indexN) {

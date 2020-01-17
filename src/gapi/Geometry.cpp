@@ -18,6 +18,11 @@ namespace gapi {
 		m_vertexBuffer.Write(0, vertices3f.size(), vertices3f.data());
 		m_indexBuffer.Write(0, indexes.size(), indexes.data());
 	}
+	bool Geometry::operator==(const Geometry& r)
+	{
+		return m_vertexBuffer.GetId() == r.m_vertexBuffer.GetId()
+			&& m_indexBuffer.GetId() == r.m_indexBuffer.GetId();
+	}
 	const llr::VertexBuffer Geometry::GetVertexBuffer() const
 	{
 		return m_vertexBuffer;

@@ -2,6 +2,8 @@
 #include "RenderPass.h"
 #include "Scene.h"
 
+#include <algorithm>
+
 namespace gapi {
 	Context::Context(wnd::Window& window) : m_window(window) {}
 
@@ -10,7 +12,7 @@ namespace gapi {
 	}
 
 	void Context::RemoveRenderPass(RenderPass* renderPass) {
-		auto finded = std::find(m_renderPasses.begin(), m_renderPasses.end(), renderPass);
+		auto finded = std::find_if(m_renderPasses.begin(), m_renderPasses.end(), [renderPass](auto rp) { return *renderPass == *rp.second; });
 		if (finded != m_renderPasses.end()) {
 			m_renderPasses.erase(finded);
 		}
