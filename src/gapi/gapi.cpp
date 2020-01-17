@@ -39,6 +39,16 @@ namespace gapi {
 		}
 	}
 
+	void Gapi::AddRenderPass(RenderPass* renderPass)
+	{
+		m_context->AddRenderPass(renderPass);
+	}
+
+	void Gapi::RemoveRenderPass(RenderPass* renderPass)
+	{
+		m_context->RemoveRenderPass(renderPass);
+	}
+
 	Geometry* Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes) {
 		return new Geometry(vertices3f, indexes);
 	}

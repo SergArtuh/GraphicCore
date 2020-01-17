@@ -17,11 +17,15 @@ namespace gapi {
 	}
 	void Context::Draw(const Scene * scene)
 	{
+		m_window.clearRenderers();
 		for (auto rp : m_renderPasses) {
+			RenderPass* renderPass = rp.second;
 			for (auto geom : scene->GetGeometries()) {
-				rp.second->SetGeometry(geom);
+				renderPass->SetGeometry(geom);
 			}
+			m_window.addRenderer(renderPass);
 		}
+
 		m_window.draw();
 	}
 }

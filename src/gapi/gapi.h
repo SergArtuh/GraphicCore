@@ -28,6 +28,10 @@ namespace gapi {
 
 		void DeleteRenderPass(RenderPass * renderPass);
 
+		void AddRenderPass(RenderPass* renderPass);
+
+		void RemoveRenderPass(RenderPass* renderPass);
+
 		Geometry* CreateGeometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes);
 
 		void DeleteGeometry(Geometry*);
