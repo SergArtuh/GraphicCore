@@ -2,11 +2,15 @@
 #include "api.h"
 #include "llr/llr.h"
 
+#include "Shader.h"
+
 #include <vector>
+#include <list>
 
 namespace wnd {
 	class Window;
 }
+
 
 namespace gapi {
 	class Context;
@@ -18,13 +22,21 @@ namespace gapi {
 	class GAPI_EXPORT Gapi final {
 	public:
 		Gapi(wnd::Window & window);
+		Gapi(const Gapi & gapi);
+
 		~Gapi();
 
 		Scene* CreateScene();
 
 		void DeleteScene(Scene*);
 
-		RenderPass* CreateRenderPass(llr::Shader & shader);
+
+		Shader* CreateShader(const std::list< ShaderSource> & sources);
+
+		void DeleteShader(Shader * shader);
+
+
+		RenderPass* CreateRenderPass(Shader * shader);
 
 		void DeleteRenderPass(RenderPass * renderPass);
 
@@ -41,5 +53,7 @@ namespace gapi {
 	private:
 		llr::Llr m_llr;
 		Context* m_context = nullptr;
+
+		size_t* m_instanceCounterRef = nullptr;
 	};
 }

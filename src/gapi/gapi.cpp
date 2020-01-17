@@ -4,11 +4,16 @@
 
 #include "Context.h"
 #include "Scene.h"
+#include "Shader.h"
 #include "RenderPass.h"
 #include "Geometry.h"
 
 namespace gapi {
 	Gapi::Gapi(wnd::Window& window) : m_llr(window), m_context(new Context(window)) {
+		
+	}
+
+	Gapi::Gapi(const Gapi& r) : m_llr(r.m_llr), m_context(r.m_context) {
 		
 	}
 
@@ -29,7 +34,17 @@ namespace gapi {
 		}
 	}
 
-	RenderPass* Gapi::CreateRenderPass(llr::Shader& shader) {
+	Shader* Gapi::CreateShader(const std::list<ShaderSource> & sources) {
+		return new Shader(sources);
+	}
+
+	void Gapi::DeleteShader(Shader* shader) {
+		if (shader) {
+			delete shader;
+		}
+	}
+
+	RenderPass* Gapi::CreateRenderPass(Shader * shader) {
 		return new RenderPass(m_context, shader);
 	}
 

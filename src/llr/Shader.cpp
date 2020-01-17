@@ -53,25 +53,19 @@ namespace llr
 		return shaderId;
 	}
 
-	Shader::Shader(ShaderSource shaderSource0
-		, ShaderSource shaderSource1 
-		, ShaderSource shaderSource2 
-		, ShaderSource shaderSource3) {
+	Shader::Shader(std::list<ShaderSource> shaderSources) {
 	
-		GLint shaderIDs[] = {
-			CreateShader(shaderSource0)
-			, CreateShader(shaderSource1)
-			, CreateShader(shaderSource2)
-			, CreateShader(shaderSource3)
-		};
+		std::list<GLint> shaderIDs;
+
+		for (auto ss : shaderSources) {
+			shaderIDs.push_back(CreateShader(ss));
+		}
 
 		m_programId = glCreateProgram(); GL_CHECK
 
-		size_t shaderIdsCount = sizeof(shaderIDs) / sizeof(shaderIDs[0]);
-		for (int i = 0; i < shaderIdsCount; ++i) {
-			const GLint shaderId = shaderIDs[i];
-			if (shaderId != UNUSED) {
-				glAttachShader(m_programId, shaderId); GL_CHECK
+		for (auto id : shaderIDs) {
+			if (id != UNUSED) {
+				glAttachShader(m_programId, id); GL_CHECK
 			}
 		}
 
@@ -93,18 +87,18 @@ namespace llr
 			glDeleteProgram(m_programId); GL_CHECK
 			m_programId = UNUSED;
 			
-			for (int i = 0; i < shaderIdsCount; ++i) {
-				const GLint shaderId = shaderIDs[i];
+			for (auto & id : shaderIDs) {
+				const GLint shaderId = id;
 				if (shaderId != UNUSED) {
 					glDeleteShader(shaderId); GL_CHECK
 				}
-				shaderIDs[i] = UNUSED;
+				id = UNUSED;
 			}
 			return;
 		}
 
-		for (int i = 0; i < shaderIdsCount; ++i) {
-			const GLint shaderId = shaderIDs[i];
+		for (auto id : shaderIDs) {
+			const GLint shaderId = id;
 			if (shaderId != UNUSED) {
 				glDetachShader(m_programId, shaderId);  GL_CHECK
 			}
@@ -114,14 +108,14 @@ namespace llr
 		*m_instanceCounterRef = 1;
 	}
 	
-	Shader::Shader(Shader& r) : m_programId(r.m_programId), m_instanceCounterRef(r.m_instanceCounterRef){
+	Shader::Shader(const Shader& r) : m_programId(r.m_programId), m_instanceCounterRef(r.m_instanceCounterRef){
 		if (m_instanceCounterRef) {
 			(*m_instanceCounterRef)++;
 		}
 	}
 
 
-	Shader & Shader::operator=(Shader& r) {
+	Shader & Shader::operator=(const Shader& r) {
 		m_programId = r.m_programId;
 		m_instanceCounterRef = r.m_instanceCounterRef;
 

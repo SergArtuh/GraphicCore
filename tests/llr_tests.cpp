@@ -81,10 +81,10 @@ void simpleShaderTest(const char * vertShader, const char* fragShader, const std
 	window.makeContextCurrent();
 	llr::Llr llr(window);
 
-	llr::Shader shader(
+	llr::Shader shader({
 		llr::ShaderSource(vertShader, llr::EShaderSourceType::VERTEX),
-		llr::ShaderSource(fragShader, llr::EShaderSourceType::FRAGMENT)
-	);
+		llr::ShaderSource(fragShader, llr::EShaderSourceType::FRAGMENT) 
+		});
 
 	const size_t dataVertexSizeInBytes = dataVertex.size() * sizeof(dataVertex[0]);
 	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);
