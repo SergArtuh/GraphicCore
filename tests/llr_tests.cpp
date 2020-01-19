@@ -41,6 +41,13 @@ private:
 	llr::Shader & m_shader;
 };
 
+template<class T> 
+T CreateBuffer(size_t dataCount, llr::EDataType dataType) {
+	T buffer(dataCount, dataType);
+	EXPECT_TRUE(buffer.IsValid());
+	return buffer;
+}
+
 template<class T, class DT> 
 void bufferTest(size_t dataCount, DT testValue0, DT testValue1, DT testValue2, llr::EDataType dataType) {
 	const size_t dataNewCount = dataCount / 10;
@@ -49,7 +56,8 @@ void bufferTest(size_t dataCount, DT testValue0, DT testValue1, DT testValue2, l
 	std::vector<DT> data(dataCount, testValue0);
 	std::vector<DT> checkData(dataCount, static_cast<DT>(0));
 
-	T vb(dataCount, dataType);
+	T vb = CreateBuffer<T>(dataCount, dataType);
+	EXPECT_TRUE(vb.IsValid());
 
 
 	vb.Write(0, dataCount, data.data());

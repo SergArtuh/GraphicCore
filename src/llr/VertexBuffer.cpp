@@ -6,20 +6,15 @@
 namespace llr
 {
 	VertexBuffer::VertexBuffer() {}
-	VertexBuffer::VertexBuffer(size_t size, EDataType dataType, size_t count) : m_size(size), m_count(count), m_dataType(dataType) {
+	VertexBuffer::VertexBuffer(size_t size, EDataType dataType, size_t count) : 
+		m_size(size), m_count(count), m_dataType(dataType) {
 		glGenBuffers(1, &m_bufferId); GL_CHECK
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId); GL_CHECK
-		glBufferData(GL_ARRAY_BUFFER, size * helper::getDataTypeSize(m_dataType), 0, GL_STATIC_DRAW); GL_CHECK
-
-		m_instanceCounterRef = new size_t[1];
-		*m_instanceCounterRef = 1;
-		 
+		glBufferData(GL_ARRAY_BUFFER, size * helper::getDataTypeSize(m_dataType), 0, GL_STATIC_DRAW); GL_CHECK		 
 	}
-	VertexBuffer::VertexBuffer(const VertexBuffer & r) : m_bufferId(r.m_bufferId), m_size(r.m_size), m_count(r.m_count), m_dataType(r.m_dataType), m_instanceCounterRef(r.m_instanceCounterRef){
-		if (m_instanceCounterRef) {
-			(*m_instanceCounterRef)++;
-		}
+	VertexBuffer::VertexBuffer(const VertexBuffer & r) : 
+		m_bufferId(r.m_bufferId), m_size(r.m_size), m_count(r.m_count), m_dataType(r.m_dataType), m_referenceCounter(r.m_referenceCounter){
 	}
 
 	VertexBuffer& VertexBuffer::operator=(const VertexBuffer& r) {
@@ -27,7 +22,7 @@ namespace llr
 		m_size = r.m_size;
 		m_count = r.m_count;
 		m_dataType = r.m_dataType;
-		m_instanceCounterRef = r.m_instanceCounterRef;
+		m_referenceCounter = r.m_referenceCounter;
 
 		return * this;
 	}
@@ -53,16 +48,11 @@ namespace llr
 	}
 
 	VertexBuffer::~VertexBuffer() {
-		if (m_instanceCounterRef) {
-			(*m_instanceCounterRef)--;
-		}
-		
-		if (m_instanceCounterRef && !(*m_instanceCounterRef) && m_bufferId != UNUSED) {
+		m_referenceCounter.Decrease();
+
+		if (!m_referenceCounter && m_bufferId != UNUSED) {
 			glDeleteBuffers(1, &m_bufferId); GL_CHECK
 			m_bufferId = UNUSED;
-
-			delete m_instanceCounterRef;
-			m_instanceCounterRef = nullptr;
 		}
 	}
 
