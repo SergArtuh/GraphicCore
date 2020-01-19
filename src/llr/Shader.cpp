@@ -103,42 +103,26 @@ namespace llr
 				glDetachShader(m_programId, shaderId);  GL_CHECK
 			}
 		}
-
-		m_instanceCounterRef = new size_t[1];
-		*m_instanceCounterRef = 1;
 	}
 	
-	Shader::Shader(const Shader& r) : m_programId(r.m_programId), m_instanceCounterRef(r.m_instanceCounterRef){
-		if (m_instanceCounterRef) {
-			(*m_instanceCounterRef)++;
-		}
+	Shader::Shader(const Shader& r) : m_programId(r.m_programId), m_referenceCounter(r.m_referenceCounter){
 	}
 
 
 	Shader & Shader::operator=(const Shader& r) {
 		m_programId = r.m_programId;
-		m_instanceCounterRef = r.m_instanceCounterRef;
-
-		if (m_instanceCounterRef) {
-			(*m_instanceCounterRef)--;
-		}
-
+		m_referenceCounter = r.m_referenceCounter;
 		return * this;
 	}
 
 	Shader::~Shader() {
-		if (m_instanceCounterRef) {
-			(*m_instanceCounterRef)--;
-		}
-		
-		if (m_instanceCounterRef && !(*m_instanceCounterRef) && m_programId != UNUSED) {
+		m_referenceCounter.Decrease();
+
+		if (!m_referenceCounter && m_programId != UNUSED) {
 			
 			glDeleteProgram(m_programId); GL_CHECK
 
 			m_programId = UNUSED;
-
-			delete m_instanceCounterRef;
-			m_instanceCounterRef = nullptr;
 		}
 	}
 

@@ -4,6 +4,8 @@
 
 #include "GL/glew.h"
 
+#include "ReferenceCounter.h"
+
 namespace llr
 {
 		class  IndexBuffer final
@@ -32,11 +34,11 @@ namespace llr
 			bool IsValid() const { return m_bufferId != (GLuint)UNUSED; }
 
 		private:
+			ReferenceCounter m_referenceCounter;
+
 			GLuint m_bufferId = ((GLuint) UNUSED );
 
 			size_t m_size = 0;
 			EDataType m_dataType = EDataType::NONE;
-
-			size_t * m_instanceCounterRef = nullptr;
 		};
 	}

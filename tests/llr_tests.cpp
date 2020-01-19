@@ -84,15 +84,24 @@ void bufferTest(size_t dataCount, DT testValue0, DT testValue1, DT testValue2, l
 	EXPECT_TRUE(std::equal(data.begin(), data.end(), checkData.begin()));
 }
 
+llr::Shader CreateShader(std::list<llr::ShaderSource> shaderSources) {
+	llr::Shader shader(shaderSources);
+	EXPECT_TRUE(shader.IsValid());
+	return shader;
+}
+
+
 void simpleShaderTest(const char * vertShader, const char* fragShader, const std::vector<float> & dataVertex, const std::vector<unsigned int> & dataIndex, const size_t w, const size_t h, std::function<void(const size_t, const size_t, const float checkPizel[4], const float*)> checkFunc) {
 	wnd::Window window(w, h, "Unit Tests");
 	window.makeContextCurrent();
 	llr::Llr llr(window);
 
-	llr::Shader shader({
+	llr::Shader shader = CreateShader({
 		llr::ShaderSource(vertShader, llr::EShaderSourceType::VERTEX),
 		llr::ShaderSource(fragShader, llr::EShaderSourceType::FRAGMENT) 
 		});
+
+	EXPECT_TRUE(shader.IsValid());
 
 	const size_t dataVertexSizeInBytes = dataVertex.size() * sizeof(dataVertex[0]);
 	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);

@@ -12,37 +12,27 @@ namespace llr
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferId); GL_CHECK
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_size * helper::getDataTypeSize(m_dataType), 0, GL_STATIC_DRAW); GL_CHECK
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); GL_CHECK
-
-		m_instanceCounterRef = new size_t[1];
-		* m_instanceCounterRef = 1;
-		 
 	}
-	IndexBuffer::IndexBuffer(const IndexBuffer & r) : m_bufferId(r.m_bufferId), m_size(r.m_size), m_dataType(r.m_dataType), m_instanceCounterRef(r.m_instanceCounterRef) {
-		if (m_instanceCounterRef) {
-			(*m_instanceCounterRef)++;
-		}
+
+	IndexBuffer::IndexBuffer(const IndexBuffer & r) :
+		m_bufferId(r.m_bufferId), m_size(r.m_size), m_dataType(r.m_dataType), m_referenceCounter(r.m_referenceCounter) {
 	}
 
 	IndexBuffer& IndexBuffer::operator=(const IndexBuffer& r) {
 		m_bufferId = r.m_bufferId;
 		m_size = r.m_size;
 		m_dataType = r.m_dataType;
-		m_instanceCounterRef = r.m_instanceCounterRef;
+		m_referenceCounter = r.m_referenceCounter;
 
 		return * this;
 	}
 
 	IndexBuffer::~IndexBuffer() {
-		if (m_instanceCounterRef) {
-			(*m_instanceCounterRef)--;
-		}
-		
-		if (m_instanceCounterRef && !(*m_instanceCounterRef) && m_bufferId != UNUSED) {
+		m_referenceCounter.Decrease();
+
+		if (!m_referenceCounter && m_bufferId != UNUSED) {
 			glDeleteBuffers(1, &m_bufferId); GL_CHECK
 			m_bufferId = UNUSED;
-
-			delete m_instanceCounterRef;
-			m_instanceCounterRef = nullptr;
 		}
 	}
 
