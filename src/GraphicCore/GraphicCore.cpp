@@ -20,6 +20,25 @@ gapi::Gapi* CreateGapi(wnd::Window* window)
 	return new gapi::Gapi(*window);
 }
 
+gapi::Context* CreateContext(gapi::Gapi* gapi)
+{
+	return gapi->CreateContext();
+}
+
+void DeleteContext(gapi::Gapi* gapi, gapi::Context* context) {
+	gapi->DeleteContext(context);
+}
+
+void ContextAddRenderPass(gapi::Gapi* gapi, gapi::Context* context, gapi::RenderPass* renderPass)
+{
+	gapi->ContextAddRenderPass(context, renderPass);
+}
+
+void ContextRemoveRenderPass(gapi::Gapi* gapi, gapi::Context* context, gapi::RenderPass* renderPass)
+{
+	gapi->ContextRemoveRenderPass(context, renderPass);
+}
+
 gapi::Scene* CreateScene(gapi::Gapi* gapi)
 {
 	return gapi->CreateScene();
@@ -71,16 +90,6 @@ void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass) {
 	gapi->DeleteRenderPass(renderPass);
 }
 
-void AddRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass)
-{
-	gapi->AddRenderPass(renderPass);
-}
-
-void RemoveRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass)
-{
-	gapi->RemoveRenderPass(renderPass);
-}
-
 gapi::Geometry* CreateGeometry(gapi::Gapi* gapi, float* vertices, size_t vertexN, unsigned int* indexes, size_t indexN) {
 	std::vector<float> vertexV(vertexN);
 	std::memcpy(vertexV.data(), vertices, vertexV.size() * sizeof(vertexV[0]));
@@ -95,7 +104,7 @@ void DeleteGeometry(gapi::Gapi* gapi, gapi::Geometry * geometry) {
 	gapi->DeleteGeometry(geometry);
 }
 
-void Draw(gapi::Gapi* gapi, gapi::Scene* scene)
+void Draw(gapi::Gapi* gapi, gapi::Context* context, gapi::Scene* scene)
 {
-	gapi->Draw(scene);
+	gapi->Draw(context, scene);
 }

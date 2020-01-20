@@ -9,18 +9,25 @@
 #include "Geometry.h"
 
 namespace gapi {
-	Gapi::Gapi(wnd::Window& window) : m_llr(window), m_context(new Context(window)) {
+	Gapi::Gapi(wnd::Window& window) : m_llr(window) {
 		
 	}
 
-	Gapi::Gapi(const Gapi& r) : m_llr(r.m_llr), m_context(r.m_context) {
+	Gapi::Gapi(const Gapi& r) : m_llr(r.m_llr) {
 		
 	}
 
-	Gapi::~Gapi() {
-		if (m_context) {
-			delete m_context;
-			m_context = nullptr;
+	Gapi::~Gapi() {}
+
+	Context* Gapi::CreateContext()
+	{
+		return new Context(m_llr.GetWindow());
+	}
+
+	void Gapi::DeleteContext(Context* context)
+	{
+		if (context) {
+			delete context;
 		}
 	}
 
@@ -45,7 +52,7 @@ namespace gapi {
 	}
 
 	RenderPass* Gapi::CreateRenderPass(Shader * shader) {
-		return new RenderPass(m_context, shader);
+		return new RenderPass(shader);
 	}
 
 	void Gapi::DeleteRenderPass(RenderPass* renderPass) {
@@ -54,14 +61,14 @@ namespace gapi {
 		}
 	}
 
-	void Gapi::AddRenderPass(RenderPass* renderPass)
+	void Gapi::ContextAddRenderPass(Context* context, RenderPass* renderPass)
 	{
-		m_context->AddRenderPass(renderPass);
+		context->AddRenderPass(renderPass);
 	}
 
-	void Gapi::RemoveRenderPass(RenderPass* renderPass)
+	void Gapi::ContextRemoveRenderPass(Context* context, RenderPass* renderPass)
 	{
-		m_context->RemoveRenderPass(renderPass);
+		context->RemoveRenderPass(renderPass);
 	}
 
 	Geometry* Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes) {
@@ -73,8 +80,8 @@ namespace gapi {
 			delete geometry;
 		}
 	}
-	void Gapi::Draw(Scene* scene)
+	void Gapi::Draw(Context* context, Scene* scene)
 	{
-		m_context->Draw(scene);
+		context->Draw(scene);
 	}
 }

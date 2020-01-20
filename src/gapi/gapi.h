@@ -26,6 +26,10 @@ namespace gapi {
 
 		~Gapi();
 
+		Context* CreateContext();
+
+		void DeleteContext(Context * context);
+
 		Scene* CreateScene();
 
 		void DeleteScene(Scene*);
@@ -40,19 +44,18 @@ namespace gapi {
 
 		void DeleteRenderPass(RenderPass * renderPass);
 
-		void AddRenderPass(RenderPass* renderPass);
+		void ContextAddRenderPass(Context* context, RenderPass* renderPass);
 
-		void RemoveRenderPass(RenderPass* renderPass);
+		void ContextRemoveRenderPass(Context* context, RenderPass* renderPass);
 
 		Geometry* CreateGeometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes);
 
 		void DeleteGeometry(Geometry*);
 
-		void Draw(Scene* scene);
+		void Draw(Context* context, Scene* scene);
 
 	private:
 		llr::Llr m_llr;
-		Context* m_context = nullptr;
 
 		size_t* m_instanceCounterRef = nullptr;
 	};

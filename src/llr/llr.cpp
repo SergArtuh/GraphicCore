@@ -25,4 +25,12 @@ namespace llr {
 		glReadPixels(0, 0, (GLsizei)m_window.getWidth(), (GLsizei)m_window.getHeight(), GL_RGBA, GL_FLOAT, o_data);
 	}
 
+	wnd::Window& Llr::GetWindow() {
+		return m_window;
+	}
+
+	const wnd::Window& Llr::GetWindow() const {
+		return m_window;
+	}
+
 }

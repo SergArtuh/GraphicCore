@@ -14,7 +14,7 @@ inline int genId() {
 
 
 namespace gapi {
-	RenderPass::RenderPass(Context* context, Shader * shader) : m_shader(shader), m_context(context), m_id(genId())
+	RenderPass::RenderPass(Shader * shader) : m_shader(shader), m_id(genId())
 	{
 	}
 
@@ -46,9 +46,5 @@ namespace gapi {
 		}
 
 		m_shader->GetShaderLLr().Draw();
-	}
-	const Context * RenderPass::GetContext()
-	{
-		return m_context;
 	}
 }

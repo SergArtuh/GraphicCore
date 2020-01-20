@@ -3,6 +3,7 @@
 #include "api.h"
 #include "wnd/window.h"
 #include "gapi/gapi.h"
+#include "gapi/Context.h"
 #include "gapi/Scene.h"
 #include "gapi/Shader.h"
 #include "gapi/RenderPass.h"
@@ -19,6 +20,15 @@ extern "C" {
 
 	gapi::Gapi* CreateGapi(wnd::Window* window);
 	void DeleteGapi(gapi::Gapi*);
+
+
+	gapi::Context* CreateContext(gapi::Gapi * gapi);
+
+	void DeleteContext(gapi::Gapi * gapi, gapi::Context * context);
+
+	void ContextAddRenderPass(gapi::Gapi* gapi, gapi::Context* context, gapi::RenderPass* renderPass);
+
+	void ContextRemoveRenderPass(gapi::Gapi* gapi, gapi::Context* context, gapi::RenderPass* renderPass);
 
 
 	gapi::Scene* CreateScene(gapi::Gapi * gapi);
@@ -39,15 +49,11 @@ extern "C" {
 
 	void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass * renderPass);
 
-	void AddRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass);
-
-	void RemoveRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass);
-
 
 	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, size_t vertexN, unsigned int * indexes, size_t indexN);
 
 	void DeleteGeometry(gapi::Gapi* gapi, gapi::Geometry*);
 
-	void Draw(gapi::Gapi* gapi, gapi::Scene * scene);
+	void Draw(gapi::Gapi * gapi, gapi::Context * context, gapi::Scene * scene);
 
 }
