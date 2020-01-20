@@ -15,10 +15,10 @@
 
 namespace llr {
 
-	void debugMsg(const char* str, const char * msgType, va_list args) {
+	void debugMsg(const int line, const char* const file, const char* str, const char * msgType, va_list args) {
 		std::vector<char> buffer(MAX_BUFFER_SIZE);
 
-		snprintf(buffer.data(), buffer.size(), "[ LLR %s ]\t", msgType);
+		snprintf(buffer.data(), buffer.size(), "[ LLR %s ] at line: %d, file %s:\t", msgType, line, file);
 
 		const size_t shift = strlen(buffer.data());
 
@@ -28,24 +28,24 @@ namespace llr {
 		OutputDebugString("\n");
 	}
 
-	void errorMsg(const char* str, ...) {
+	void errorMsg(const int line, const char* const file, const char* str, ...) {
 		va_list args;
 		va_start(args, str);
-		debugMsg(str, "Error", args);
+		debugMsg(line, file, str, "Error", args);
 		va_end(args);
 	}
 
-	void warningMsg(const char* str, ...) {
+	void warningMsg(const int line, const char* const file, const char* str, ...) {
 		va_list args;
 		va_start(args, str);
-		debugMsg(str, "Warning", args);
+		debugMsg(line, file, str, "Warning", args);
 		va_end(args);
 	}
 
-	void infoMsg(const char* str, ...) {
+	void infoMsg(const int line, const char* const file, const char* str, ...) {
 		va_list args;
 		va_start(args, str);
-		debugMsg(str, "Info", args);
+		debugMsg(line, file, str, "Info", args);
 		va_end(args);
 	}
 }

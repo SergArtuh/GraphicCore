@@ -16,7 +16,8 @@ namespace llr {
 				case EDataType::INT:
 					m_type = GL_INT;
 					break;
-			default:	
+			default:
+				LLR_ERROR("Unknown data type enum");
 				m_type = UNUSED;
 				break;
 			}

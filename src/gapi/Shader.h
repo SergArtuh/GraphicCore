@@ -35,11 +35,18 @@ namespace gapi {
 	};
 
 	class GAPI_EXPORT Shader final {
+		friend class Gapi;
+	private:
+		Shader(const std::list<ShaderSource>& sources);
+		Shader() = default;
+		Shader(const Shader&) = default;
+		Shader& operator=(const Shader&) = default;
 	public:
-		Shader(const std::list<ShaderSource> & sources);
 
 		llr::Shader& GetShaderLLr();
 		const llr::Shader& GetShaderLLr() const;
+
+		bool IsValid() const;
 	private:
 		llr::Shader m_shader;
 	};

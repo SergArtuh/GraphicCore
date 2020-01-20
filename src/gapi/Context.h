@@ -13,9 +13,11 @@ namespace gapi {
 		friend class Gapi;
 	private:
 		Context(wnd::Window & window);
-	public:
+		Context(const Context&) = delete;
 		Context() = default;
-
+		Context& operator=(const Context&) = default;
+	public:
+		
 		void AddRenderPass(RenderPass* renderPass, int priority = 99);
 
 		void RemoveRenderPass(RenderPass* renderPass);

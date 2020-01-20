@@ -14,7 +14,6 @@ namespace gapi {
 			throw std::exception("index buffer invalid");
 		}
 
-
 		m_vertexBuffer.Write(0, vertices3f.size(), vertices3f.data());
 		m_indexBuffer.Write(0, indexes.size(), indexes.data());
 	}
@@ -30,5 +29,9 @@ namespace gapi {
 	const llr::IndexBuffer Geometry::GetIndexBuffer() const
 	{
 		return m_indexBuffer;
+	}
+	bool Geometry::IsValid() const
+	{
+		return m_vertexBuffer.IsValid() && m_indexBuffer.IsValid();
 	}
 }

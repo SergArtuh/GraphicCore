@@ -26,8 +26,6 @@ namespace llr
 
 		EDataType GetDataType() const;
 
-	public:
-
 		void Write(const size_t offset, const size_t size, const void* data);
 
 		void Read(const size_t offset, const size_t size, void* o_data);

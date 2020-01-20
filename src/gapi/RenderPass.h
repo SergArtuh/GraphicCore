@@ -16,15 +16,20 @@ namespace gapi {
 		friend class Gapi;
 	protected:
 		RenderPass(Shader * shader);
+		RenderPass() = default;
+		RenderPass(const RenderPass&) = default;
+		RenderPass& operator=(const RenderPass&) = default;
 	public:
 		bool operator==(const RenderPass& r);
 
 		void SetGeometry(const Geometry * geometry);
 
 		void OnRender(wnd::Window& window) override;
+
+		bool IsValid() const;
 	private:
-		int m_id;
-		Shader * m_shader;
+		int m_id = UNUSED;
+		Shader * m_shader = nullptr;
 		std::map<int, llr::VertexBuffer> m_vertexBuffers;
 		llr::IndexBuffer m_indexBuffer;
 	};

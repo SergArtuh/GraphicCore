@@ -152,9 +152,14 @@ namespace llr
 
 	void Shader::Draw()
 	{
-		if (!(IsValid() && m_indexBuffer.IsValid())) {
+		if (!IsValid()) {
+			LLR_WARNING("Try to draw invalid shader");
 			return;
 		}
+		else if(!m_indexBuffer.IsValid()){
+			LLR_WARNING("Try to draw shader (Program ID: %d) with invalid index buffer", m_programId);
+		}
+
 		glUseProgram(m_programId); GL_CHECK
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer.GetId()); GL_CHECK
@@ -185,6 +190,11 @@ namespace llr
 	{
 		glUseProgram(m_programId);
 		GLint location = glGetUniformLocation(m_programId, name);
+
+		if (location == UNUSED) {
+			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+		}
+
 		glUniform3f(location, c0, c1, c2);
 		glUseProgram(0);
 		
@@ -193,6 +203,11 @@ namespace llr
 	{
 		glUseProgram(m_programId);
 		GLint location = glGetUniformLocation(m_programId, name);
+
+		if (location == UNUSED) {
+			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+		}
+
 		glUniform3i(location, c0, c1, c2);
 		glUseProgram(0);
 	}
@@ -200,6 +215,11 @@ namespace llr
 	{
 		glUseProgram(m_programId);
 		GLint location = glGetUniformLocation(m_programId, name);
+
+		if (location == UNUSED) {
+			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+		}
+
 		glUniform3ui(location, c0, c1, c2);
 		glUseProgram(0);
 	}

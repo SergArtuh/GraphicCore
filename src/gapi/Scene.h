@@ -8,9 +8,13 @@ namespace gapi {
 	class RenderPass;
 
 	class GAPI_EXPORT Scene final {
-	public:
-		Scene();
+		friend class Gapi;
+	private:
+		Scene() = default;
+		Scene(const Scene&) = default;
+		Scene& operator=(const Scene&) = default;
 
+	public:
 		void AddGeometry(Geometry * geometry);
 
 		void RemoveGeometry(Geometry* geometry);

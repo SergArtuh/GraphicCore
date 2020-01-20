@@ -56,7 +56,7 @@ namespace llr
 		ReferenceCounter m_referenceCounter;
 
 		std::map<int, VertexBuffer> m_vertexBuffer;
-		IndexBuffer m_indexBuffer = IndexBuffer();
+		IndexBuffer m_indexBuffer;
 
 		GLuint m_programId = ((GLuint) UNUSED );
 	};

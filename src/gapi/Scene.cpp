@@ -4,11 +4,9 @@
 #include <algorithm>
 
 namespace gapi {
-	Scene::Scene()  {
-	}
 	void Scene::AddGeometry(Geometry* geometry)
 	{
-		if (!geometry) {
+		if (!(geometry && geometry->IsValid())) {
 			return;
 		}
 		m_geometries.push_back(geometry);
@@ -16,7 +14,7 @@ namespace gapi {
 
 	void Scene::RemoveGeometry(Geometry* geometry)
 	{
-		if (!geometry) {
+		if (!(geometry && geometry->IsValid())) {
 			return;
 		}
 

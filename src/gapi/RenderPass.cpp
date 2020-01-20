@@ -24,6 +24,10 @@ namespace gapi {
 	}
 
 	void RenderPass::SetGeometry(const Geometry * geometry) {
+		if (!(geometry && geometry->IsValid())) {
+			return;
+		}
+
 		m_vertexBuffers.emplace(0, geometry->GetVertexBuffer());
 		m_indexBuffer = geometry->GetIndexBuffer();
 	}
@@ -46,5 +50,9 @@ namespace gapi {
 		}
 
 		m_shader->GetShaderLLr().Draw();
+	}
+	bool RenderPass::IsValid() const
+	{
+		return m_id != UNUSED && m_shader->IsValid();
 	}
 }

@@ -19,4 +19,8 @@ namespace gapi {
 	{
 		return m_shader;
 	}
+	bool Shader::IsValid() const
+	{
+		return m_shader.IsValid();
+	}
 }
