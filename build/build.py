@@ -21,6 +21,7 @@ PROJECT_DIR= "..\\prj\\"
 
 msvcCompiler = None
 
+buildTests = False;
 proxy = None
 
 def DownloadURL(url, dest):
@@ -110,7 +111,8 @@ def RunCMake():
                 "-G", generator,
                 "-S", "..\\",
                 "-B", PROJECT_DIR,
-                "-DBUILD_SHARED_LIBS=ON"
+                "-DBUILD_SHARED_LIBS=ON",
+                "-DINSTALL_DIR=" + BIN_DIR
                 ]
     
     subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=True)
@@ -128,7 +130,7 @@ def RunExecutable(cmd):
     subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=True)
 
 try:
-        arguments, values = getopt.getopt(sys.argv[1:],['"ho:v"'], ['proxy='])
+        arguments, values = getopt.getopt(sys.argv[1:],['"ho:v"'], ['tests', 'install-dir=', 'proxy='])
 except getopt.GetoptError as err:
         print(err)
         sys.exit(2)
@@ -136,6 +138,10 @@ except getopt.GetoptError as err:
 for currentArgument, currentValue in arguments:
     if currentArgument == "--proxy":
         proxy = currentValue
+    elif currentArgument == "--tests":
+        buildTests = True
+    elif currentArgument == "--install-dir":
+        BIN_DIR = currentValue if currentValue[-1] is not '\\' or '/' else currentValue + '\\'
 
 CreateDirectory(TEMP_DIR)
 CreateDirectory(BIN_DIR)
@@ -149,6 +155,5 @@ RunCMake()
 
 DeleteDirectory(TEMP_DIR)
 
-RunExecutable( BIN_DIR + "llr_tests")
-
-
+if buildTests:
+        RunExecutable( BIN_DIR + "llr_tests")
