@@ -3,6 +3,8 @@ from distutils.spawn import find_executable
 import requests, zipfile, io, os, shutil
 import re
 import subprocess
+import sys
+import getopt
 
 GLEW_URL = "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip"
 GLEW_DIR = "glew-2.1.0\\"
@@ -19,13 +21,20 @@ PROJECT_DIR= "..\\prj\\"
 
 msvcCompiler = None
 
+buildTests = False;
+proxy = None
+
 def DownloadURL(url, dest):
         try:
-             response = requests.get(url)
+             if proxy == None:
+                     response = requests.get(url)
+             else:
+                    proxies = { "https": proxy, "http": proxy}
+                    response = requests.get(url, proxies=proxies)
+                    
 
         except requests.exceptions.RequestException as e:
-            print "Fail to download from URL: " + url
-            return False
+            raise Exception( "Fail to download from URL: " + url )
 
         zip = zipfile.ZipFile(io.BytesIO(response.content))
         dirName = zip.namelist()[0]
@@ -54,9 +63,9 @@ def InstallGLEW():
             if not DownloadURL(GLEW_URL, TEMP_DIR):
                 return
 
-            CopyFile(TEMP_DIR + GLEW_DIR + "bin\\Release\\x64\\glew32.dll", BIN_DIR)
-            CopyFile(TEMP_DIR + GLEW_DIR + "lib\\Release\\x64\\glew32.lib", LIB_DIR)
-            CopyDirectory(TEMP_DIR + GLEW_DIR + "include\\GL", INCLUDE_DIR + "GL")
+        CopyFile(TEMP_DIR + GLEW_DIR + "bin\\Release\\x64\\glew32.dll", BIN_DIR)
+        CopyFile(TEMP_DIR + GLEW_DIR + "lib\\Release\\x64\\glew32.lib", LIB_DIR)
+        CopyDirectory(TEMP_DIR + GLEW_DIR + "include\\GL", INCLUDE_DIR + "GL")
 
 
 def InstallGLFW():
@@ -64,9 +73,9 @@ def InstallGLFW():
             if not DownloadURL(GLFW_URL, TEMP_DIR):
                 return
 
-            CopyFile(TEMP_DIR + GLFW_DIR + "lib-vc2019\\glfw3.dll", BIN_DIR)
-            CopyFile(TEMP_DIR + GLFW_DIR + "lib-vc2019\\glfw3dll.lib", LIB_DIR)
-            CopyDirectory(TEMP_DIR + GLFW_DIR + "include\\GLFW", INCLUDE_DIR + "GLFW")
+        CopyFile(TEMP_DIR + GLFW_DIR + "lib-vc2019\\glfw3.dll", BIN_DIR)
+        CopyFile(TEMP_DIR + GLFW_DIR + "lib-vc2019\\glfw3dll.lib", LIB_DIR)
+        CopyDirectory(TEMP_DIR + GLFW_DIR + "include\\GLFW", INCLUDE_DIR + "GLFW")
 
 def GetVisualStudioVersion():
     global msvcCompiler
@@ -83,8 +92,8 @@ def GetVisualStudioVersion():
 def RunCMake():
     visualStudioVersion = GetVisualStudioVersion()
     if visualStudioVersion is None:
-        print "Please run build.py script in Visual Studio Developer Command Prompt"
-        return
+        raise Exception( "Please run build.py script in Visual Studio Developer Command Prompt")
+
     print 'VS version "{ver}"'.format(ver=visualStudioVersion)
 
 
@@ -93,15 +102,17 @@ def RunCMake():
     elif visualStudioVersion is 15:
         generator = "Visual Studio 15 2017 Win64"
     else:
-        print "Visual studio version is not supported"
-        return
+        raise Exception( "Visual studio version is not supported" )
 
     cmakeCmd = ["cmake.exe",
                 "-G", generator,
                 "-S", "..\\",
                 "-B", PROJECT_DIR,
-                "-DBUILD_SHARED_LIBS=ON"
+                "-DBUILD_SHARED_LIBS=ON",
+                "-DINSTALL_DIR=" + BIN_DIR
                 ]
+    if buildTests:
+            cmakeCmd.append("-DBUILD_TESTS=ON");
     
     subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=True)
 
@@ -117,16 +128,37 @@ def RunCMake():
 def RunExecutable(cmd):
     subprocess.check_call(cmd, stderr=subprocess.STDOUT, shell=True)
 
-CreateDirectory(TEMP_DIR)
-CreateDirectory(BIN_DIR)
-CreateDirectory(LIB_DIR)
-CreateDirectory(INCLUDE_DIR)
+try:
+        arguments, values = getopt.getopt(sys.argv[1:],['"ho:v"'], ['tests', 'install-dir=', 'proxy='])
+except getopt.GetoptError as err:
+        print(err)
+        sys.exit(2)
+ 
+for currentArgument, currentValue in arguments:
+    if currentArgument == "--proxy":
+        proxy = currentValue
+    elif currentArgument == "--tests":
+        buildTests = True
+    elif currentArgument == "--install-dir":
+        if currentValue[-1] is not '\\' or not '/':
+                BIN_DIR = currentValue + '\\'
+        else:
+                BIN_DIR = currentValue
 
-InstallGLFW()
-InstallGLEW()
+try:
+        CreateDirectory(TEMP_DIR)
+        CreateDirectory(BIN_DIR)
+        CreateDirectory(LIB_DIR)
+        CreateDirectory(INCLUDE_DIR)
 
-RunCMake()
+        InstallGLFW()
+        InstallGLEW()
 
-DeleteDirectory(TEMP_DIR)
+        RunCMake()
 
-RunExecutable( BIN_DIR + "llr_tests")
+        DeleteDirectory(TEMP_DIR)
+
+        if buildTests:
+                RunExecutable( BIN_DIR + "llr_tests")
+except ValueError as err:
+        print(err.args)
