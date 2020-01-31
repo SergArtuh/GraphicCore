@@ -1,11 +1,10 @@
 
 set(CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR})
 
-find_package(GLEW REQUIRED)
-find_package(OpenGL REQUIRED)
+find_package(GLFW REQUIRED)
 
-if (GLEW_FOUND AND GLEW_FOUND)
-	set(This llr)
+if (GLFW_FOUND)
+	set(This wnd)
 
 	file(GLOB sources ./**.cpp )
 	file(GLOB headers ./**.h )
@@ -16,14 +15,12 @@ if (GLEW_FOUND AND GLEW_FOUND)
 	file(MAKE_DIRECTORY ${INCLUDE_DIRECTORY}/${This})
 	add_custom_command(TARGET ${This} PRE_BUILD COMMAND cp ${headers} ${INCLUDE_DIRECTORY}/${This})
 	
-	target_include_directories(${This} PUBLIC ${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
-	target_link_libraries(${This} PUBLIC wnd ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+	target_include_directories(${This} PUBLIC ${GLFW_INCLUDE_DIRS})
+    target_link_libraries(${This} PUBLIC ${GLFW_LIBRARIES})
 	
 	install(TARGETS ${This} 
 		RUNTIME DESTINATION ${BIN_DIRECTORY}
 		LIBRARY DESTINATION ${LIB_DIRECTORY}
 	)
-
-	
 endif()
 
