@@ -3,7 +3,7 @@
 #include <list>
 #include<stdarg.h>
 
-wnd::Window* CreateWindow(const size_t w, const size_t h, CStr title)
+wnd::Window* CreateWindow(const CSize w, const CSize h, CStr title)
 {
 	return new wnd::Window(w, h, title);
 }
@@ -59,7 +59,7 @@ void SceneRemoveGeometry(gapi::Scene* scene, gapi::Geometry* geometry)
 	scene->RemoveGeometry(geometry);
 }
 
-gapi::ShaderSource* CreateShaderSource(CStr sourcr, int32_t type)
+gapi::ShaderSource* CreateShaderSource(CStr sourcr, I32 type)
 {
 	return new gapi::ShaderSource(sourcr, gapi::ShaderSourceType(type));
 }
@@ -71,7 +71,7 @@ void DeleteShaderSource(gapi::ShaderSource* shaderSource)
 	}
 }
 
-gapi::Shader* CreateShader(gapi::Gapi* gapi, gapi::ShaderSource ** sources, uint32_t count) {
+gapi::Shader* CreateShader(gapi::Gapi* gapi, gapi::ShaderSource ** sources, UI32 count) {
 	if (!(sources && count > 0)) {
 		return nullptr;
 	}
@@ -95,7 +95,7 @@ void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass) {
 	gapi->DeleteRenderPass(renderPass);
 }
 
-gapi::Geometry* CreateGeometry(gapi::Gapi* gapi, float* vertices, CSize vertexN, uint32_t * indexes, CSize indexN) {
+gapi::Geometry* CreateGeometry(gapi::Gapi* gapi, float* vertices, CSize vertexN, UI32 * indexes, CSize indexN) {
 	std::vector<float> vertexV(vertexN);
 	std::memcpy(vertexV.data(), vertices, vertexV.size() * sizeof(vertexV[0]));
 

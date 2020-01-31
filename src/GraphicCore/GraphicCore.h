@@ -11,13 +11,20 @@
 
 #include "llr/Shader.h"
 
+using I32 = int32_t;
+using CI32 = const int32_t;
+using UI32 = uint32_t;
+using CUI32 = const uint32_t;
+
+using Size = const uint64_t;
+using CSize = const uint64_t;
+
+using Str = char* const;
+using CStr = const char* const;
 
 
 extern "C" {
-	using CStr = const char* const;
-	using CSize = const uint64_t;
-
-	wnd::Window * CreateWindow(const size_t w, const size_t h, CStr title);
+	wnd::Window * CreateWindow(CSize w, CSize h, CStr title);
 	void DeleteWindow(wnd::Window * window);
 
 
@@ -42,11 +49,11 @@ extern "C" {
 
 	void SceneRemoveGeometry(gapi::Scene* scene, gapi::Geometry* geometry);
 
-	gapi::ShaderSource * CreateShaderSource(CStr sourcr, int32_t type);
+	gapi::ShaderSource * CreateShaderSource(CStr sourcr, I32 type);
 
 	void DeleteShaderSource(gapi::ShaderSource* shaderSource);
 
-	gapi::Shader * CreateShader(gapi::Gapi* gapi, gapi::ShaderSource** sources, uint32_t count);
+	gapi::Shader * CreateShader(gapi::Gapi* gapi, gapi::ShaderSource** sources, UI32 count);
 
 	void DeleteShader(gapi::Gapi* gapi, gapi::Shader * shader);
 
@@ -56,7 +63,7 @@ extern "C" {
 	void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass * renderPass);
 
 
-	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, CSize vertexN, uint32_t * indexes, CSize indexN);
+	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, CSize vertexN, UI32 * indexes, CSize indexN);
 
 	void DeleteGeometry(gapi::Gapi* gapi, gapi::Geometry*);
 
