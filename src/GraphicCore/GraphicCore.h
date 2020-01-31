@@ -14,7 +14,10 @@
 
 
 extern "C" {
-	wnd::Window * CreateWindow(const size_t w, const size_t h, const char* title);
+	using CStr = const char* const;
+	using CSize = const uint64_t;
+
+	wnd::Window * CreateWindow(const size_t w, const size_t h, CStr title);
 	void DeleteWindow(wnd::Window * window);
 
 
@@ -39,8 +42,11 @@ extern "C" {
 
 	void SceneRemoveGeometry(gapi::Scene* scene, gapi::Geometry* geometry);
 
+	gapi::ShaderSource * CreateShaderSource(CStr sourcr, int32_t type);
 
-	gapi::Shader * CreateShader(gapi::Gapi* gapi, int count, int type, const char* const source, ...);
+	void DeleteShaderSource(gapi::ShaderSource* shaderSource);
+
+	gapi::Shader * CreateShader(gapi::Gapi* gapi, gapi::ShaderSource** sources, uint32_t count);
 
 	void DeleteShader(gapi::Gapi* gapi, gapi::Shader * shader);
 
@@ -50,7 +56,7 @@ extern "C" {
 	void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass * renderPass);
 
 
-	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, size_t vertexN, unsigned int * indexes, size_t indexN);
+	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, CSize vertexN, uint32_t * indexes, CSize indexN);
 
 	void DeleteGeometry(gapi::Gapi* gapi, gapi::Geometry*);
 

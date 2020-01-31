@@ -3,7 +3,7 @@
 #include <list>
 #include<stdarg.h>
 
-wnd::Window* CreateWindow(const size_t w, const size_t h, const char* title)
+wnd::Window* CreateWindow(const size_t w, const size_t h, CStr title)
 {
 	return new wnd::Window(w, h, title);
 }
@@ -59,23 +59,28 @@ void SceneRemoveGeometry(gapi::Scene* scene, gapi::Geometry* geometry)
 	scene->RemoveGeometry(geometry);
 }
 
-gapi::Shader* CreateShader(gapi::Gapi* gapi, int count, int type, const char* const source, ...) {
-	if (count <= 0) {
+gapi::ShaderSource* CreateShaderSource(CStr sourcr, int32_t type)
+{
+	return new gapi::ShaderSource(sourcr, gapi::ShaderSourceType(type));
+}
+
+void DeleteShaderSource(gapi::ShaderSource* shaderSource)
+{
+	if (shaderSource) {
+		delete shaderSource;
+	}
+}
+
+gapi::Shader* CreateShader(gapi::Gapi* gapi, gapi::ShaderSource ** sources, uint32_t count) {
+	if (!(sources && count > 0)) {
 		return nullptr;
 	}
-
-	std::list< gapi::ShaderSource> shaderSources;
-
-	va_list arg;
-	va_start(arg, count);
+	std::list< gapi::ShaderSource> sourcesList;
 	for (int i = 0; i < count; ++i) {
-		auto type = va_arg(arg, int);
-		auto src = va_arg(arg, const char* const);
-		shaderSources.emplace_back(src, type);
+		sourcesList.push_back(*sources[i]);
 	}
 
-	va_end(arg);
-	return gapi->CreateShader(shaderSources);
+	return gapi->CreateShader(sourcesList);
 }
 
 void DeleteShader(gapi::Gapi* gapi, gapi::Shader* shader) {
@@ -90,7 +95,7 @@ void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass) {
 	gapi->DeleteRenderPass(renderPass);
 }
 
-gapi::Geometry* CreateGeometry(gapi::Gapi* gapi, float* vertices, size_t vertexN, unsigned int* indexes, size_t indexN) {
+gapi::Geometry* CreateGeometry(gapi::Gapi* gapi, float* vertices, CSize vertexN, uint32_t * indexes, CSize indexN) {
 	std::vector<float> vertexV(vertexN);
 	std::memcpy(vertexV.data(), vertices, vertexV.size() * sizeof(vertexV[0]));
 

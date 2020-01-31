@@ -7,6 +7,7 @@ import sys
 import getopt
 
 GLEW_URL = "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip"
+GLEW_URL_MIRROR = "https://sourceforge.net/projects/glew/files/glew/2.1.0/glew-2.1.0-win32.zip/download?use_mirror=netcologne"
 GLEW_DIR = "glew-2.1.0\\"
 
 GLFW_URL = "https://github.com/glfw/glfw/releases/download/3.3.1/glfw-3.3.1.bin.WIN64.zip"
@@ -60,7 +61,7 @@ def CopyDirectory(srcDir, destDir):
 
 def InstallGLEW():
         if not os.path.exists(TEMP_DIR + GLEW_DIR):
-            if not DownloadURL(GLEW_URL, TEMP_DIR):
+            if not DownloadURL(GLEW_URL_MIRROR, TEMP_DIR):
                 return
 
         CopyFile(TEMP_DIR + GLEW_DIR + "bin\\Release\\x64\\glew32.dll", BIN_DIR)
