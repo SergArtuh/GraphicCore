@@ -160,6 +160,6 @@ try:
         DeleteDirectory(TEMP_DIR)
 
         if buildTests:
-                RunExecutable( BIN_DIR + "llr_tests")
+                RunExecutable( BIN_DIR + "tests")
 except ValueError as err:
         print(err.args)
