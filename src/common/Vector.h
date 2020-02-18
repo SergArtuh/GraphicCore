@@ -12,19 +12,19 @@ public:
 
 	Vector(std::initializer_list<T>);
 
-	Vector(const Vector & r);
+	Vector(const Vector& r);
 
-	Vector(Vector && r);
+	Vector(Vector&& r);
 
 	~Vector();
 
-	T& operator=(const Vector& r);
+	Vector& operator=(const Vector& r);
 
-	T & operator[](size_t n) {
+	T& operator[](size_t n) {
 		return m_data[n];
 	}
 
-	const T & operator[](size_t n) const {
+	const T& operator[](size_t n) const {
 		return m_data[n];
 	}
 
@@ -113,8 +113,9 @@ inline Vector<T, S>::~Vector()
 
 
 template<class T, size_t S>
-inline T& Vector<T, S>::operator=(const Vector& r) {
+inline  Vector<T, S>& Vector<T, S>::operator=(const Vector& r) {
 	CopyConstructor(*this, r);
+	return *this;
 }
 
 template<class T, size_t S>

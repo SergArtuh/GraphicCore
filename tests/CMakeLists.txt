@@ -4,7 +4,9 @@ set(This tests)
 
 add_executable(${This} llr_tests.cpp common_tests.cpp)
 
-target_link_libraries(tests PUBLIC llr wnd gtest_main)
+target_link_libraries(${This} PUBLIC llr wnd gtest_main)
+
+set_target_properties(${This} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin )
 
 install(TARGETS gtest gtest_main DESTINATION ${BIN_DIRECTORY})
 
