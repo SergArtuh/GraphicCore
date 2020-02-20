@@ -11,6 +11,8 @@
 
 #include "llr/Shader.h"
 
+#include "Common/Vector.h"
+
 using I32 = int32_t;
 using CI32 = const int32_t;
 using UI32 = uint32_t;

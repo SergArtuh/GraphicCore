@@ -113,3 +113,8 @@ void Draw(gapi::Gapi* gapi, gapi::Context* context, gapi::Scene* scene)
 {
 	gapi->Draw(context, scene);
 }
+
+Vec2f* CreateVector2f(float*)
+{
+	return nullptr;
+}
