@@ -33,6 +33,8 @@ public:
 		return m_data[n];
 	}
 
+	pVec GetVectorPtr(size_t n);
+
 private:
 
 public:
@@ -91,6 +93,12 @@ template<class T, size_t M, size_t N>
 inline T& Matrix<T, M, N>::operator=(const Matrix& r) {
 	CopyConstructor(*this, r);
 	return *this;
+}
+
+template<class T, size_t M, size_t N>
+inline Vector<T, M>* Matrix<T, M, N>::GetVectorPtr(size_t n)
+{
+	return m_data + n;
 }
 
 template<class T, size_t M, size_t N>

@@ -67,3 +67,65 @@ float GetVector4f(Vec4f* v, UI32 id) {
 void SetVector4f(Vec4f* v, UI32 id, float value) {
 	(*v)[id] = value;
 }
+
+
+
+
+Mat3f* CreateMatrix3f(float* data) {
+	if (!data) {
+		return new Mat3f;
+	}
+	constexpr UI32 N = 9;
+	return new Mat3f(std::initializer_list<float>(data, data + N));
+}
+
+void DeleteMatrix3f(Mat3f* m) {
+	if (m) {
+		delete m;
+	}
+}
+
+float GetMatrix3f(Mat3f* m, UI32 i, UI32 j)
+{
+	return (*m)[i][j];
+}
+
+Vec3f* GetVectorMatrix3f(Mat3f* m, UI32 i)
+{
+	return m->GetVectorPtr(i);
+}
+
+void SetMatrix3f(Mat3f* m, UI32 i, UI32 j, float value) {
+	(*m)[i][j] = value;
+}
+
+
+
+
+Mat4f* CreateMatrix4f(float * data) {
+	if (!data) {
+		return new Mat4f;
+	}
+	constexpr UI32 N = 16;
+	return new Mat4f(std::initializer_list<float>(data, data + N));
+}
+
+void DeleteMatrix4f(Mat4f * m) {
+	if (m) {
+		delete m;
+	}
+}
+
+float GetMatrix4f(Mat4f* m, UI32 i, UI32 j)
+{
+	return (*m)[i][j];
+}
+
+Vec4f* GetVectorMatrix4f(Mat4f* m, UI32 i)
+{
+	return m->GetVectorPtr(i);
+}
+
+void SetMatrix4f(Mat4f* m, UI32 i, UI32 j, float value) {
+	(*m)[i][j] = value;
+}
