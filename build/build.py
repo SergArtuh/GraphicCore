@@ -22,6 +22,7 @@ PROJECT_DIR= "..\\prj\\"
 
 msvcCompiler = None
 
+installDir = False;
 buildTests = False;
 proxy = None
 
@@ -109,11 +110,13 @@ def RunCMake():
                 "-G", generator,
                 "-S", "..\\",
                 "-B", PROJECT_DIR,
-                "-DBUILD_SHARED_LIBS=ON",
-                "-DINSTALL_DIR=" + BIN_DIR
+                "-DBUILD_SHARED_LIBS=ON"
                 ]
     if buildTests:
             cmakeCmd.append("-DBUILD_TESTS=ON");
+
+    if installDir:
+            cmakeCmd.append("-DINSTALL_DIRECTORY=" + BIN_DIR);
     
     subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=True)
 
@@ -145,6 +148,7 @@ for currentArgument, currentValue in arguments:
                 BIN_DIR = currentValue + '\\'
         else:
                 BIN_DIR = currentValue
+        installDir = True
 
 try:
         CreateDirectory(TEMP_DIR)
