@@ -126,6 +126,20 @@ namespace llr
 		}
 	}
 
+	void Shader::SetConstantBuffer(const ConstantBuffer buffer, const int location) {
+
+		if (!buffer.IsValid()) {
+			LLR_WARNING("Try to set to a shader(Program ID: %d) Invali ConstantBuffer", m_programId);
+			return;
+		}
+
+		m_constantBuffer[location] = buffer.GetId();
+
+		glBindBufferBase(GL_UNIFORM_BUFFER, location, buffer.GetId());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glUseProgram(0);
+	}
+
 	void Shader::SetVertexBuffer(const VertexBuffer buffer, const int location, const size_t stride)
 	{
 		if (!buffer.IsValid()) {
@@ -176,6 +190,15 @@ namespace llr
 			glBindBuffer(GL_ARRAY_BUFFER, buffer.GetId()); GL_CHECK
 		}
 		
+
+		for (auto uniformBlock : m_constantBuffer)
+		{
+			const int bindingId = uniformBlock.first;
+			const ConstantBuffer buffer = uniformBlock.second;
+			glBindBufferBase(m_programId, bindingId, buffer.GetId());
+
+		}
+
 		glDrawElements(GL_TRIANGLES, (GLsizei)m_indexBuffer.GetSize(), adapter::DataType(m_indexBuffer.GetDataType()), NULL); GL_CHECK
 
 		for (auto vb : m_vertexBuffer) {
@@ -186,6 +209,8 @@ namespace llr
 		glBindBuffer(GL_ARRAY_BUFFER, 0); GL_CHECK
 		glUseProgram(0); GL_CHECK
 	}
+
+	//TODO: make reusable code for SetConstant method family
 	void Shader::SetConstant(const char* name, const float c0, const float c1, const float c2)
 	{
 		glUseProgram(m_programId);
@@ -193,6 +218,7 @@ namespace llr
 
 		if (location == UNUSED) {
 			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+			return;
 		}
 
 		glUniform3f(location, c0, c1, c2);
@@ -206,6 +232,7 @@ namespace llr
 
 		if (location == UNUSED) {
 			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+			return;
 		}
 
 		glUniform3i(location, c0, c1, c2);
@@ -218,9 +245,47 @@ namespace llr
 
 		if (location == UNUSED) {
 			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+			return;
 		}
 
 		glUniform3ui(location, c0, c1, c2);
+		glUseProgram(0);
+	}
+
+	void Shader::SetConstant(const char* name, const float c0, const float c1, const float c2, const float c3) {
+		glUseProgram(m_programId);
+		GLint location = glGetUniformLocation(m_programId, name);
+
+		if (location == UNUSED) {
+			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+			return;
+		}
+
+		glUniform4f(location, c0, c1, c2, c3);
+		glUseProgram(0);
+	}
+	void Shader::SetConstant(const char* name, const int c0, const int c1, const int c2, const float c3) {
+		glUseProgram(m_programId);
+		GLint location = glGetUniformLocation(m_programId, name);
+
+		if (location == UNUSED) {
+			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+			return;
+		}
+
+		glUniform4i(location, c0, c1, c2, c3);
+		glUseProgram(0);
+	}
+	void Shader::SetConstant(const char* name, const unsigned int c0, const unsigned int c1, const unsigned int c2, const float c3) {
+		glUseProgram(m_programId);
+		GLint location = glGetUniformLocation(m_programId, name);
+
+		if (location == UNUSED) {
+			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", m_programId, name);
+			return;
+		}
+
+		glUniform4ui(location, c0, c1, c2, c3);
 		glUseProgram(0);
 	}
 }

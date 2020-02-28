@@ -1,5 +1,6 @@
 #pragma once
 #include "api.h"
+#include "ConstantBuffer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
@@ -37,6 +38,8 @@ namespace llr
 
 		~Shader();
 			
+		void SetConstantBuffer(const ConstantBuffer buffer, const int location);
+
 		void SetVertexBuffer(const VertexBuffer buffer, const int location, const size_t stride = 0U);
 
 		void SetIndexBuffer(const IndexBuffer buffer);
@@ -49,12 +52,22 @@ namespace llr
 
 	public:
 		void SetConstant(const char* name, const float c0, const float c1, const float c2);
+
 		void SetConstant(const char* name, const int c0, const int c1, const int c2);
+
 		void SetConstant(const char* name, const unsigned int c0, const unsigned int c1, const unsigned int c2);
+
+
+		void SetConstant(const char* name, const float c0, const float c1, const float c2, const float c3);
+
+		void SetConstant(const char* name, const int c0, const int c1, const int c2, const float c3);
+
+		void SetConstant(const char* name, const unsigned int c0, const unsigned int c1, const unsigned int c2, const float c3);
 
 	private:
 		ReferenceCounter m_referenceCounter;
 
+		std::map<int, ConstantBuffer> m_constantBuffer;
 		std::map<int, VertexBuffer> m_vertexBuffer;
 		IndexBuffer m_indexBuffer;
 
