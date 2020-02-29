@@ -23,6 +23,14 @@ namespace gapi {
 		return m_id == r.m_id;
 	}
 
+	void RenderPass::SetInput(RenderPassInput * input, int location) {
+		if (!(input && input->IsValid())) {
+			return;
+		}
+
+		m_shader->GetShaderLLr().SetConstantBuffer(input->GetConstantBuffer(), location);
+	}
+
 	void RenderPass::SetGeometry(const Geometry * geometry) {
 		if (!(geometry && geometry->IsValid())) {
 			return;

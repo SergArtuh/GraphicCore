@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "RenderPass.h"
+#include "RenderPassInput.h"
 #include "Geometry.h"
 
 namespace gapi {
@@ -58,6 +59,21 @@ namespace gapi {
 	void Gapi::DeleteRenderPass(RenderPass* renderPass) {
 		if (renderPass) {
 			delete renderPass;
+		}
+	}
+
+	void Gapi::SetRenderPassInput(gapi::RenderPass* renderPass, RenderPassInput * renderPassInput, uint32_t location) {
+		renderPass->SetInput(renderPassInput, location);
+	}
+
+	RenderPassInput * Gapi::CreateRenderPassInput(size_t size)
+	{
+		return new RenderPassInput(size);
+	}
+
+	void Gapi::DeleteRenderPassInput(RenderPassInput * renderPassInput) {
+		if (renderPassInput) {
+			delete renderPassInput;
 		}
 	}
 

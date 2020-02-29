@@ -87,12 +87,32 @@ void DeleteShader(gapi::Gapi* gapi, gapi::Shader* shader) {
 	gapi->DeleteShader(shader);
 }
 
+gapi::RenderPassInput* CreateRenderPassInput(gapi::Gapi* gapi, CSize size) {
+	return gapi->CreateRenderPassInput(size);
+}
+
+void DeleteRenderPassInput(gapi::Gapi* gapi, gapi::RenderPassInput* renderPassInput) {
+	gapi->DeleteRenderPassInput(renderPassInput);
+}
+
+void* GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput) {
+	return renderPassInput->GetData().data();
+}
+
+void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput) {
+	renderPassInput->MarkDirty();
+}
+
 gapi::RenderPass* CreateRenderPass(gapi::Gapi* gapi, gapi::Shader * shader) {
 	return gapi->CreateRenderPass( shader );
 }
 
 void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass) {
 	gapi->DeleteRenderPass(renderPass);
+}
+
+void SetRenderPassInput(gapi::Gapi* gapi, gapi::RenderPass* renderPass, gapi::RenderPassInput* renderPassInput, UI32 location) {
+	gapi->SetRenderPassInput(renderPass, renderPassInput, location);
 }
 
 gapi::Geometry* CreateGeometry(gapi::Gapi* gapi, float* vertices, CSize vertexN, UI32 * indexes, CSize indexN) {
@@ -112,9 +132,4 @@ void DeleteGeometry(gapi::Gapi* gapi, gapi::Geometry * geometry) {
 void Draw(gapi::Gapi* gapi, gapi::Context* context, gapi::Scene* scene)
 {
 	gapi->Draw(context, scene);
-}
-
-Vec2f* CreateVector2f(float*)
-{
-	return nullptr;
 }

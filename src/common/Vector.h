@@ -10,6 +10,8 @@ public:
 
 	Vector();
 
+	Vector(pT ptr);
+
 	Vector(std::initializer_list<T>);
 
 	Vector(const Vector& r);
@@ -83,6 +85,9 @@ private:
 
 template<class T, size_t S>
 inline Vector<T, S>::Vector() : m_data{ new T[S] } {}
+
+template<class T, size_t S>
+inline Vector<T, S>::Vector(pT ptr) : m_data{ ptr } {}
 
 template<class T, size_t S>
 inline Vector<T, S>::Vector(std::initializer_list<T> fl) : m_data{ new T[S] } {

@@ -1,5 +1,8 @@
 #pragma once
 #include "api.h"
+
+#include "RenderPassInput.h"
+
 #include "wnd/IRenderer.h"
 #include "llr/IndexBuffer.h"
 #include "llr/VertexBuffer.h"
@@ -21,6 +24,8 @@ namespace gapi {
 		RenderPass& operator=(const RenderPass&) = default;
 	public:
 		bool operator==(const RenderPass& r);
+		
+		void SetInput(RenderPassInput * input, int location = 0);
 
 		void SetGeometry(const Geometry * geometry);
 

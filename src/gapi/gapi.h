@@ -16,6 +16,7 @@ namespace gapi {
 	class Context;
 	class Scene;
 	class RenderPass;
+	class RenderPassInput;
 	class Geometry;
 
 
@@ -38,11 +39,19 @@ namespace gapi {
 		Shader* CreateShader(const std::list< ShaderSource> & sources);
 
 		void DeleteShader(Shader * shader);
+		
+
+		RenderPassInput * CreateRenderPassInput(size_t size);
+
+		void DeleteRenderPassInput(RenderPassInput * renderPassInput);
 
 
 		RenderPass* CreateRenderPass(Shader * shader);
 
 		void DeleteRenderPass(RenderPass * renderPass);
+
+		void SetRenderPassInput(RenderPass* renderPass, RenderPassInput * renderPassInput, uint32_t location);
+
 
 		void ContextAddRenderPass(Context* context, RenderPass* renderPass);
 

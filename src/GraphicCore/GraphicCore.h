@@ -7,6 +7,7 @@
 #include "gapi/Scene.h"
 #include "gapi/Shader.h"
 #include "gapi/RenderPass.h"
+#include "gapi/RenderPassInput.h"
 #include "gapi/Geometry.h"
 
 #include "llr/Shader.h"
@@ -60,10 +61,20 @@ extern "C" {
 	void DeleteShader(gapi::Gapi* gapi, gapi::Shader * shader);
 
 
+	gapi::RenderPassInput * CreateRenderPassInput(gapi::Gapi* gapi, CSize size);
+
+	void DeleteRenderPassInput(gapi::Gapi* gapi, gapi::RenderPassInput* renderPassInput);
+
+	void * GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput);
+
+	void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput);
+
+
 	gapi::RenderPass* CreateRenderPass(gapi::Gapi* gapi, gapi::Shader * shader);
 
 	void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass * renderPass);
 
+	void SetRenderPassInput(gapi::Gapi* gapi, gapi::RenderPass * renderPass, gapi::RenderPassInput * renderPassInput, UI32 location);
 
 	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, CSize vertexN, UI32 * indexes, CSize indexN);
 

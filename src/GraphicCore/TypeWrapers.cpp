@@ -8,6 +8,10 @@ Vec2f* CreateVector2f(float* data) {
 	return new Vec2f(std::initializer_list<float>(data, data + N));
 }
 
+Vec2f* CreateVectorFromNativeData2f(float* ptr) {
+	return new Vec2f(ptr);
+}
+
 void DeleteVector2f(Vec2f* v) {
 	if (v) {
 		delete v;
@@ -31,6 +35,10 @@ Vec3f* CreateVector3f(float*data)
 	return new Vec3f(std::initializer_list<float>(data, data + N));
 }
 
+Vec3f* CreateVectorFromNativeData3f(float* ptr) {
+	return new Vec3f(ptr);
+}
+
 void DeleteVector3f(Vec3f*v) {
 	if (v) {
 		delete v;
@@ -45,13 +53,16 @@ void SetVector3f(Vec3f* v, UI32 id, float value) {
 	(*v)[id] = value;
 }
 
-Vec4f* CreateVector4f(float*data)
-{
+Vec4f* CreateVector4f(float*data) {
 	if (!data) {
 		return new Vec4f;
 	}
 	constexpr UI32 N = 4;
 	return new Vec4f(std::initializer_list<float>(data, data + N));
+}
+
+Vec4f* CreateVectorFromNativeData4f(float * ptr) {
+	return new Vec4f(ptr);
 }
 
 void DeleteVector4f(Vec4f* v) {
