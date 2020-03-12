@@ -14,11 +14,13 @@ namespace llr
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); GL_CHECK
 	}
 
-	IndexBuffer::IndexBuffer(const IndexBuffer & r) :
-		m_bufferId(r.m_bufferId), m_size(r.m_size), m_dataType(r.m_dataType), m_referenceCounter(r.m_referenceCounter) {
+	IndexBuffer::IndexBuffer(const IndexBuffer & r) : m_bufferId(r.m_bufferId), m_size(r.m_size), m_dataType(r.m_dataType), m_referenceCounter(r.m_referenceCounter) {
+		m_referenceCounter.Increase();
 	}
 
 	IndexBuffer& IndexBuffer::operator=(const IndexBuffer& r) {
+		m_referenceCounter.Increase();
+
 		m_bufferId = r.m_bufferId;
 		m_size = r.m_size;
 		m_dataType = r.m_dataType;

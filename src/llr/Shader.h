@@ -4,6 +4,8 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
+#include "VertexArrayBuffer.h"
+
 #include "ReferenceCounter.h"
 
 #include "enum.h"
@@ -32,12 +34,14 @@ namespace llr
 		Shader() = default;
 		Shader(std::list<ShaderSource> shaderSources);
 		
-		Shader(const Shader&);
+		Shader(const Shader&) = default;
 
 		Shader& operator=(const Shader& r);
 
 		~Shader();
 			
+		void SetVertexArrayBuffer(const llr::VertexArrayBuffer vao);
+
 		void SetConstantBuffer(const ConstantBuffer buffer, const int location);
 
 		void SetVertexBuffer(const VertexBuffer buffer, const int location, const size_t stride = 0U);
@@ -66,6 +70,8 @@ namespace llr
 
 	private:
 		ReferenceCounter m_referenceCounter;
+
+		llr::VertexArrayBuffer m_vao;
 
 		std::map<int, ConstantBuffer> m_constantBuffer;
 		std::map<int, VertexBuffer> m_vertexBuffer;

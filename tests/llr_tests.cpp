@@ -2,6 +2,7 @@
 #include<llr/llr.h>
 #include<wnd/window.h>
 #include "llr/VertexBuffer.h"
+#include "llr/VertexArrayBuffer.h"
 #include "llr/ConstantBuffer.h"
 #include "llr/IndexBuffer.h"
 #include "llr/Shader.h"
@@ -194,7 +195,32 @@ void simpleShaderTest(const char * vertShader, const char* fragShader, const std
 	delete[] pixelsData;
 }
 
+void shaderVAOTest(llr::Shader shader, llr::VertexArrayBuffer vao, wnd::Window && window, std::function<void(const size_t, const size_t, const float checkPizel[4], const float*)> checkFunc) {
+	window.makeContextCurrent();
+	llr::Llr llr(window);
 
+
+	float colorConstantDefault[4]{};
+	float colorConstantData[]{ 0.2f, 0.4f, 0.6f, 0.8f };
+	llr::ConstantBuffer colorModConstantBuffer(sizeof(colorConstantData));
+	colorModConstantBuffer.Write(0, sizeof(colorConstantData), colorConstantData);
+
+	shader.SetVertexArrayBuffer(vao);
+	shader.SetConstantBuffer(colorModConstantBuffer, 0);
+
+	RendererTest renderer(shader);
+
+	window.addRenderer(&renderer);
+
+	float* pixelsData = new float[window.getWidth() * window.getHeight() * 4];
+
+	window.draw(); //dummy draw because of double buffer
+	window.draw();
+	llr.getFramebufferData(pixelsData);
+	checkFunc(window.getWidth(), window.getHeight(), colorConstantData, pixelsData);
+
+	delete[] pixelsData;
+}
 
 TEST(llr_tests, VertexBuffer) {
 	wnd::Window window(800, 600, "Unit Tests");
@@ -265,4 +291,60 @@ TEST(llr_tests, Shader) {
 		EXPECT_TRUE(controllSum < CONTROLL_SUM_EPSILON);
 	});
 
+}
+
+
+
+TEST(llr_tests, ShaderVAO) {
+	wnd::Window window(600, 600, "Unit Tests");
+
+	llr::Shader shader = CreateShader({
+		llr::ShaderSource(g_testShader0V, llr::EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader0F, llr::EShaderSourceType::FRAGMENT)
+		});
+
+	EXPECT_TRUE(shader.IsValid());
+	std::vector<float> dataVertex{ -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f };
+	std::vector<unsigned int> dataIndex{ 0, 1, 2 };
+
+	const size_t dataVertexSizeInBytes = dataVertex.size() * sizeof(dataVertex[0]);
+	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);
+
+	
+
+
+	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	vb.Write(0, dataVertex.size(), dataVertex.data());
+
+	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	ib.Write(0, dataIndex.size(), dataIndex.data());
+
+	shader.SetIndexBuffer(ib);
+
+	llr::VertexArrayBuffer vao;
+	vao.SetVertexBuffer(vb, 0);
+	vao.SetIndexBuffer(ib);
+
+
+	shaderVAOTest(shader, vao, std::move(window), [](const size_t w, const size_t h, const float checkPizel[4], const float* data) {
+		float controllSum = 0.f;
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < w; ++j) {
+				const float* pixel = data + ((w * j + h - i - 1) * 4);
+				if (j < i) {
+					controllSum += checkPizel[0] - pixel[0];
+					controllSum += checkPizel[1] - pixel[1];
+					controllSum += checkPizel[2] - pixel[2];
+					controllSum += checkPizel[3] - pixel[3];
+				}
+				else {
+					controllSum += pixel[0];
+					controllSum += pixel[1];
+					controllSum += pixel[2];
+					controllSum += pixel[3];
+				}
+			}
+		}
+		EXPECT_TRUE(controllSum < CONTROLL_SUM_EPSILON);
+	});
 }

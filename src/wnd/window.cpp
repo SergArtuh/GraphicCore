@@ -25,11 +25,6 @@ namespace wnd {
 		makeContextCurrent();
 	}
 
-	Window::Window(Window& r)
-	{
-		std::swap(m_window, r.m_window);
-	}
-
 	Window::~Window()
 	{
 		if (m_window)
@@ -73,6 +68,11 @@ namespace wnd {
 
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
+	}
+
+	bool Window::isValid() const
+	{
+		return false;
 	}
 
 }

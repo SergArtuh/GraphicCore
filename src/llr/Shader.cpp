@@ -105,10 +105,6 @@ namespace llr
 		}
 	}
 	
-	Shader::Shader(const Shader& r) : m_programId(r.m_programId), m_referenceCounter(r.m_referenceCounter){
-	}
-
-
 	Shader & Shader::operator=(const Shader& r) {
 		m_programId = r.m_programId;
 		m_referenceCounter = r.m_referenceCounter;
@@ -126,6 +122,10 @@ namespace llr
 		}
 	}
 
+	void Shader::SetVertexArrayBuffer(const llr::VertexArrayBuffer vao) {
+		m_vao = vao;
+	}
+
 	void Shader::SetConstantBuffer(const ConstantBuffer buffer, const int location) {
 
 		if (!buffer.IsValid()) {
@@ -133,7 +133,7 @@ namespace llr
 			return;
 		}
 
-		m_constantBuffer[location] = buffer.GetId();
+		m_constantBuffer[location] = buffer;
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, location, buffer.GetId());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -170,43 +170,58 @@ namespace llr
 			LLR_WARNING("Try to draw invalid shader");
 			return;
 		}
-		else if(!m_indexBuffer.IsValid()){
-			LLR_WARNING("Try to draw shader (Program ID: %d) with invalid index buffer", m_programId);
-		}
 
 		glUseProgram(m_programId); GL_CHECK
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer.GetId()); GL_CHECK
-
-		for (auto vb : m_vertexBuffer) {
-			const VertexBuffer& buffer = vb.second;
-			if (!buffer.IsValid()) {
-				continue;
-			}
-
-			const int & location = vb.first;
-			
-			glEnableVertexAttribArray(location);  GL_CHECK
-			glBindBuffer(GL_ARRAY_BUFFER, buffer.GetId()); GL_CHECK
-		}
-		
 
 		for (auto uniformBlock : m_constantBuffer)
 		{
 			const int bindingId = uniformBlock.first;
 			const ConstantBuffer buffer = uniformBlock.second;
-			glBindBufferBase(m_programId, bindingId, buffer.GetId());
+			glBindBufferBase(GL_UNIFORM_BUFFER, bindingId, buffer.GetId()); GL_CHECK
 
 		}
 
-		glDrawElements(GL_TRIANGLES, (GLsizei)m_indexBuffer.GetSize(), adapter::DataType(m_indexBuffer.GetDataType()), NULL); GL_CHECK
+		if (m_vao.IsValid()) {
+			m_vao.Bind();
+
+			glDrawElements(GL_TRIANGLES, (GLsizei)m_vao.GetIndexSize(), adapter::DataType(m_vao.GetIndexDataType()), NULL); GL_CHECK
+		}
+		else {
+			if (!m_indexBuffer.IsValid()) {
+				LLR_WARNING("Try to draw shader (Program ID: %d) with invalid index buffer", m_programId);
+			}
+
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer.GetId()); GL_CHECK
+
+			for (auto vb : m_vertexBuffer) {
+				const VertexBuffer& buffer = vb.second;
+				if (!buffer.IsValid()) {
+					continue;
+				}
+
+				const int& location = vb.first;
+
+				glEnableVertexAttribArray(location);  GL_CHECK
+				glBindBuffer(GL_ARRAY_BUFFER, buffer.GetId()); GL_CHECK
+			}
+
+			glDrawElements(GL_TRIANGLES, (GLsizei)m_indexBuffer.GetSize(), adapter::DataType(m_indexBuffer.GetDataType()), NULL); GL_CHECK
+		}
+		
 
 		for (auto vb : m_vertexBuffer) {
 			const int& location = vb.first;
 			glDisableVertexAttribArray(location);  GL_CHECK	
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0); GL_CHECK
+		if (m_vao.IsValid()) {
+			m_vao.Unbind();
+		}
+		else {
+			glBindBuffer(GL_ARRAY_BUFFER, 0); GL_CHECK
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); GL_CHECK
+		}
+		
 		glUseProgram(0); GL_CHECK
 	}
 

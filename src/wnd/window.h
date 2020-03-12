@@ -12,7 +12,8 @@ namespace wnd {
 		public:
 			Window() = default;
 			Window(const size_t w, const size_t h, const char* title);
-			Window(Window& r);
+			Window(const Window& r) = default;
+
 			~Window();
 
 			void makeContextCurrent();
@@ -28,6 +29,8 @@ namespace wnd {
 			size_t getHeight() const { return m_height; }
 
 			void draw();
+
+			bool isValid() const;
 
 		private:
 			GLFWwindow* m_window = nullptr;
