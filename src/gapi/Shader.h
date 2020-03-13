@@ -7,6 +7,8 @@
 #include <list>
 
 namespace gapi {
+	class Geometry;
+
 	class ShaderSourceType {
 	public:
 		ShaderSourceType() {}
@@ -45,6 +47,10 @@ namespace gapi {
 
 		llr::Shader& GetShaderLLr();
 		const llr::Shader& GetShaderLLr() const;
+
+		void SetGeometry(const Geometry & geometry);
+
+		void Draw();
 
 		bool IsValid() const;
 	private:

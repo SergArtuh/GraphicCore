@@ -1,8 +1,7 @@
 #pragma once
 #include "api.h"
 
-#include "llr/VertexBuffer.h"
-#include "llr/IndexBuffer.h"
+#include "llr/VertexArrayBuffer.h"
 
 #include <vector>
 
@@ -19,13 +18,10 @@ namespace gapi {
 	public:
 		bool operator==(const Geometry & r);
 
-		const llr::VertexBuffer GetVertexBuffer() const;
-
-		const llr::IndexBuffer GetIndexBuffer() const;
+		const llr::VertexArrayBuffer GetVertexArrayBuffer() const;
 
 		bool IsValid() const;
 	private:
-		llr::VertexBuffer m_vertexBuffer;
-		llr::IndexBuffer m_indexBuffer;
+		llr::VertexArrayBuffer m_vao;
 	};
 }

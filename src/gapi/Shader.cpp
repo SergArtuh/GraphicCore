@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "Geometry.h"
 
 
 namespace gapi {
@@ -19,6 +20,14 @@ namespace gapi {
 	{
 		return m_shader;
 	}
+	void Shader::SetGeometry(const Geometry& geometry) {
+		m_shader.SetVertexArrayBuffer(geometry.GetVertexArrayBuffer());
+	}
+
+	void Shader::Draw() {
+		m_shader.Draw();
+	}
+
 	bool Shader::IsValid() const
 	{
 		return m_shader.IsValid();

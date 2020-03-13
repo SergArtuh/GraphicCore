@@ -31,33 +31,17 @@ namespace gapi {
 		m_shader->GetShaderLLr().SetConstantBuffer(input->GetConstantBuffer(), location);
 	}
 
-	void RenderPass::SetGeometry(const Geometry * geometry) {
+	void RenderPass::SetGeometry(Geometry * geometry) {
 		if (!(geometry && geometry->IsValid())) {
 			return;
 		}
-
-		m_vertexBuffers.emplace(0, geometry->GetVertexBuffer());
-		m_indexBuffer = geometry->GetIndexBuffer();
+		m_shader->SetGeometry(*geometry);
 	}
 
 	void RenderPass::OnRender(wnd::Window& window)
 	{
 		window.makeContextCurrent();
-
-		for (auto vb : m_vertexBuffers) {
-			llr::VertexBuffer vertexBuffer = vb.second;
-			
-			if (vertexBuffer.IsValid()) {
-				int location = vb.first;
-				m_shader->GetShaderLLr().SetVertexBuffer(vertexBuffer, location);
-			}
-		}
-
-		if (m_indexBuffer.IsValid()) {
-			m_shader->GetShaderLLr().SetIndexBuffer(m_indexBuffer);
-		}
-
-		m_shader->GetShaderLLr().Draw();
+		m_shader->Draw();
 	}
 	bool RenderPass::IsValid() const
 	{

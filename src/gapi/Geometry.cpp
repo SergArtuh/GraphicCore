@@ -1,37 +1,33 @@
-#include "Scene.h"
 #include "Geometry.h"
+
+#include "llr/VertexBuffer.h"
+#include "llr/IndexBuffer.h"
 
 namespace gapi {
 	Geometry::Geometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes) 
-		: m_vertexBuffer(vertices3f.size(), llr::EDataType::FLOAT, 3)
-		, m_indexBuffer(indexes.size(), llr::EDataType::UINT)
 	{
-		if (!m_vertexBuffer.IsValid()) {
-			throw std::exception("vertex buffer invalid");
-		}
+		llr::VertexBuffer vertexBuffer(vertices3f.size(), llr::EDataType::FLOAT, 3);
+		llr::IndexBuffer indexBuffer(indexes.size(), llr::EDataType::UINT);
 
-		if (!m_indexBuffer.IsValid()) {
-			throw std::exception("index buffer invalid");
-		}
+		vertexBuffer.Write(0, vertices3f.size(), vertices3f.data());
+		indexBuffer.Write(0, indexes.size(), indexes.data());
 
-		m_vertexBuffer.Write(0, vertices3f.size(), vertices3f.data());
-		m_indexBuffer.Write(0, indexes.size(), indexes.data());
+		m_vao.SetIndexBuffer(indexBuffer);
+
+		//TODO: use constant
+		m_vao.SetVertexBuffer(vertexBuffer, 0);
 	}
 	bool Geometry::operator==(const Geometry& r)
 	{
-		return m_vertexBuffer.GetId() == r.m_vertexBuffer.GetId()
-			&& m_indexBuffer.GetId() == r.m_indexBuffer.GetId();
+		return m_vao.GetId() != UNUSED && m_vao.GetId() == r.m_vao.GetId();
 	}
-	const llr::VertexBuffer Geometry::GetVertexBuffer() const
+	const llr::VertexArrayBuffer Geometry::GetVertexArrayBuffer() const
 	{
-		return m_vertexBuffer;
+		return m_vao;
 	}
-	const llr::IndexBuffer Geometry::GetIndexBuffer() const
-	{
-		return m_indexBuffer;
-	}
+	
 	bool Geometry::IsValid() const
 	{
-		return m_vertexBuffer.IsValid() && m_indexBuffer.IsValid();
+		return m_vao.IsValid();
 	}
 }

@@ -4,8 +4,7 @@
 #include "RenderPassInput.h"
 
 #include "wnd/IRenderer.h"
-#include "llr/IndexBuffer.h"
-#include "llr/VertexBuffer.h"
+#include "llr/VertexArrayBuffer.h"
 
 #include <list>
 #include <map>
@@ -27,7 +26,7 @@ namespace gapi {
 		
 		void SetInput(RenderPassInput * input, int location = 0);
 
-		void SetGeometry(const Geometry * geometry);
+		void SetGeometry(Geometry * geometry);
 
 		void OnRender(wnd::Window& window) override;
 
@@ -35,7 +34,5 @@ namespace gapi {
 	private:
 		int m_id = UNUSED;
 		Shader * m_shader = nullptr;
-		std::map<int, llr::VertexBuffer> m_vertexBuffers;
-		llr::IndexBuffer m_indexBuffer;
 	};
 }
