@@ -8,6 +8,7 @@
 
 namespace gapi {
 	class Geometry;
+	class Camera;
 
 	class ShaderSourceType {
 	public:
@@ -49,6 +50,8 @@ namespace gapi {
 		const llr::Shader& GetShaderLLr() const;
 
 		void SetGeometry(const Geometry & geometry);
+
+		void SetCamera(const Camera & camera);
 
 		void Draw();
 

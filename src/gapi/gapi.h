@@ -17,6 +17,7 @@ namespace gapi {
 	class Scene;
 	class RenderPass;
 	class RenderPassInput;
+	class Camera;
 	class Geometry;
 
 
@@ -56,6 +57,10 @@ namespace gapi {
 		void ContextAddRenderPass(Context* context, RenderPass* renderPass);
 
 		void ContextRemoveRenderPass(Context* context, RenderPass* renderPass);
+
+		Camera* CreateCamera(float fow, float aspect, float near, float far);
+
+		void DeleteCamera(Camera * camera);
 
 		Geometry* CreateGeometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes);
 

@@ -13,6 +13,7 @@
 namespace gapi {
 	class Shader;
 	class Geometry;
+	class Camera;
 
 	class GAPI_EXPORT RenderPass : public wnd::IRenderer{
 		friend class Gapi;
@@ -27,6 +28,8 @@ namespace gapi {
 		void SetInput(RenderPassInput * input, int location = 0);
 
 		void SetGeometry(Geometry * geometry);
+
+		void SetCamera(const Camera* geometry);
 
 		void OnRender(wnd::Window& window) override;
 

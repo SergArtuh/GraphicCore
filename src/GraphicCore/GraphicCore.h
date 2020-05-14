@@ -9,6 +9,7 @@
 #include "gapi/RenderPass.h"
 #include "gapi/RenderPassInput.h"
 #include "gapi/Geometry.h"
+#include "gapi/Camera.h"
 
 #include "llr/Shader.h"
 
@@ -48,6 +49,8 @@ extern "C" {
 
 	void DeleteScene(gapi::Gapi* gapi, gapi::Scene* scene);
 
+	void SceneSetCamera(gapi::Scene* scene, gapi::Camera* camera);
+
 	void SceneAddGeometry(gapi::Scene * scene, gapi::Geometry* geometry);
 
 	void SceneRemoveGeometry(gapi::Scene* scene, gapi::Geometry* geometry);
@@ -75,6 +78,10 @@ extern "C" {
 	void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass * renderPass);
 
 	void SetRenderPassInput(gapi::Gapi* gapi, gapi::RenderPass * renderPass, gapi::RenderPassInput * renderPassInput, UI32 location);
+
+	gapi::Camera * CreateCamera(gapi::Gapi* gapi, float fov, float aspect, float near, float far);
+
+	void DeleteCamera(gapi::Gapi* gapi, gapi::Camera*);
 
 	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, CSize vertexN, UI32 * indexes, CSize indexN);
 

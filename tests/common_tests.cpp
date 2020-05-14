@@ -29,7 +29,7 @@ TEST(common_tests, Vector) {
 
 		std::vector<float> aa = { 5.f, 6.f, 7.f };
 
-		Vec4f v2 = { 1.f, 2.f, 3.f, 4.f };
+		Vec4f v2 = { { 1.f, 2.f, 3.f, 4.f } };
 
 		for (int i = 0; i < v0.size(); ++i) {
 			EXPECT_TRUE(v2[i] == testData0[i]);
@@ -42,6 +42,24 @@ TEST(common_tests, Vector) {
 
 		for (int i = 0; i < v0.size(); ++i) {
 			EXPECT_TRUE(v3[i] == testData0[i]);
+		}
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+	/////////////////////////////Fill Vector/////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////
+	{
+		const size_t N = 4;
+		auto v0 = makeZeroVector<float, N>();
+		
+		for (int i = 0; i < v0.size(); ++i) {
+			EXPECT_EQ(v0[i], 0.f);
+		}
+
+		auto v1 = makeOneVector<float, N>();
+
+		for (int i = 0; i < v1.size(); ++i) {
+			EXPECT_EQ(v1[i], 1.f);
 		}
 	}
 
@@ -111,8 +129,9 @@ TEST(common_tests, Matrix) {
 	float testData0[] = { 1.f, 2.f, 3.f, 4.f };
 	float testData1[] = { 5.f, 6.f, 7.f, 8.f };
 
-	const size_t N = 2;
+	float testDataCheck0[] = { 1.f, 2.f, 3.f, 4.f };
 
+	constexpr size_t N = 2;
 
 	/////////////////////////////////////////////////////////////////////////
 	//////////////////////////Initialization/////////////////////////////////
@@ -121,33 +140,33 @@ TEST(common_tests, Matrix) {
 	Mat2f m0;
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			m0[i][j] = testData0[j*N + i];
+			m0[i][j] = testData0[i*N + j];
 		}
 	}
 
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			EXPECT_EQ(m0[i][j], testData0[j * N + i]);
+			EXPECT_EQ(m0[i][j], testData0[i * N + j]);
 		}
 	}
 
 
 
-	Mat2f m1 = { 1.f, 2.f, 3.f, 4.f };
+	Mat2f m1 = { { 1.f, 2.f, 3.f, 4.f } };
 
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			EXPECT_EQ(m1[i][j], testData0[j * N + i]);
+			EXPECT_EQ(m1[i][j], testData0[i * N + j]);
 		}
 	}
 
 
-
+	
 	Mat2f m2 = m1;
 
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			EXPECT_EQ(m2[i][j], testData0[j * N + i]);
+			EXPECT_EQ(m2[i][j], testData0[i * N + j]);
 		}
 	}
 
@@ -158,7 +177,55 @@ TEST(common_tests, Matrix) {
 
 	for (int i = 0; i < N; ++i) {
 		for (int j = 0; j < N; ++j) {
-			EXPECT_EQ(m2[i][j], testData0[j * N + i]);
+			EXPECT_EQ(m2[i][j], testData0[i * N + j]);
 		}
 	}
+	
+
+	Mat2f m4(testData0, shmem::Use());
+
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < N; ++j) {
+			EXPECT_EQ(m4[i][j], testDataCheck0[i * N + j]);
+		}
+	}
+
+	for (int i = 0; i < N * N; ++i) {
+		testData0[i]++;
+	}
+	
+
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < N; ++j) {
+			EXPECT_NE(m4[i][j], testDataCheck0[i * N + j]);
+		}
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////
+	//////////////////////////Matrix Operations//////////////////////////////
+	/////////////////////////////////////////////////////////////////////////
+
+	auto m5 = makeZeroMatrix<float, N,N>();
+
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < N; ++j) {
+			EXPECT_EQ(m5[i][j], 0.f);
+		}
+	}
+
+	m5 = makeIdentityMatrix<float, N>();
+	for (int i = 0; i < N; ++i) {
+		for (int j = 0; j < N; ++j) {
+			if (i == j) {
+				EXPECT_EQ(m5[i][j], 1.f);
+			}
+			else 
+			{ 
+				EXPECT_EQ(m5[i][j], 0.f); 
+			}
+		}
+	}
+
+	//TODO: test projection matrix
 }

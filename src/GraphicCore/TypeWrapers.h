@@ -61,6 +61,8 @@ extern "C" {
 
 	Mat4f * CreateMatrix4f(float*);
 
+	Mat4f * CreateMatrixFromNativeData4f(float* ptr);
+
 	void DeleteMatrix4f(Mat4f*);
 
 	float GetMatrix4f(Mat4f* v, UI32 i, UI32);

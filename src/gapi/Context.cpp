@@ -33,6 +33,9 @@ namespace gapi {
 		m_window.clearRenderers();
 		for (auto rp : m_renderPasses) {
 			RenderPass* renderPass = rp.second;
+
+			renderPass->SetCamera(scene->GetCamera());
+
 			for (auto geom : scene->GetGeometries()) {
 				renderPass->SetGeometry(geom);
 			}

@@ -4,11 +4,12 @@ namespace gapi {
 	RenderPassInput::RenderPassInput(size_t size) : m_constantBuffer(size) {
 		m_data.resize(size);
 	}
-	const llr::ConstantBuffer RenderPassInput::GetConstantBuffer() {
-		if (m_isDirty) {
-			m_constantBuffer.Write(0, m_data.size(), m_data.data());
-			m_isDirty = false;
-		}
+	const llr::ConstantBuffer RenderPassInput::GetConstantBuffer() const {
+		//TODO: make lazy buffer writing
+		//if (m_isDirty) {
+		//	m_constantBuffer.Write(0, m_data.size(), m_data.data());
+		//	m_isDirty = false;
+		//}
 		return m_constantBuffer;
 	}
 
@@ -22,6 +23,9 @@ namespace gapi {
 
 	void RenderPassInput::MarkDirty() {
 		m_isDirty = true;
+
+		//TODO: make lazy buffer writing
+		m_constantBuffer.Write(0, m_data.size(), m_data.data());
 	}
 
 	bool RenderPassInput::IsValid() const {

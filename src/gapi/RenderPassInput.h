@@ -19,7 +19,7 @@ namespace gapi {
 	public:
 		//bool operator==(const RenderPassInput& r);
 
-		const llr::ConstantBuffer GetConstantBuffer();
+		const llr::ConstantBuffer GetConstantBuffer() const;
 
 		Data & GetData();
 

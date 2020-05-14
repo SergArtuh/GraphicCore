@@ -49,6 +49,11 @@ void DeleteScene(gapi::Gapi* gapi, gapi::Scene* scene)
 	gapi->DeleteScene(scene);
 }
 
+void SceneSetCamera(gapi::Scene* scene, gapi::Camera* camera)
+{
+	scene->SetCamera(camera);
+}
+
 void SceneAddGeometry(gapi::Scene* scene, gapi::Geometry* geometry)
 {
 	scene->AddGeometry(geometry);
@@ -113,6 +118,14 @@ void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass) {
 
 void SetRenderPassInput(gapi::Gapi* gapi, gapi::RenderPass* renderPass, gapi::RenderPassInput* renderPassInput, UI32 location) {
 	gapi->SetRenderPassInput(renderPass, renderPassInput, location);
+}
+
+gapi::Camera* CreateCamera(gapi::Gapi* gapi, float fow, float aspect, float near, float far) {
+	return gapi->CreateCamera(fow, aspect, near, far);
+}
+
+void DeleteCamera(gapi::Gapi* gapi, gapi::Camera * camere) {
+	gapi->DeleteCamera(camere);
 }
 
 gapi::Geometry* CreateGeometry(gapi::Gapi* gapi, float* vertices, CSize vertexN, UI32 * indexes, CSize indexN) {

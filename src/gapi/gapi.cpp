@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "RenderPass.h"
 #include "RenderPassInput.h"
+#include "Camera.h"
 #include "Geometry.h"
 
 namespace gapi {
@@ -85,6 +86,17 @@ namespace gapi {
 	void Gapi::ContextRemoveRenderPass(Context* context, RenderPass* renderPass)
 	{
 		context->RemoveRenderPass(renderPass);
+	}
+
+
+	Camera* Gapi::CreateCamera(float fow, float aspect, float near, float far) {
+		return new Camera(fow, aspect, near, far);
+	}
+
+	void Gapi::DeleteCamera(Camera* camera) {
+		if (camera) {
+			delete camera;
+		}
 	}
 
 	Geometry* Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes) {

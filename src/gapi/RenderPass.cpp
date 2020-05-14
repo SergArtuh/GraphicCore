@@ -4,6 +4,8 @@
 
 #include "wnd/window.h"
 
+#include "Camera.h"
+
 constexpr const int IB = 0;
 constexpr const int VB = 1;
 
@@ -36,6 +38,13 @@ namespace gapi {
 			return;
 		}
 		m_shader->SetGeometry(*geometry);
+	}
+
+	void RenderPass::SetCamera(const Camera* camera) {
+		if (!(camera && camera->IsValid())) {
+			return;
+		}
+		m_shader->SetCamera(*camera);
 	}
 
 	void RenderPass::OnRender(wnd::Window& window)

@@ -4,6 +4,15 @@
 #include <algorithm>
 
 namespace gapi {
+	void Scene::SetCamera(Camera * camera)
+	{
+		m_camera = camera;
+	}
+
+	const Camera* Scene::GetCamera() const
+	{
+		return m_camera;
+	}
 	void Scene::AddGeometry(Geometry* geometry)
 	{
 		if (!(geometry && geometry->IsValid())) {

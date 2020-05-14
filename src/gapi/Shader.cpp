@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include "Geometry.h"
+#include "Camera.h"
 
 
 namespace gapi {
@@ -22,6 +23,10 @@ namespace gapi {
 	}
 	void Shader::SetGeometry(const Geometry& geometry) {
 		m_shader.SetVertexArrayBuffer(geometry.GetVertexArrayBuffer());
+	}
+
+	void Shader::SetCamera(const Camera& camera) {
+		m_shader.SetConstantBuffer(camera.GetConstantBuffer(), 0); //TODO: USE CONSTANT
 	}
 
 	void Shader::Draw() {

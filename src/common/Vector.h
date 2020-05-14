@@ -1,18 +1,30 @@
 #pragma once
 #include "api.h"
+#include "shmem.h"
+
 #include <stdint.h>
-#include <initializer_list>
+#include <array>
+
 
 template<class T, size_t S>
 class Vector final {
 public:
 	using pT = T*;
+	using InitArray = std::array<T, S>;
 
 	Vector();
 
+	Vector(InitArray&& initArray);
+
 	Vector(pT ptr);
 
-	Vector(std::initializer_list<T>);
+	Vector(pT ptr, shmem::Use);
+
+	Vector(pT ptr, shmem::NotUse);
+
+	//Vector(std::initializer_list<T>);
+
+
 
 	Vector(const Vector& r);
 
@@ -29,6 +41,8 @@ public:
 	const T& operator[](size_t n) const {
 		return m_data[n];
 	}
+
+	static constexpr size_t SizeInBytes();
 
 private:
 	template <size_t D>
@@ -76,30 +90,41 @@ public:
 	size_t size() const { return S; }
 
 private:
-	void CopyConstructor(Vector& l, const Vector& r);
+	void Copy(Vector& l, const Vector& r);
 
 
 	pT m_data = nullptr;
 };
 
+template<class T, size_t S>
+inline Vector<T, S>::Vector(InitArray&& initArray) : Vector(initArray.data(), shmem::NotUse()) {}
 
 template<class T, size_t S>
-inline Vector<T, S>::Vector() : m_data{ new T[S] } {}
+inline Vector<T, S>::Vector() : m_data{ reinterpret_cast<pT>(malloc(SizeInBytes())) } {}
 
 template<class T, size_t S>
-inline Vector<T, S>::Vector(pT ptr) : m_data{ ptr } {}
+inline Vector<T, S>::Vector(pT ptr) : Vector(ptr, shmem::NotUse()) {}
 
 template<class T, size_t S>
+inline Vector<T, S>::Vector(pT ptr, shmem::Use) : m_data{ ptr } {
+}
+
+template<class T, size_t S>
+inline Vector<T, S>::Vector(pT ptr, shmem::NotUse) : m_data{ reinterpret_cast<pT>(malloc(SizeInBytes())) } {
+	memcpy(m_data, ptr, SizeInBytes());
+}
+
+/*template<class T, size_t S>
 inline Vector<T, S>::Vector(std::initializer_list<T> fl) : m_data{ new T[S] } {
 	uint16_t counter = 0;
 	for (const T& e : fl) {
 		m_data[counter++] = e;
 	}
-}
+}*/
 
 template<class T, size_t S>
-inline Vector<T, S>::Vector(const Vector& r) : m_data{ new T[S] } {
-	CopyConstructor(*this, r);
+inline Vector<T, S>::Vector(const Vector& r) : m_data{ reinterpret_cast<pT>(malloc(SizeInBytes())) } {
+	Copy(*this, r);
 }
 
 template<class T, size_t S>
@@ -112,21 +137,28 @@ template<class T, size_t S>
 inline Vector<T, S>::~Vector()
 {
 	if (m_data) {
-		delete[] m_data;
+		// XXX: temporary disabled
+		// Need alocator
+		//delete[] m_data;
 	}
 }
 
 
 template<class T, size_t S>
 inline  Vector<T, S>& Vector<T, S>::operator=(const Vector& r) {
-	CopyConstructor(*this, r);
+	Copy(*this, r);
 	return *this;
 }
 
 template<class T, size_t S>
-inline void Vector<T, S>::CopyConstructor(Vector& l, const Vector& r) {
-	constexpr const uint16_t sizeInBytes = sizeof(T) * S;
-	memcpy(m_data, r.m_data, sizeInBytes);
+inline constexpr size_t Vector<T, S>::SizeInBytes()
+{
+	return sizeof(T) * S;
+}
+
+template<class T, size_t S>
+inline void Vector<T, S>::Copy(Vector& l, const Vector& r) {
+	memcpy(m_data, r.m_data, SizeInBytes());
 }
 
 template<class T, size_t S>
@@ -148,3 +180,46 @@ inline void Vector<T, S>::normalize() {
 using Vec4f = Vector<float, 4>;
 using Vec3f = Vector<float, 3>;
 using Vec2f = Vector<float, 2>;
+
+
+
+namespace {
+	template <class T, size_t S, size_t C>
+	struct FillVector {
+		static void result(Vector<T, S>& v, T value) {
+			v[C] = value;
+			FillVector<T, S, C - 1>::result(v, value);
+		}
+	};
+
+	template <class T, size_t S>
+	struct FillVector<T, S, 0> {
+		static void result(Vector<T, S>& v, T value) {
+			v[0] = value;
+		}
+	};
+}
+
+template<class T, size_t S>
+constexpr void makeZeroVector(Vector< T, S>& v) {
+	FillVector<T, S, S - 1>::result(v, T{ 0 });
+}
+
+template<class T, size_t S>
+constexpr Vector< T, S> makeZeroVector() {
+	Vector< T, S> v;
+	makeZeroVector(v);
+	return v;
+}
+
+template<class T, size_t S>
+constexpr void makeOneVector(Vector< T, S>& v) {
+	FillVector<T, S, S - 1>::result(v, T{ 1 });
+}
+
+template<class T, size_t S>
+constexpr Vector< T, S> makeOneVector() {
+	Vector< T, S> v;
+	makeOneVector(v);
+	return v;
+}
