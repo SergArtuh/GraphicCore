@@ -49,6 +49,8 @@ namespace gapi {
 		llr::Shader& GetShaderLLr();
 		const llr::Shader& GetShaderLLr() const;
 
+		//TODO: create SetConstantBuffer
+
 		void SetGeometry(const Geometry & geometry);
 
 		void SetCamera(const Camera & camera);

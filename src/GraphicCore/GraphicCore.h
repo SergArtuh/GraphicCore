@@ -7,6 +7,7 @@
 #include "gapi/Scene.h"
 #include "gapi/Shader.h"
 #include "gapi/RenderPass.h"
+#include "gapi/RenderPassStage.h"
 #include "gapi/RenderPassInput.h"
 #include "gapi/Geometry.h"
 #include "gapi/Camera.h"
@@ -73,11 +74,25 @@ extern "C" {
 	void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput);
 
 
+	gapi::RenderPassStage * CreateRenderPassStage(gapi::Gapi* gapi);
+
+	void DeleteRenderPassStage(gapi::Gapi* gapi, gapi::RenderPassStage* renderPassStage);
+
+	void SetRenderPassStageInput(gapi::Gapi* gapi, gapi::RenderPassStage * renderPass, gapi::RenderPassInput* renderPassInput, UI32 location);
+
+	void SetRenderPassStageGeometryTarget(gapi::RenderPassStage * renderPassStage, int target);
+
+	void AddRenderPassStageGeometry(gapi::RenderPassStage * renderPassStage, gapi::Geometry* geometry);
+
+	void RemoveRenderPassStageGeometry(gapi::RenderPassStage * renderPassStage, gapi::Geometry* geometry);
+
+
 	gapi::RenderPass* CreateRenderPass(gapi::Gapi* gapi, gapi::Shader * shader);
 
 	void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass * renderPass);
 
-	void SetRenderPassInput(gapi::Gapi* gapi, gapi::RenderPass * renderPass, gapi::RenderPassInput * renderPassInput, UI32 location);
+	void AddRenderPassStage(gapi::RenderPass* renderPass, gapi::RenderPassStage* stage);
+
 
 	gapi::Camera * CreateCamera(gapi::Gapi* gapi, float fov, float aspect, float near, float far);
 

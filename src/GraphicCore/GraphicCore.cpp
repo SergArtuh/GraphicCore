@@ -3,6 +3,8 @@
 #include <list>
 #include<stdarg.h>
 
+#include "gapi/enum.h"
+
 wnd::Window* CreateWindow(const CSize w, const CSize h, CStr title)
 {
 	return new wnd::Window(w, h, title);
@@ -108,6 +110,33 @@ void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput) {
 	renderPassInput->MarkDirty();
 }
 
+gapi::RenderPassStage* CreateRenderPassStage(gapi::Gapi* gapi)
+{
+	return gapi->CreateRenderPassStage();
+}
+
+void DeleteRenderPassStage(gapi::Gapi* gapi, gapi::RenderPassStage* renderPassStage)
+{
+	gapi->DeleteRenderPassStage(renderPassStage);
+}
+
+void SetRenderPassStageInput(gapi::Gapi* gapi, gapi::RenderPassStage* renderPassStage, gapi::RenderPassInput* renderPassInput, UI32 location)
+{
+	gapi->SetRenderPassStageInput(renderPassStage, renderPassInput, location);
+}
+
+void SetRenderPassStageGeometryTarget(gapi::RenderPassStage* renderPassStage, int target) {
+	renderPassStage->SetGeometryTarget(static_cast<gapi::ERenderPassInputGeometryTarget>(target));
+}
+
+void AddRenderPassStageGeometry(gapi::RenderPassStage* renderPassStage, gapi::Geometry* geometry) {
+	renderPassStage->AddGeomerty(geometry);
+}
+
+void RemoveRenderPassStageGeometry(gapi::RenderPassStage* renderPassStage, gapi::Geometry* geometry) {
+	renderPassStage->RemoveGeomerty(geometry);
+}
+
 gapi::RenderPass* CreateRenderPass(gapi::Gapi* gapi, gapi::Shader * shader) {
 	return gapi->CreateRenderPass( shader );
 }
@@ -116,8 +145,8 @@ void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass* renderPass) {
 	gapi->DeleteRenderPass(renderPass);
 }
 
-void SetRenderPassInput(gapi::Gapi* gapi, gapi::RenderPass* renderPass, gapi::RenderPassInput* renderPassInput, UI32 location) {
-	gapi->SetRenderPassInput(renderPass, renderPassInput, location);
+void AddRenderPassStage(gapi::RenderPass* renderPass, gapi::RenderPassStage* stage) {
+	renderPass->AddRenderPassStage(stage);
 }
 
 gapi::Camera* CreateCamera(gapi::Gapi* gapi, float fow, float aspect, float near, float far) {

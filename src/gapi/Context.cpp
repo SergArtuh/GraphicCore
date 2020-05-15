@@ -1,5 +1,6 @@
 #include "Context.h"
 #include "RenderPass.h"
+#include "RenderPassStage.h"
 #include "Scene.h"
 
 #include <algorithm>
@@ -24,6 +25,32 @@ namespace gapi {
 			m_renderPasses.erase(finded);
 		}
 	}
+
+
+	void Context::SetupRenderPass(const Scene* scene, RenderPass * renderPass) {
+		renderPass->SetCamera(scene->GetCamera());
+		for (auto stage : renderPass->GetRenderPassStage()) {
+
+			auto geometryTarget = stage->GetGeometryTarget();
+
+			if (ERenderPassInputGeometryTarget::ALL_SCENE == geometryTarget) {
+				stage->CleanGeomerties();
+				for (auto geom : scene->GetGeometries()) {
+					stage->AddGeomerty(geom);
+				}
+			}
+			else if (ERenderPassInputGeometryTarget::NDC_RECT == geometryTarget){
+				//TODO:
+			}
+			else if (ERenderPassInputGeometryTarget::NONE == geometryTarget) {
+				stage->CleanGeomerties();
+			}
+			else if (ERenderPassInputGeometryTarget::CUSTOM == geometryTarget) {
+				//no-op
+			}
+		}
+	}
+
 	void Context::Draw(const Scene * scene)
 	{
 		if (!scene) {
@@ -33,12 +60,8 @@ namespace gapi {
 		m_window.clearRenderers();
 		for (auto rp : m_renderPasses) {
 			RenderPass* renderPass = rp.second;
+			SetupRenderPass(scene, renderPass);
 
-			renderPass->SetCamera(scene->GetCamera());
-
-			for (auto geom : scene->GetGeometries()) {
-				renderPass->SetGeometry(geom);
-			}
 			m_window.addRenderer(renderPass);
 		}
 

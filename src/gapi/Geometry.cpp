@@ -30,4 +30,12 @@ namespace gapi {
 	{
 		return m_vao.IsValid();
 	}
+	bool Geometry::IsAddedToScene() const
+	{
+		return m_isAddedScene;
+	}
+	void Geometry::SetIsAddedToScene(bool isInScene)
+	{
+		m_isAddedScene = isInScene;
+	}
 }

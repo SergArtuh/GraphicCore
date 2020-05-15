@@ -18,6 +18,7 @@ namespace gapi {
 		if (!(geometry && geometry->IsValid())) {
 			return;
 		}
+		geometry->SetIsAddedToScene(true);
 		m_geometries.push_back(geometry);
 	}
 
@@ -31,6 +32,7 @@ namespace gapi {
 			return *geometry == *g;
 		} );
 		if (finded != m_geometries.end()) {
+			geometry->SetIsAddedToScene(false);
 			m_geometries.remove(geometry);
 		}
 	}

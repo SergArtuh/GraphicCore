@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Shader.h"
 #include "RenderPass.h"
+#include "RenderPassStage.h"
 #include "RenderPassInput.h"
 #include "Camera.h"
 #include "Geometry.h"
@@ -63,8 +64,8 @@ namespace gapi {
 		}
 	}
 
-	void Gapi::SetRenderPassInput(gapi::RenderPass* renderPass, RenderPassInput * renderPassInput, uint32_t location) {
-		renderPass->SetInput(renderPassInput, location);
+	void Gapi::AddRenderPassStage(RenderPass* renderPass, RenderPassStage* stage) {
+		renderPass->AddRenderPassStage(stage);
 	}
 
 	RenderPassInput * Gapi::CreateRenderPassInput(size_t size)
@@ -76,6 +77,23 @@ namespace gapi {
 		if (renderPassInput) {
 			delete renderPassInput;
 		}
+	}
+
+	RenderPassStage* Gapi::CreateRenderPassStage()
+	{
+		return new RenderPassStage();
+	}
+
+	void Gapi::DeleteRenderPassStage(RenderPassStage* stage)
+	{
+		if (stage) {
+			delete stage;
+		}
+	}
+
+	void Gapi::SetRenderPassStageInput(RenderPassStage* stage, RenderPassInput* renderPassInput, uint32_t location)
+	{
+		stage->SetInput(renderPassInput, location);
 	}
 
 	void Gapi::ContextAddRenderPass(Context* context, RenderPass* renderPass)

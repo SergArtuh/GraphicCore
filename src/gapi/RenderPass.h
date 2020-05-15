@@ -1,8 +1,6 @@
 #pragma once
 #include "api.h"
 
-#include "RenderPassInput.h"
-
 #include "wnd/IRenderer.h"
 #include "llr/VertexArrayBuffer.h"
 
@@ -12,11 +10,16 @@
 
 namespace gapi {
 	class Shader;
+	class RenderPassStage;
 	class Geometry;
 	class Camera;
 
+	using RenderPassStages = std::list<RenderPassStage*>;
+	using CRenderPassStages = const RenderPassStages;
+
 	class GAPI_EXPORT RenderPass : public wnd::IRenderer{
 		friend class Gapi;
+
 	protected:
 		RenderPass(Shader * shader);
 		RenderPass() = default;
@@ -25,7 +28,11 @@ namespace gapi {
 	public:
 		bool operator==(const RenderPass& r);
 		
-		void SetInput(RenderPassInput * input, int location = 0);
+		void AddRenderPassStage(RenderPassStage * stage);
+
+		CRenderPassStages & GetRenderPassStage() const;
+
+		RenderPassStages& GetRenderPassStage();
 
 		void SetGeometry(Geometry * geometry);
 
@@ -37,5 +44,6 @@ namespace gapi {
 	private:
 		int m_id = UNUSED;
 		Shader * m_shader = nullptr;
+		RenderPassStages m_stages;
 	};
 }

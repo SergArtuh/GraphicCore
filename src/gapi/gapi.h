@@ -16,6 +16,7 @@ namespace gapi {
 	class Context;
 	class Scene;
 	class RenderPass;
+	class RenderPassStage;
 	class RenderPassInput;
 	class Camera;
 	class Geometry;
@@ -47,11 +48,18 @@ namespace gapi {
 		void DeleteRenderPassInput(RenderPassInput * renderPassInput);
 
 
+		RenderPassStage * CreateRenderPassStage();
+
+		void DeleteRenderPassStage(RenderPassStage * stage);
+
+		void SetRenderPassStageInput(RenderPassStage* renderPass, RenderPassInput* renderPassInput, uint32_t location);
+
+
 		RenderPass* CreateRenderPass(Shader * shader);
 
 		void DeleteRenderPass(RenderPass * renderPass);
 
-		void SetRenderPassInput(RenderPass* renderPass, RenderPassInput * renderPassInput, uint32_t location);
+		void AddRenderPassStage(RenderPass* renderPass, RenderPassStage* stage);
 
 
 		void ContextAddRenderPass(Context* context, RenderPass* renderPass);

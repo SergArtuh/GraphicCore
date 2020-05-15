@@ -24,6 +24,8 @@ namespace gapi {
 
 		void Draw(const Scene * scene);
 	private:
+		void SetupRenderPass(const Scene* scene, RenderPass*);
+
 		wnd::Window m_window;
 
 		std::multimap<int, RenderPass*> m_renderPasses;

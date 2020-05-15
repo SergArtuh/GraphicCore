@@ -1,9 +1,10 @@
 #include "RenderPass.h"
-#include "Shader.h"
-#include "Geometry.h"
 
 #include "wnd/window.h"
 
+#include "RenderPassStage.h"
+#include "Shader.h"
+#include "Geometry.h"
 #include "Camera.h"
 
 constexpr const int IB = 0;
@@ -25,13 +26,18 @@ namespace gapi {
 		return m_id == r.m_id;
 	}
 
-	void RenderPass::SetInput(RenderPassInput * input, int location) {
-		if (!(input && input->IsValid())) {
-			return;
-		}
-
-		m_shader->GetShaderLLr().SetConstantBuffer(input->GetConstantBuffer(), location);
+	void RenderPass::AddRenderPassStage(RenderPassStage* stage) {
+		m_stages.push_back(stage);
 	}
+
+	CRenderPassStages & RenderPass::GetRenderPassStage() const {
+		return m_stages;
+	}
+
+	RenderPassStages & RenderPass::GetRenderPassStage() {
+		return m_stages;
+	}
+
 
 	void RenderPass::SetGeometry(Geometry * geometry) {
 		if (!(geometry && geometry->IsValid())) {
@@ -50,7 +56,26 @@ namespace gapi {
 	void RenderPass::OnRender(wnd::Window& window)
 	{
 		window.makeContextCurrent();
-		m_shader->Draw();
+		
+		for (const auto stage : GetRenderPassStage()) {
+			for (const auto input : stage->GetRenderPassInputs()) {
+				const auto location = input.first;
+				const auto buffer = input.second->GetConstantBuffer();
+
+				m_shader->GetShaderLLr().SetConstantBuffer(buffer, location);
+			}
+
+			for (const auto geom : stage->GetGeometries()) {
+				if (!geom->IsAddedToScene()) {
+					continue;
+				}
+
+				m_shader->SetGeometry(*geom);
+				m_shader->Draw();
+			}
+		}
+
+		
 	}
 	bool RenderPass::IsValid() const
 	{
