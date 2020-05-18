@@ -20,4 +20,14 @@ namespace llr
 		LAST = FRAGMENT
 	};
 
+	enum class ETextureFormat : int
+	{
+		RED,
+		RED_INTEGER,
+		RGB,
+		RGB_INTEGER,
+		RGBA,
+		RGBA_INTEGER,
+		NONE = -1
+	};
 }

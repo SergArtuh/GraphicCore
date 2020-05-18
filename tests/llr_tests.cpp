@@ -6,10 +6,13 @@
 #include "llr/ConstantBuffer.h"
 #include "llr/IndexBuffer.h"
 #include "llr/Shader.h"
+#include "llr/Texture2d.h"
+
+#include "Common/Vector.h"
 
 #include <vector>
 
-#define CONTROLL_SUM_EPSILON 1e-5
+#define CONTROLL_SUM_EPSILON 0.1
 
 namespace {
 	const char* g_testShader0V = "#version 430 core\n"
@@ -222,6 +225,33 @@ void shaderVAOTest(llr::Shader shader, llr::VertexArrayBuffer vao, wnd::Window &
 	delete[] pixelsData;
 }
 
+
+template<class T, int TS>
+void texture2dTest(const size_t width, const size_t heigth, llr::ETextureFormat format, Vector<T, TS> initVslue) {
+	llr::Texture2D texture = llr::Texture2D(width, heigth, format);
+
+	std::vector<T> dataVertex(width * heigth * TS);
+	std::vector<T> checkVertex(width * heigth * TS, static_cast<T>(0));
+
+	for (int i = 0; i < dataVertex.size(); i += TS) {
+		for (int j = 0; j < TS; j++) {
+			dataVertex[i + j] = initVslue[j];
+		}
+	}
+
+	texture.Write(0, width, 0, heigth, dataVertex.data());
+	texture.Read(0, width, 0, heigth, checkVertex.data());
+
+	T checkSum = static_cast<T>(0);
+
+	for (int i = 0; i < dataVertex.size(); ++i) {
+		checkSum += dataVertex[i] - checkVertex[i];
+	}
+	EXPECT_TRUE(abs(checkSum) <= static_cast<T>(CONTROLL_SUM_EPSILON));
+
+}
+
+
 TEST(llr_tests, VertexBuffer) {
 	wnd::Window window(800, 600, "Unit Tests");
 	window.makeContextCurrent();
@@ -345,6 +375,33 @@ TEST(llr_tests, ShaderVAO) {
 				}
 			}
 		}
-		EXPECT_TRUE(controllSum < CONTROLL_SUM_EPSILON);
+		EXPECT_TRUE(abs(controllSum) < CONTROLL_SUM_EPSILON);
 	});
 }
+
+
+TEST(llr_tests, Texture2D) {
+
+	const size_t WIDTH = 100;
+	const size_t HEIGHT = 50;
+
+	wnd::Window window(600, 600, "Unit Tests");
+	
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RED, Vec1f{ {1.f} });
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 1.f, 2.f, 3.f } });
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { 1.f, 2.f, 3.f, 4.f } });
+
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RED, Vec1f{ {-12.f} });
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { -14.f, -0.5f, 66.f } });
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { -16.f, -0.8f, 13.f, 42.f } });
+
+
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RED_INTEGER, Vec1i{ {1} });
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGB_INTEGER, Vec3i{ { 1, 2, 3 } });
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { 1, 2, 3, 4 } });
+
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RED_INTEGER, Vec1i{ {-15} });
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGB_INTEGER, Vec3i{ { -18, -21, 98 } });
+	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { -162251, -2, 2878, 455 } });
+} 
+

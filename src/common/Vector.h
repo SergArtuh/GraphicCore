@@ -180,7 +180,12 @@ inline void Vector<T, S>::normalize() {
 using Vec4f = Vector<float, 4>;
 using Vec3f = Vector<float, 3>;
 using Vec2f = Vector<float, 2>;
+using Vec1f = Vector<float, 1>;
 
+using Vec4i = Vector<int, 4>;
+using Vec3i = Vector<int, 3>;
+using Vec2i = Vector<int, 2>;
+using Vec1i = Vector<int, 1>;
 
 
 namespace {
