@@ -1,6 +1,46 @@
 #include<gtest/gtest.h>
 #include "Common/Vector.h"
 #include "Common/Matrix.h"
+#include "Common/ObjectHandler.h"
+
+struct TestObject;
+using TestObjectHandler = ObjectHandler<TestObject>;
+
+struct TestObject : public  ObjectHandleable<TestObject> {
+public:
+
+	static TestObjectHandler CreareObject() {
+		ObjectHandler<TestObject> obj;
+
+		// init object
+		m_instancesCount++;
+		obj.m_isValid = true;
+
+		return obj;
+	}
+
+	static Size GetInstanceCount() { return m_instancesCount; }
+protected:
+	TestObject() = default;
+
+	void Copy(const TestObject& r) override { m_isValid = r.m_isValid; }
+	void Dispose() override { 
+		m_instancesCount--;
+		m_isValid = false;
+	}
+	bool IsValid() override { return m_isValid; }
+
+	
+
+private:
+	static Size	m_instancesCount;
+
+	bool m_isValid = false;
+};
+Size TestObject::m_instancesCount = 0;
+
+
+
 
 TEST(common_tests, Vector) {
 	float testData0[] = { 1.f, 2.f, 3.f, 4.f };
@@ -226,6 +266,86 @@ TEST(common_tests, Matrix) {
 			}
 		}
 	}
+}
 
-	//TODO: test projection matrix
+TEST(common_tests, Shmem) {
+	{
+		float dataTest[4] = { 1.f,2.f,3.f,4.f };
+		float dataCheck[4] = { 5.f,6.f,7.f,8.f };
+
+		Vec4f v0(dataTest, shmem::Use());
+		for (int i = 0; i < sizeof(dataTest) / sizeof(dataTest[0]); ++i) {
+			v0[i] = dataCheck[i];
+		}
+
+		EXPECT_EQ(memcmp(dataTest, dataCheck, sizeof(dataTest)), 0);
+	}
+
+	{
+		const Size N = 4;
+		const Size cMatSize = N * N;
+		float dataTest[cMatSize] = {};
+		float dataCheck[cMatSize] = {};
+
+		for (int i = 0; i < cMatSize; ++i) {
+			dataTest[i] = i;
+			dataCheck[i] = i + sizeof(dataTest);
+		}
+
+		Mat4f v0(dataTest, shmem::Use());
+		for (int i = 0; i < N; ++i) {
+			for (int j = 0; j < N; ++j) {
+				v0[i][j] = dataCheck[i * N + j];
+			}
+		}
+
+		EXPECT_EQ(memcmp(dataTest, dataCheck, sizeof(dataTest)), 0);
+	}
+}
+
+
+
+TEST(common_tests, ReferenceCounter) {
+	EXPECT_EQ(TestObject::GetInstanceCount(), 0);
+	{
+		
+		TestObjectHandler rc0 = TestObject::CreareObject();
+
+		EXPECT_EQ(TestObject::GetInstanceCount(), 1);
+		rc0.GetReferenceCount();
+		EXPECT_EQ(rc0.GetReferenceCount(), 1);
+
+		TestObjectHandler rc1(rc0);
+
+		EXPECT_EQ(TestObject::GetInstanceCount(), 1);
+		EXPECT_EQ(rc0.GetReferenceCount(), 2);
+
+		TestObjectHandler rc2 = TestObject::CreareObject();
+		EXPECT_EQ(TestObject::GetInstanceCount(), 2);
+		EXPECT_EQ(rc2.GetReferenceCount(), 1);
+
+
+		TestObjectHandler rc3(std::move(rc2));
+
+		EXPECT_EQ(TestObject::GetInstanceCount(), 2);
+		EXPECT_EQ(rc2.GetReferenceCount(), 0);
+		EXPECT_EQ(rc3.GetReferenceCount(), 1);
+
+
+		TestObjectHandler rc4;
+		EXPECT_EQ(rc4.GetReferenceCount(), 1);
+		{
+			TestObjectHandler rc5 = TestObject::CreareObject();
+			EXPECT_EQ(rc5.GetReferenceCount(), 1);
+
+			rc4 = rc5;
+
+			EXPECT_EQ(rc4.GetReferenceCount(), 2);
+			EXPECT_EQ(TestObject::GetInstanceCount(), 3);
+
+		}
+		EXPECT_EQ(rc4.GetReferenceCount(), 1);
+		EXPECT_EQ(TestObject::GetInstanceCount(), 3);
+	}
+	EXPECT_EQ(TestObject::GetInstanceCount(), 0);
 }

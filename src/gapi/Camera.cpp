@@ -14,6 +14,6 @@ namespace gapi {
 		makeProjectionMatrix(fov, aspect, near, far, m_projMat);
 		makeIdentityMatrix(m_viewMat);
 		makeZeroVector(m_posVec);
-		MarkDirty();
+		Update();
 	}
 }

@@ -10,8 +10,8 @@
 constexpr const int IB = 0;
 constexpr const int VB = 1;
 
-inline int genId() {
-	static int id = 0;
+inline I32 genId() {
+	static I32 id = 0;
 	return ++id;
 }
 
@@ -38,15 +38,7 @@ namespace gapi {
 		return m_stages;
 	}
 
-
-	void RenderPass::SetGeometry(Geometry * geometry) {
-		if (!(geometry && geometry->IsValid())) {
-			return;
-		}
-		m_shader->SetGeometry(*geometry);
-	}
-
-	void RenderPass::SetCamera(const Camera* camera) {
+	void RenderPass::SetCamera(CCamera* camera) {
 		if (!(camera && camera->IsValid())) {
 			return;
 		}
@@ -79,6 +71,6 @@ namespace gapi {
 	}
 	bool RenderPass::IsValid() const
 	{
-		return m_id != UNUSED && m_shader->IsValid();
+		return m_id != UNUSED && m_shader && m_shader->IsValid();
 	}
 }

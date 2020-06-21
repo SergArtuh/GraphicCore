@@ -14,21 +14,14 @@
 
 #include "llr/Shader.h"
 
-#include "Common/Vector.h"
+#include "common/types.h"
 
-using I32 = int32_t;
-using CI32 = const int32_t;
-using UI32 = uint32_t;
-using CUI32 = const uint32_t;
-
-using Size = const uint64_t;
-using CSize = const uint64_t;
-
-using Str = char* const;
-using CStr = const char* const;
 
 
 extern "C" {
+
+	typedef char* (__stdcall* LogMsgCallback)(const char* const msg);
+
 	wnd::Window * CreateWindow(CSize w, CSize h, CStr title);
 	void DeleteWindow(wnd::Window * window);
 
@@ -50,6 +43,7 @@ extern "C" {
 
 	void DeleteScene(gapi::Gapi* gapi, gapi::Scene* scene);
 
+	[[deprecated]]
 	void SceneSetCamera(gapi::Scene* scene, gapi::Camera* camera);
 
 	void SceneAddGeometry(gapi::Scene * scene, gapi::Geometry* geometry);
@@ -93,9 +87,10 @@ extern "C" {
 
 	void AddRenderPassStage(gapi::RenderPass* renderPass, gapi::RenderPassStage* stage);
 
-
+	[[deprecated]]
 	gapi::Camera * CreateCamera(gapi::Gapi* gapi, float fov, float aspect, float near, float far);
 
+	[[deprecated]]
 	void DeleteCamera(gapi::Gapi* gapi, gapi::Camera*);
 
 	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, CSize vertexN, UI32 * indexes, CSize indexN);
@@ -104,4 +99,6 @@ extern "C" {
 
 	void Draw(gapi::Gapi * gapi, gapi::Context * context, gapi::Scene * scene);
 
+
+	void SetLogCallback(LogMsgCallback callback);
 }

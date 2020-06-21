@@ -16,6 +16,8 @@ namespace llr
 		~VertexBuffer();
 
 		VertexBuffer(const VertexBuffer&);
+		VertexBuffer(VertexBuffer &&);
+
 		VertexBuffer& operator=(const VertexBuffer& r);
 
 		size_t GetSizeInBytes() const;
@@ -35,6 +37,10 @@ namespace llr
 		bool IsValid() const { return m_bufferId != (GLuint)UNUSED; }
 
 	private:
+		void AddReference();
+
+		void RemoveReference();
+
 		ReferenceCounter m_referenceCounter;
 
 		GLuint m_bufferId = ((GLuint)UNUSED);

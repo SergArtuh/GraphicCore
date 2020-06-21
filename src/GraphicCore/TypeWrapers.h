@@ -1,5 +1,6 @@
 #include "api.h"
 
+#include "Common/types.h"
 #include "Common/Vector.h"
 #include "Common/Matrix.h"
 

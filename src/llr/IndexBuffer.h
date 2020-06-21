@@ -8,7 +8,7 @@
 
 namespace llr
 {
-		class  IndexBuffer final
+		class  IndexBuffer final : public ReferenceCounter
 		{
 		public:
 			IndexBuffer() = default;
@@ -18,7 +18,6 @@ namespace llr
 			IndexBuffer(const IndexBuffer&);
 			IndexBuffer& operator=(const IndexBuffer& r);
 			
-
 		public:
 
 			void Write(const size_t offset, const size_t size, const void * data);

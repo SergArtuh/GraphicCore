@@ -12,7 +12,7 @@ if (GLEW_FOUND AND GLEW_FOUND)
 	
 	set ( CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 	add_library(${This} SHARED ${sources} ${headers})
-	
+
 	file(MAKE_DIRECTORY ${INCLUDE_DIRECTORY}/${This})
 	add_custom_command(TARGET ${This} PRE_BUILD COMMAND cp ${headers} ${INCLUDE_DIRECTORY}/${This})
 	

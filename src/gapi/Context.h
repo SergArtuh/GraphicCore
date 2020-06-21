@@ -11,6 +11,9 @@ namespace gapi {
 
 	class GAPI_EXPORT Context final {
 		friend class Gapi;
+
+		using RenderPasses = std::multimap<int, RenderPass*>;
+
 	private:
 		Context(wnd::Window & window);
 		Context(const Context&) = delete;
@@ -18,7 +21,7 @@ namespace gapi {
 		Context& operator=(const Context&) = default;
 	public:
 		
-		void AddRenderPass(RenderPass* renderPass, int priority = 99);
+		void AddRenderPass(RenderPass* renderPass, I32 priority = 99);
 
 		void RemoveRenderPass(RenderPass* renderPass);
 
@@ -28,6 +31,6 @@ namespace gapi {
 
 		wnd::Window m_window;
 
-		std::multimap<int, RenderPass*> m_renderPasses;
+		RenderPasses m_renderPasses;
 	};
 }

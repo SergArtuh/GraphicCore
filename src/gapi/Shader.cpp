@@ -21,11 +21,11 @@ namespace gapi {
 	{
 		return m_shader;
 	}
-	void Shader::SetGeometry(const Geometry& geometry) {
+	void Shader::SetGeometry(CGeometry& geometry) {
 		m_shader.SetVertexArrayBuffer(geometry.GetVertexArrayBuffer());
 	}
 
-	void Shader::SetCamera(const Camera& camera) {
+	void Shader::SetCamera(CCamera& camera) {
 		m_shader.SetConstantBuffer(camera.GetConstantBuffer(), 0); //TODO: USE CONSTANT
 	}
 

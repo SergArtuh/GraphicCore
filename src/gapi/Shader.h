@@ -10,12 +10,15 @@ namespace gapi {
 	class Geometry;
 	class Camera;
 
+	using CGeometry = const Geometry;
+	using CCamera = const Camera;
+
 	class ShaderSourceType {
 	public:
 		ShaderSourceType() {}
-		ShaderSourceType(int type) {
-			if (type < static_cast<int>(llr::EShaderSourceType::FIRST)
-				|| type > static_cast<int>(llr::EShaderSourceType::LAST)) {
+		ShaderSourceType(I32 type) {
+			if (type < static_cast<I32>(llr::EShaderSourceType::FIRST)
+				|| type > static_cast<I32>(llr::EShaderSourceType::LAST)) {
 				
 				return;
 			}
@@ -49,11 +52,9 @@ namespace gapi {
 		llr::Shader& GetShaderLLr();
 		const llr::Shader& GetShaderLLr() const;
 
-		//TODO: create SetConstantBuffer
+		void SetGeometry(CGeometry & geometry);
 
-		void SetGeometry(const Geometry & geometry);
-
-		void SetCamera(const Camera & camera);
+		void SetCamera(CCamera & camera);
 
 		void Draw();
 

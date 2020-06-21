@@ -43,7 +43,7 @@ namespace gapi {
 		void DeleteShader(Shader * shader);
 		
 
-		RenderPassInput * CreateRenderPassInput(size_t size);
+		RenderPassInput * CreateRenderPassInput(Size size);
 
 		void DeleteRenderPassInput(RenderPassInput * renderPassInput);
 
@@ -52,7 +52,7 @@ namespace gapi {
 
 		void DeleteRenderPassStage(RenderPassStage * stage);
 
-		void SetRenderPassStageInput(RenderPassStage* renderPass, RenderPassInput* renderPassInput, uint32_t location);
+		void SetRenderPassStageInput(RenderPassStage* renderPass, RenderPassInput* renderPassInput, UI32 location);
 
 
 		RenderPass* CreateRenderPass(Shader * shader);
@@ -66,11 +66,13 @@ namespace gapi {
 
 		void ContextRemoveRenderPass(Context* context, RenderPass* renderPass);
 
+		[[deprecated]]
 		Camera* CreateCamera(float fow, float aspect, float near, float far);
 
+		[[deprecated]]
 		void DeleteCamera(Camera * camera);
 
-		Geometry* CreateGeometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes);
+		Geometry* CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes);
 
 		void DeleteGeometry(Geometry*);
 
@@ -79,6 +81,6 @@ namespace gapi {
 	private:
 		llr::Llr m_llr;
 
-		size_t* m_instanceCounterRef = nullptr;
+		Size * m_instanceCounterRef = nullptr;
 	};
 }

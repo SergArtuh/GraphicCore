@@ -7,6 +7,8 @@ namespace gapi {
 	class Geometry;
 	class Camera;
 
+	using CCamera = const Camera;
+
 	class GAPI_EXPORT Scene final {
 		friend class Gapi;
 	private:
@@ -17,7 +19,7 @@ namespace gapi {
 	public:
 		void SetCamera(Camera * );
 
-		const Camera* GetCamera() const;
+		CCamera * GetCamera() const;
 
 		void AddGeometry(Geometry * geometry);
 

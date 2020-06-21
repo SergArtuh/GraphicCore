@@ -1,3 +1,5 @@
+#define REFERENCE_COUNTER_PROFOLER
+
 #include<gtest/gtest.h>
 #include<llr/llr.h>
 #include<wnd/window.h>
@@ -251,6 +253,37 @@ void texture2dTest(const size_t width, const size_t heigth, llr::ETextureFormat 
 
 }
 
+template<class T>
+void ReferenceCounerTest(T vb) {
+	ReferenceCounterProfiler::Get().Enable();
+	ReferenceCounterProfiler::Get().Reset();
+	{
+		T vb0;
+		EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 1);
+		{
+			llr::VertexBuffer vb1(vb);
+
+			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 2);
+
+			llr::VertexBuffer vb2;
+			vb2 = vb1;
+
+			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 3);
+
+			llr::VertexBuffer vb3(std::move(vb2));
+
+			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 3);
+
+			EXPECT_FALSE(vb2.IsValid());
+
+		}
+		EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 1);
+	}
+	EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 0);
+
+	ReferenceCounterProfiler::Get().Disable();
+}
+
 
 TEST(llr_tests, VertexBuffer) {
 	wnd::Window window(800, 600, "Unit Tests");
@@ -405,3 +438,43 @@ TEST(llr_tests, Texture2D) {
 	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { -162251, -2, 2878, 455 } });
 } 
 
+#include "common/ReferenceCounter.h"
+
+
+TEST(llr_tests, ReferenceCounter) {
+
+
+
+	//std::vector<float> dataVertex{ -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f };
+	//llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	//ReferenceCounerTest(vb);
+
+	/*ReferenceCounterProfiler::Get().Enable();
+	{
+		llr::VertexBuffer vb0;
+		EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 1);
+		{
+			std::vector<float> dataVertex{ -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f };
+			llr::VertexBuffer vb1(dataVertex.size(), llr::EDataType::FLOAT, 3);
+
+			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 2);
+
+			llr::VertexBuffer vb2 = vb1;
+
+			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 3);
+
+			llr::VertexBuffer vb3(std::move(vb2));
+
+			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 3);
+
+			EXPECT_FALSE(vb2.IsValid());
+
+		}
+		EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 1);
+	}
+	EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 0);*/
+	
+
+
+
+}

@@ -45,7 +45,6 @@ namespace llr
 		glEnableVertexAttribArray(location);  GL_CHECK
 		glBindBuffer(GL_ARRAY_BUFFER, buffer.GetId()); GL_CHECK
 
-		//TODO: stride
 		glVertexAttribPointer(location, (GLsizei)buffer.GetCount(), adapter::DataType(buffer.GetDataType()), GL_FALSE, (GLsizei)0, nullptr); GL_CHECK
 
 		Unbind();

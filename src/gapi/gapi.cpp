@@ -68,7 +68,7 @@ namespace gapi {
 		renderPass->AddRenderPassStage(stage);
 	}
 
-	RenderPassInput * Gapi::CreateRenderPassInput(size_t size)
+	RenderPassInput * Gapi::CreateRenderPassInput(Size size)
 	{
 		return new RenderPassInput(size);
 	}
@@ -91,7 +91,7 @@ namespace gapi {
 		}
 	}
 
-	void Gapi::SetRenderPassStageInput(RenderPassStage* stage, RenderPassInput* renderPassInput, uint32_t location)
+	void Gapi::SetRenderPassStageInput(RenderPassStage* stage, RenderPassInput* renderPassInput, UI32 location)
 	{
 		stage->SetInput(renderPassInput, location);
 	}
@@ -117,7 +117,7 @@ namespace gapi {
 		}
 	}
 
-	Geometry* Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes) {
+	Geometry* Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes) {
 		return new Geometry(vertices3f, indexes);
 	}
 

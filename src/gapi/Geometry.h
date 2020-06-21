@@ -11,7 +11,7 @@ namespace gapi {
 		friend class Gapi;
 		friend class Scene;
 	private:
-		Geometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes);
+		Geometry(std::vector<float> vertices3f, std::vector<UI32> indexes);
 		Geometry() = default;
 		Geometry(const Geometry&) = default;
 		Geometry& operator=(const Geometry&) = default;

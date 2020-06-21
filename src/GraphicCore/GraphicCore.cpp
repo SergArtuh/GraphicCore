@@ -5,8 +5,24 @@
 
 #include "gapi/enum.h"
 
-wnd::Window* CreateWindow(const CSize w, const CSize h, CStr title)
-{
+#include "llr/api.h"
+
+
+class GraphicCoreLogStrategy : public llr::ILoggerStrategy {
+public:
+	virtual void Log(const char const* msg) override {
+		m_callback(msg);
+	}
+
+	void SetCallback(LogMsgCallback callback) {
+		m_callback = callback;
+	}
+private:
+	LogMsgCallback m_callback = nullptr;
+};
+
+
+wnd::Window* CreateWindow(const CSize w, const CSize h, CStr title) {
 	return new wnd::Window(w, h, title);
 }
 
@@ -17,8 +33,7 @@ void DeleteWindow(wnd::Window* window)
 	}
 }
 
-gapi::Gapi* CreateGapi(wnd::Window* window)
-{
+gapi::Gapi* CreateGapi(wnd::Window* window) {
 	return new gapi::Gapi(*window);
 }
 
@@ -107,7 +122,7 @@ void* GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput) {
 }
 
 void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput) {
-	renderPassInput->MarkDirty();
+	renderPassInput->Update();
 }
 
 gapi::RenderPassStage* CreateRenderPassStage(gapi::Gapi* gapi)
@@ -174,4 +189,13 @@ void DeleteGeometry(gapi::Gapi* gapi, gapi::Geometry * geometry) {
 void Draw(gapi::Gapi* gapi, gapi::Context* context, gapi::Scene* scene)
 {
 	gapi->Draw(context, scene);
+}
+
+
+
+
+void SetLogCallback(LogMsgCallback callback) {
+	auto logStrategy = new GraphicCoreLogStrategy();
+	logStrategy->SetCallback(callback);
+	llr::Logger::Get().SetStrategy(logStrategy);
 }

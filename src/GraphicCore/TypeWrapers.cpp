@@ -9,7 +9,7 @@ Vec2f* CreateVector2f(float* data) {
 }
 
 Vec2f* CreateVectorFromNativeData2f(float* ptr) {
-	return new Vec2f(ptr);
+	return new Vec2f(ptr, shmem::Use());
 }
 
 void DeleteVector2f(Vec2f* v) {
@@ -36,7 +36,7 @@ Vec3f* CreateVector3f(float*data)
 }
 
 Vec3f* CreateVectorFromNativeData3f(float* ptr) {
-	return new Vec3f(ptr);
+	return new Vec3f(ptr, shmem::Use());
 }
 
 void DeleteVector3f(Vec3f*v) {
@@ -87,7 +87,7 @@ Mat3f* CreateMatrix3f(float* data) {
 		return new Mat3f;
 	}
 	constexpr UI32 N = 9;
-	return new Mat3f(data);
+	return new Mat3f(data, shmem::Use());
 }
 
 void DeleteMatrix3f(Mat3f* m) {
@@ -122,7 +122,7 @@ Mat4f* CreateMatrix4f(float * data) {
 }
 
 Mat4f* CreateMatrixFromNativeData4f(float* ptr) {
-	return new Mat4f(ptr);
+	return new Mat4f(ptr, shmem::Use());
 }
 
 void DeleteMatrix4f(Mat4f * m) {

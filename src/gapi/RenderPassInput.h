@@ -25,15 +25,13 @@ namespace gapi {
 
 		CData & GetData() const;
 
-		void MarkDirty();
+		void Update();
 
 		bool IsValid() const;
 	private:
 		llr::ConstantBuffer m_constantBuffer;
 
 		std::vector<char> m_data;
-		bool m_isDirty = true;
-		
 	};
 
 

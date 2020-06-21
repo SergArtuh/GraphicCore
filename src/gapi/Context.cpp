@@ -8,7 +8,7 @@
 namespace gapi {
 	Context::Context(wnd::Window& window) : m_window(window) {}
 
-	void Context::AddRenderPass(RenderPass* renderPass, int priority) {
+	void Context::AddRenderPass(RenderPass* renderPass, I32 priority) {
 		if (!(renderPass && renderPass->IsValid())) {
 			return;
 		}
