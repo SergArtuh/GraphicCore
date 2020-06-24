@@ -16,3 +16,6 @@ using CSize = const uint64_t;
 
 using Str = char* const;
 using CStr = const char* const;
+
+using Data = void *;
+using CData = const Data;

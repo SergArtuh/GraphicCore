@@ -152,6 +152,15 @@ namespace llr
 		glUseProgram(0);
 	}
 
+	void Shader::SetTexture2D(const Texture2D texture, const int location) {
+		if (!texture.IsValid()) {
+			LLR_WARNING("Try to set to a shader(Program ID: %d) Invali Texture2d", m_programId);
+			return;
+		}
+
+		m_textures2d[location] = texture;
+	}
+
 	void Shader::SetVertexBuffer(const VertexBuffer buffer, const int location, const size_t stride)
 	{
 		if (!buffer.IsValid()) {
@@ -191,6 +200,15 @@ namespace llr
 			const ConstantBuffer buffer = uniformBlock.second;
 			glBindBufferBase(GL_UNIFORM_BUFFER, bindingId, buffer.GetId()); GL_CHECK
 
+		}
+
+		for (const auto& textureAttachment : m_textures2d)
+		{
+			const GLuint attachmenyId = textureAttachment.first;
+			const Texture2D texture = textureAttachment.second;
+
+			glActiveTexture(GL_TEXTURE0 + attachmenyId);
+			glBindTexture(GL_TEXTURE_2D, texture.GetId());
 		}
 
 		if (m_vao.IsValid()) {

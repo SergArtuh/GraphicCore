@@ -57,6 +57,14 @@ namespace gapi {
 				m_shader->GetShaderLLr().SetConstantBuffer(buffer, location);
 			}
 
+			for (const auto input : stage->GetTextures2D()) {
+				const auto location = input.first;
+				const auto texture2d = input.second->GetTexture2D();
+
+				m_shader->GetShaderLLr().SetTexture2D(texture2d, location);
+			}
+
+
 			for (const auto geom : stage->GetGeometries()) {
 				if (!geom->IsAddedToScene()) {
 					continue;

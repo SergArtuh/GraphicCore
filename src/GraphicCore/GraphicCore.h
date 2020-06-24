@@ -9,6 +9,7 @@
 #include "gapi/RenderPass.h"
 #include "gapi/RenderPassStage.h"
 #include "gapi/RenderPassInput.h"
+#include "gapi/Texture2D.h"
 #include "gapi/Geometry.h"
 #include "gapi/Camera.h"
 
@@ -26,22 +27,22 @@ extern "C" {
 	void DeleteWindow(wnd::Window * window);
 
 
-	gapi::Gapi* CreateGapi(wnd::Window* window);
-	void DeleteGapi(gapi::Gapi*);
+	gapi::PGapi CreateGapi(wnd::Window* window);
+	void DeleteGapi(gapi::PGapi);
 
 
 	gapi::Context* CreateContext(gapi::Gapi * gapi);
 
 	void DeleteContext(gapi::Gapi * gapi, gapi::Context * context);
 
-	void ContextAddRenderPass(gapi::Gapi* gapi, gapi::Context* context, gapi::RenderPass* renderPass);
+	void ContextAddRenderPass(gapi::PGapi gapi, gapi::Context* context, gapi::RenderPass* renderPass);
 
-	void ContextRemoveRenderPass(gapi::Gapi* gapi, gapi::Context* context, gapi::RenderPass* renderPass);
+	void ContextRemoveRenderPass(gapi::PGapi gapi, gapi::Context* context, gapi::RenderPass* renderPass);
 
 
 	gapi::Scene* CreateScene(gapi::Gapi * gapi);
 
-	void DeleteScene(gapi::Gapi* gapi, gapi::Scene* scene);
+	void DeleteScene(gapi::PGapi gapi, gapi::Scene* scene);
 
 	[[deprecated]]
 	void SceneSetCamera(gapi::Scene* scene, gapi::Camera* camera);
@@ -54,48 +55,57 @@ extern "C" {
 
 	void DeleteShaderSource(gapi::ShaderSource* shaderSource);
 
-	gapi::Shader * CreateShader(gapi::Gapi* gapi, gapi::ShaderSource** sources, UI32 count);
+	gapi::Shader * CreateShader(gapi::PGapi gapi, gapi::ShaderSource** sources, UI32 count);
 
-	void DeleteShader(gapi::Gapi* gapi, gapi::Shader * shader);
+	void DeleteShader(gapi::PGapi gapi, gapi::Shader * shader);
 
 
-	gapi::RenderPassInput * CreateRenderPassInput(gapi::Gapi* gapi, CSize size);
+	gapi::PTexture2D CreateTexture2D(gapi::Gapi * gapi, CSize width, CSize height, I32 format);
 
-	void DeleteRenderPassInput(gapi::Gapi* gapi, gapi::RenderPassInput* renderPassInput);
+	void DeleteTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d);
+
+	void WriteTexture2D(gapi::PTexture2D texture2d, CSize xMin, const CSize xMax, CSize yMin, CSize yMax, CData data);
+
+
+	gapi::RenderPassInput * CreateRenderPassInput(gapi::PGapi gapi, CSize size);
+
+	void DeleteRenderPassInput(gapi::PGapi gapi, gapi::RenderPassInput* renderPassInput);
 
 	void * GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput);
 
 	void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput);
 
 
-	gapi::RenderPassStage * CreateRenderPassStage(gapi::Gapi* gapi);
+	gapi::PRenderPassStage CreateRenderPassStage(gapi::PGapi gapi);
 
-	void DeleteRenderPassStage(gapi::Gapi* gapi, gapi::RenderPassStage* renderPassStage);
+	void DeleteRenderPassStage(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage);
 
-	void SetRenderPassStageInput(gapi::Gapi* gapi, gapi::RenderPassStage * renderPass, gapi::RenderPassInput* renderPassInput, UI32 location);
+	void SetRenderPassStageInput(gapi::PGapi gapi, gapi::PRenderPassStage renderPass, gapi::RenderPassInput* renderPassInput, UI32 location);
 
-	void SetRenderPassStageGeometryTarget(gapi::RenderPassStage * renderPassStage, int target);
+	void SetRenderPassStageTexture2d(gapi::PGapi gapi, gapi::PRenderPassStage renderPass, gapi::PTexture2D texture2d, UI32 location);
 
-	void AddRenderPassStageGeometry(gapi::RenderPassStage * renderPassStage, gapi::Geometry* geometry);
+	void SetRenderPassStageGeometryTarget(gapi::PRenderPassStage renderPassStage, int target);
 
-	void RemoveRenderPassStageGeometry(gapi::RenderPassStage * renderPassStage, gapi::Geometry* geometry);
+	void AddRenderPassStageGeometry(gapi::PRenderPassStage renderPassStage, gapi::Geometry* geometry);
+
+	void RemoveRenderPassStageGeometry(gapi::PRenderPassStage renderPassStage, gapi::Geometry* geometry);
 
 
-	gapi::RenderPass* CreateRenderPass(gapi::Gapi* gapi, gapi::Shader * shader);
+	gapi::RenderPass* CreateRenderPass(gapi::PGapi gapi, gapi::Shader * shader);
 
-	void DeleteRenderPass(gapi::Gapi* gapi, gapi::RenderPass * renderPass);
+	void DeleteRenderPass(gapi::PGapi gapi, gapi::RenderPass * renderPass);
 
 	void AddRenderPassStage(gapi::RenderPass* renderPass, gapi::RenderPassStage* stage);
 
 	[[deprecated]]
-	gapi::Camera * CreateCamera(gapi::Gapi* gapi, float fov, float aspect, float near, float far);
+	gapi::Camera * CreateCamera(gapi::PGapi gapi, float fov, float aspect, float near, float far);
 
 	[[deprecated]]
-	void DeleteCamera(gapi::Gapi* gapi, gapi::Camera*);
+	void DeleteCamera(gapi::PGapi gapi, gapi::Camera*);
 
-	gapi::Geometry * CreateGeometry(gapi::Gapi* gapi, float * vertices, CSize vertexN, UI32 * indexes, CSize indexN);
+	gapi::Geometry * CreateGeometry(gapi::PGapi gapi, float * vertices, CSize vertexN, UI32 * indexes, CSize indexN);
 
-	void DeleteGeometry(gapi::Gapi* gapi, gapi::Geometry*);
+	void DeleteGeometry(gapi::PGapi gapi, gapi::Geometry*);
 
 	void Draw(gapi::Gapi * gapi, gapi::Context * context, gapi::Scene * scene);
 

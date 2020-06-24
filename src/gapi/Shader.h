@@ -54,6 +54,7 @@ namespace gapi {
 
 		void SetGeometry(CGeometry & geometry);
 
+		[[deprecated]]
 		void SetCamera(CCamera & camera);
 
 		void Draw();

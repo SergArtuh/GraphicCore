@@ -36,6 +36,7 @@ namespace gapi {
 
 		RenderPassStages& GetRenderPassStage();
 
+		[[deprecated]]
 		void SetCamera(CCamera * geometry);
 
 		void OnRender(wnd::Window& window) override;

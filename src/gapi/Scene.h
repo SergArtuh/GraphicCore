@@ -19,6 +19,7 @@ namespace gapi {
 	public:
 		void SetCamera(Camera * );
 
+		[[deprecated]]
 		CCamera * GetCamera() const;
 
 		void AddGeometry(Geometry * geometry);

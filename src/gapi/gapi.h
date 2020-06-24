@@ -2,6 +2,8 @@
 #include "api.h"
 #include "llr/llr.h"
 
+#include "enum.h"
+
 #include "Shader.h"
 
 #include <vector>
@@ -20,6 +22,7 @@ namespace gapi {
 	class RenderPassInput;
 	class Camera;
 	class Geometry;
+	class Texture2D;
 
 
 	class GAPI_EXPORT Gapi final {
@@ -46,6 +49,11 @@ namespace gapi {
 		RenderPassInput * CreateRenderPassInput(Size size);
 
 		void DeleteRenderPassInput(RenderPassInput * renderPassInput);
+
+
+		Texture2D* CreateTexture2d(CSize width, CSize height, ETextureFormat format);
+
+		void DeleteTexture2d(Texture2D * texture2d);
 
 
 		RenderPassStage * CreateRenderPassStage();
@@ -83,4 +91,6 @@ namespace gapi {
 
 		Size * m_instanceCounterRef = nullptr;
 	};
+
+	using PGapi = Gapi*;
 }

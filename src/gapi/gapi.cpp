@@ -79,6 +79,16 @@ namespace gapi {
 		}
 	}
 
+	Texture2D* Gapi::CreateTexture2d(CSize width, CSize height, ETextureFormat format) {
+		return new Texture2D(width, height, format);
+	}
+
+	void Gapi::DeleteTexture2d(Texture2D* texture2d) {
+		if (texture2d) {
+			delete texture2d;
+		}
+	}
+
 	RenderPassStage* Gapi::CreateRenderPassStage()
 	{
 		return new RenderPassStage();

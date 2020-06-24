@@ -3,6 +3,7 @@
 #include "ConstantBuffer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "Texture2d.h"
 
 #include "VertexArrayBuffer.h"
 
@@ -44,6 +45,8 @@ namespace llr
 
 		void SetConstantBuffer(const ConstantBuffer buffer, const int location);
 
+		void SetTexture2D(const Texture2D texture, const int location);
+
 		void SetVertexBuffer(const VertexBuffer buffer, const int location, const size_t stride = 0U);
 
 		void SetIndexBuffer(const IndexBuffer buffer);
@@ -75,6 +78,7 @@ namespace llr
 
 		std::map<int, ConstantBuffer> m_constantBuffer;
 		std::map<int, VertexBuffer> m_vertexBuffer;
+		std::map<int, Texture2D> m_textures2d;
 		IndexBuffer m_indexBuffer;
 
 		GLuint m_programId = ((GLuint) UNUSED );
