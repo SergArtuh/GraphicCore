@@ -185,11 +185,20 @@ namespace llr
 		m_indexBuffer = buffer;
 	}
 
+	void Shader::SetFramebuffer(const Framebuffer framebuffer) {
+		m_framebuffer = framebuffer;
+	}
+
 	void Shader::Draw()
 	{
 		if (!IsValid()) {
 			LLR_WARNING("Try to draw invalid shader");
 			return;
+		}
+
+
+		if (m_framebuffer.IsValid()) {
+			glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer.GetId());
 		}
 
 		glUseProgram(m_programId); GL_CHECK
@@ -253,6 +262,8 @@ namespace llr
 		}
 		
 		glUseProgram(0); GL_CHECK
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	}
 
 	void Shader::SetConstant(const char* name, const float c0, const float c1, const float c2)

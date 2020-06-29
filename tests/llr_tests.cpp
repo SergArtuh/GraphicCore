@@ -9,6 +9,7 @@
 #include "llr/IndexBuffer.h"
 #include "llr/Shader.h"
 #include "llr/Texture2d.h"
+#include "llr/Framebuffer.h"
 
 #include "Common/Vector.h"
 
@@ -32,6 +33,20 @@ namespace {
 		"out vec4 colorOut;\n"
 		"void main() {\n"
 		"	 colorOut = color + uColorMod.mod;\n"
+		"}";
+
+	const char* g_testShader1V = "#version 430 core\n"
+		"layout(location = 0) in vec3 vertexPos;\n"
+		"void main() {\n"
+		"	gl_Position = vec4(vertexPos, 1.0);\n"
+		"}";
+
+
+	const char* g_testShader1F = "#version 430 core\n"
+		"uniform vec4 color = vec4(0,0,0,0);\n"
+		"out vec4 colorOut;\n"
+		"void main() {\n"
+		"	 colorOut = color;\n"
 		"}";
 
 
@@ -441,40 +456,93 @@ TEST(llr_tests, Texture2D) {
 #include "common/ReferenceCounter.h"
 
 
-TEST(llr_tests, ReferenceCounter) {
+TEST(llr_tests, Framebuffer) {
+
+
+	const size_t WIDTH = 250;
+	const size_t HEIGHT = 250;
+
+	wnd::Window window(WIDTH, HEIGHT, "Unit Tests");
+
+	llr::Shader shader = CreateShader({
+		llr::ShaderSource(g_testShader1V, llr::EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader1F, llr::EShaderSourceType::FRAGMENT)
+		});
+
+	EXPECT_TRUE(shader.IsValid());
+	std::vector<float> dataVertex{ -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f };
+	std::vector<unsigned int> dataIndex{ 0, 1, 2 };
+
+	const size_t dataVertexSizeInBytes = dataVertex.size() * sizeof(dataVertex[0]);
+	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);
 
 
 
-	//std::vector<float> dataVertex{ -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f };
-	//llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
-	//ReferenceCounerTest(vb);
 
-	/*ReferenceCounterProfiler::Get().Enable();
-	{
-		llr::VertexBuffer vb0;
-		EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 1);
-		{
-			std::vector<float> dataVertex{ -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f };
-			llr::VertexBuffer vb1(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	vb.Write(0, dataVertex.size(), dataVertex.data());
 
-			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 2);
+	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	ib.Write(0, dataIndex.size(), dataIndex.data());
 
-			llr::VertexBuffer vb2 = vb1;
+	shader.SetIndexBuffer(ib);
 
-			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 3);
+	llr::VertexArrayBuffer vao;
+	vao.SetVertexBuffer(vb, 0);
+	vao.SetIndexBuffer(ib);
 
-			llr::VertexBuffer vb3(std::move(vb2));
+	llr::Framebuffer fb(WIDTH, HEIGHT);
+	EXPECT_TRUE(fb.IsValid());
 
-			EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 3);
+	llr::Texture2D texture = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
+	fb.SetTextures2d(texture, 0);
 
-			EXPECT_FALSE(vb2.IsValid());
+	shader.SetFramebuffer(fb);
 
+
+	float colorConstantDefault[4]{};
+	float colorConstantData[]{ 0.2f, 0.4f, 0.6f, 0.8f };
+	const float red[4] = { 0.98f,0.f,0.f,1.f };
+	const float green[4] = { 0,0.95,0,1 };
+	const float blue[4] = { 0,0,0.92,1 };
+	float* pixelsData = new float[600 * 600 * 4];
+
+	shader.SetConstant("color", red[0], red[1], red[2], red[3]);
+	shader.SetVertexBuffer(vb, 0);
+	shader.SetIndexBuffer(ib);
+
+	RendererTest renderer(shader);
+
+	window.addRenderer(&renderer);
+
+	window.draw(); 
+
+
+	std::vector<float> textureData(WIDTH * HEIGHT * 4, 0.f);
+	auto dataCheck = [&textureData, WIDTH, HEIGHT](const float checkPizel[4]) {
+		float controllSum = 0.f;
+		const float* data = textureData.data();
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WIDTH; ++j) {
+				const float* pixel = data + ((WIDTH * j + HEIGHT - i - 1) * 4);
+				if (j < i) {
+					controllSum += checkPizel[0] - pixel[0];
+					controllSum += checkPizel[1] - pixel[1];
+					controllSum += checkPizel[2] - pixel[2];
+					controllSum += checkPizel[3] - pixel[3];
+				}
+				else {
+					controllSum += pixel[0];
+					controllSum += pixel[1];
+					controllSum += pixel[2];
+					controllSum += pixel[3];
+				}
+			}
 		}
-		EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 1);
-	}
-	EXPECT_EQ(ReferenceCounterProfiler::Get().Count(), 0);*/
-	
+		EXPECT_TRUE(abs(controllSum) < CONTROLL_SUM_EPSILON);
+	};
 
+	texture.Read(0, WIDTH, 0, HEIGHT, textureData.data());
 
-
+	dataCheck(red);
 }

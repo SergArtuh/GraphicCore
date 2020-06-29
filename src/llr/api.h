@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include "common/types.h"
 
 #define LLR_EXPORT __declspec(dllexport)
 

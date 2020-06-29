@@ -4,6 +4,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "Texture2d.h"
+#include "Framebuffer.h"
 
 #include "VertexArrayBuffer.h"
 
@@ -51,6 +52,8 @@ namespace llr
 
 		void SetIndexBuffer(const IndexBuffer buffer);
 
+		void SetFramebuffer(const Framebuffer framebuffer);
+
 		void Draw();
 
 		GLuint GetId() const {return m_programId; }
@@ -80,6 +83,7 @@ namespace llr
 		std::map<int, VertexBuffer> m_vertexBuffer;
 		std::map<int, Texture2D> m_textures2d;
 		IndexBuffer m_indexBuffer;
+		Framebuffer m_framebuffer;
 
 		GLuint m_programId = ((GLuint) UNUSED );
 	};
