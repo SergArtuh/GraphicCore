@@ -6,6 +6,12 @@
 #include "Matrix.h"
 
 
+using Byte = char;
+using CByte = const char;
+using UByte = unsigned char;
+using CUByte = const unsigned char;
+
+
 using I32 = int32_t;
 using CI32 = const int32_t;
 using UI32 = uint32_t;

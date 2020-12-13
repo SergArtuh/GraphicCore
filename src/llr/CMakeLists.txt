@@ -17,8 +17,7 @@ if (GLEW_FOUND AND GLEW_FOUND)
 	add_custom_command(TARGET ${This} PRE_BUILD COMMAND cp ${headers} ${INCLUDE_DIRECTORY}/${This})
 	
 	target_include_directories(${This} PUBLIC ${OPENGL_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
-	target_link_libraries(${This} PUBLIC wnd ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
-	
+	target_link_libraries(${This} PUBLIC wnd common ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 	install(TARGETS ${This} 
 		RUNTIME DESTINATION ${BIN_DIRECTORY}
 		LIBRARY DESTINATION ${LIB_DIRECTORY}

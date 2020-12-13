@@ -126,6 +126,12 @@ void WriteTexture2D(gapi::PTexture2D texture2d, CSize xMin, const CSize xMax, CS
 	texture2d->Write(xMin, xMax,yMin, yMax, data);
 }
 
+void SaveTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d, CStr path)
+{
+	const std::string pathStr(path);
+	texture2d->Save(pathStr);
+}
+
 gapi::RenderPassInput* CreateRenderPassInput(gapi::PGapi gapi, CSize size) {
 	return gapi->CreateRenderPassInput(size);
 }

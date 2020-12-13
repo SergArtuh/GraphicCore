@@ -14,10 +14,21 @@
 #include "Common/Vector.h"
 
 #include <vector>
+#include <limits>
 
 #define CONTROLL_SUM_EPSILON 0.1
+#define BYTE_EPSILON .5 / static_cast<double>(UCHAR_MAX)
 
 namespace {
+
+#ifdef WIN32
+	const std::string tmpDirLocation = "C:\\temp\\";
+#else
+	const std::string tmpDirLocation = "\\tmp\\";
+#endif // WIN32
+
+	
+
 	const char* g_testShader0V = "#version 430 core\n"
 		"layout(location = 0) in vec3 vertexPos;\n"
 		"void main() {\n"
@@ -243,12 +254,41 @@ void shaderVAOTest(llr::Shader shader, llr::VertexArrayBuffer vao, wnd::Window &
 }
 
 
+template<class T>
+void texture2dTest(const size_t width, const size_t heigth, llr::ETextureFormat format, const std::vector<T> & dataVertex, const std::string& saveFile) {
+	bool isSaveMode = !saveFile.empty();
+	llr::Texture2D texture = llr::Texture2D(width, heigth, format);
+	llr::Texture2D textureCheck = llr::Texture2D(width, heigth, format);
+
+	texture.Write(0, width, 0, heigth, dataVertex.data());
+
+	if (isSaveMode) {
+		texture.Save(saveFile);
+		textureCheck.Load(saveFile);
+	}
+	else {
+		textureCheck = texture;
+	}
+
+	std::vector<T> checkVertex(dataVertex.size(), static_cast<T>(0));
+	textureCheck.Read(0, width, 0, heigth, checkVertex.data());
+
+	T checkSum = static_cast<T>(0);
+
+	for (int i = 0; i < dataVertex.size(); ++i) {
+		T diff = static_cast<T>(abs(dataVertex[i] - checkVertex[i]));
+		checkSum += (isSaveMode && diff < BYTE_EPSILON) ? static_cast<T>(0) : diff;
+	}
+	EXPECT_TRUE(abs(checkSum) <= static_cast<T>(CONTROLL_SUM_EPSILON));
+
+}
+
+
 template<class T, int TS>
-void texture2dTest(const size_t width, const size_t heigth, llr::ETextureFormat format, Vector<T, TS> initVslue) {
+void texture2dTestFillCollor(const size_t width, const size_t heigth, llr::ETextureFormat format, Vector<T, TS> initVslue, const std::string& saveFile = "") {
 	llr::Texture2D texture = llr::Texture2D(width, heigth, format);
 
 	std::vector<T> dataVertex(width * heigth * TS);
-	std::vector<T> checkVertex(width * heigth * TS, static_cast<T>(0));
 
 	for (int i = 0; i < dataVertex.size(); i += TS) {
 		for (int j = 0; j < TS; j++) {
@@ -256,16 +296,35 @@ void texture2dTest(const size_t width, const size_t heigth, llr::ETextureFormat 
 		}
 	}
 
+	texture2dTest(width, heigth, format, dataVertex, saveFile);
 	texture.Write(0, width, 0, heigth, dataVertex.data());
-	texture.Read(0, width, 0, heigth, checkVertex.data());
+}
 
-	T checkSum = static_cast<T>(0);
+void texture2dTestWhiteNoise(const size_t width, const size_t heigth, llr::ETextureFormat format, const std::string & saveFile = "") {
+	llr::Texture2D texture = llr::Texture2D(width, heigth, format);
 
-	for (int i = 0; i < dataVertex.size(); ++i) {
-		checkSum += dataVertex[i] - checkVertex[i];
+	Size bpp = 0;
+	if (format == llr::ETextureFormat::RGB) {
+		bpp = 3;
 	}
-	EXPECT_TRUE(abs(checkSum) <= static_cast<T>(CONTROLL_SUM_EPSILON));
+	else if(format == llr::ETextureFormat::RGBA) {
+		bpp = 4;
+	}
+	else {
+		//unsupported
+		return;
+	}
 
+	std::vector<float> dataVertex(width * heigth * bpp);
+
+	for (int i = 0; i < dataVertex.size(); i += bpp) {
+		for (int j = 0; j < bpp; j++) {
+			dataVertex[i + j] = (float)rand() / RAND_MAX;
+		}
+	}
+
+	texture2dTest(width, heigth, format, dataVertex, saveFile);
+	texture.Write(0, width, 0, heigth, dataVertex.data());
 }
 
 template<class T>
@@ -430,31 +489,55 @@ TEST(llr_tests, ShaderVAO) {
 
 TEST(llr_tests, Texture2D) {
 
-	const size_t WIDTH = 100;
-	const size_t HEIGHT = 50;
+	const size_t WIDTH = 800;
+	const size_t HEIGHT = 600;
 
 	wnd::Window window(600, 600, "Unit Tests");
-	
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RED, Vec1f{ {1.f} });
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 1.f, 2.f, 3.f } });
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { 1.f, 2.f, 3.f, 4.f } });
 
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RED, Vec1f{ {-12.f} });
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { -14.f, -0.5f, 66.f } });
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { -16.f, -0.8f, 13.f, 42.f } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RED, Vec1f{ {1.f} });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 1.f, 2.f, 3.f } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { 1.f, 2.f, 3.f, 4.f } });
+
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RED, Vec1f{ {-12.f} });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { -14.f, -0.5f, 66.f } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { -16.f, -0.8f, 13.f, 42.f } });
 
 
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RED_INTEGER, Vec1i{ {1} });
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGB_INTEGER, Vec3i{ { 1, 2, 3 } });
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { 1, 2, 3, 4 } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RED_INTEGER, Vec1i{ {1} });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB_INTEGER, Vec3i{ { 1, 2, 3 } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { 1, 2, 3, 4 } });
 
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RED_INTEGER, Vec1i{ {-15} });
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGB_INTEGER, Vec3i{ { -18, -21, 98 } });
-	texture2dTest(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { -162251, -2, 2878, 455 } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RED_INTEGER, Vec1i{ {-15} });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB_INTEGER, Vec3i{ { -18, -21, 98 } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { -162251, -2, 2878, 455 } });
+
+
 } 
 
-#include "common/ReferenceCounter.h"
+TEST(llr_tests, Texture2D_IO) {
+	//const size_t Widths[] = { 2, 50, 500, 1080, 3840 };
+	//const size_t Heights[] = { 4, 25, 500, 1920, 2160 };
 
+	const size_t Widths[] = { 2, 2, 50, 500};
+	const size_t Heights[] = {1, 4, 25, 500};
+
+	wnd::Window window(600, 600, "Unit Tests");
+
+	for (int i = 0; i < sizeof(Widths) / sizeof(Widths[0]); ++i) {
+
+		const size_t WIDTH = Widths[i];
+		const size_t HEIGHT = Heights[i];
+
+		texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 1.f, 0.f, 0.f } }, tmpDirLocation + "testRedColorRGB.png");
+		texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 0.f, 1.f, 0.f} }, tmpDirLocation + "testGreenColorRGB.png");
+		texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 0.f, 0.f, 1.f} }, tmpDirLocation + "testBlueColorRGB.png");
+		texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { 1.f, 1.f, 1.f, 1.f} }, tmpDirLocation + "testBlueAlphaRGBA.png");
+
+
+		texture2dTestWhiteNoise(WIDTH, HEIGHT, llr::ETextureFormat::RGB, tmpDirLocation + "testNoiseRGB.png");
+		texture2dTestWhiteNoise(WIDTH, HEIGHT, llr::ETextureFormat::RGB, tmpDirLocation + "testNoiseRGBA.png");
+	}
+}
 
 TEST(llr_tests, Framebuffer) {
 

@@ -66,6 +66,8 @@ extern "C" {
 
 	void WriteTexture2D(gapi::PTexture2D texture2d, CSize xMin, const CSize xMax, CSize yMin, CSize yMax, CData data);
 
+	void SaveTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d, CStr path);
+
 
 	gapi::RenderPassInput * CreateRenderPassInput(gapi::PGapi gapi, CSize size);
 
