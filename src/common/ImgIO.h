@@ -7,12 +7,16 @@
 namespace imgio {
 
 	struct ImgData {
-		Size Width;
-		Size Height;
-		UI32 BPP;
+		Size Width = 0;
+		Size Height = 0;
+		UI32 BPP = 0;
 
 		std::vector<float> PixelData;
-		std::string Path;
+		std::string Path = "";
+
+		operator bool() {
+			return Width > 0 && Height > 0 && BPP > 0;
+		}
 	};
 
 	COMMON_EXPORT ImgData loadImage(const std::string& path);

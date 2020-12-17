@@ -190,8 +190,10 @@ namespace llr
 
 	void Texture2D::Load(const std::string& path) {
 		imgio::ImgData imgData = imgio::loadImage(path);
-		Init(imgData.Width, imgData.Height, TextureSizedFormatFromBpp(imgData.BPP, EDataType::FLOAT));
-		Write(0, imgData.Width, 0, imgData.Height, imgData.PixelData.data());
+		if (imgData) {
+			Init(imgData.Width, imgData.Height, TextureSizedFormatFromBpp(imgData.BPP, EDataType::FLOAT));
+			Write(0, imgData.Width, 0, imgData.Height, imgData.PixelData.data());
+		}
 	}
 
 	void  Texture2D::Save(const std::string& path) {
@@ -200,7 +202,7 @@ namespace llr
 		}
 
 		if (m_dataType != EDataType::FLOAT) {
-			//TODO: log not supported
+			LOG_ERROR("fail to save %s file. Non-float textures unsupported", path.c_str());
 		}
 
 		int w, h;

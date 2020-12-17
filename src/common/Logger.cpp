@@ -23,10 +23,16 @@ namespace common {
 		}
 	}
 
-	void Logger::debugMsg(const int line, const char* const file, const char* str, const char * msgType, va_list args) {
+	void Logger::debugMsg(const int line, const char* const file, const char* str, const char * msgType, va_list args, bool isLogLocation) {
 		std::vector<char> buffer(MAX_BUFFER_SIZE);
 
-		snprintf(buffer.data(), buffer.size(), "[ LLR %s ] at line: %d, file %s:\t", msgType, line, file);
+		if (isLogLocation) {
+			snprintf(buffer.data(), buffer.size(), "[ %s ] at line: %d, file %s:\t", msgType, line, file);
+		}
+		else {
+			snprintf(buffer.data(), buffer.size(), "[ %s ]\t", msgType);
+		}
+		
 
 		const size_t shift = strlen(buffer.data());
 
@@ -54,13 +60,13 @@ namespace common {
 	void Logger::infoMsg(const int line, const char* const file, const char* str, ...) {
 		va_list args;
 		va_start(args, str);
-		debugMsg(line, file, str, "Info", args);
+		debugMsg(line, file, str, "Info", args, false);
 		va_end(args);
 	}
 
 
 	void DefaultLogStrategy::Log(const char* const msg) {
 		printf(msg);
-		printf("/n");
+		printf("\n");
 	}
 }

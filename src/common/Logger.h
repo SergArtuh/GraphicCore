@@ -41,7 +41,7 @@ namespace common {
 
 		void infoMsg(const int line, const char* const file, const char* str, ...);
 	private:
-		void debugMsg(const int line, const char* const file, const char* str, const char* msgType, va_list args);
+		void debugMsg(const int line, const char* const file, const char* str, const char* msgType, va_list args, bool isLogLocation = true);
 
 		ILoggerStrategy* m_logStrategy = nullptr;;
 	};

@@ -1,22 +1,32 @@
 #pragma once
 #include "ImgIO.h"
 
+#include "Logger.h"
+
 #include <png.h>
 
 namespace imgio {
-	
+	inline void pngSaveError(std::string path) {
+		LOG_ERROR("fail to save file %s", path.c_str());
+		return;
+	}
+
+	inline void pngLoadError(std::string path) {
+		LOG_ERROR("fail to load file %s", path.c_str());
+		return;
+	}
 
 	void savePng(const ImgData&& imgData) {
 		FILE* fp = fopen(imgData.Path.c_str(), "wb");
 		if (!fp)
 		{
-			//TODO: log warning
+			LOG_ERROR("can not open file %s", imgData.Path.c_str());
 			return;
 		}
 
 		png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 		if (!png_ptr) {
-			//TODO: log warning
+			pngSaveError(imgData.Path);
 			return;
 		}
 		
@@ -24,19 +34,20 @@ namespace imgio {
 		png_infop png_info;
 		if (!(png_info = png_create_info_struct(png_ptr))) {
 			png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
-			//TODO: log warning
+			pngSaveError(imgData.Path);
 			return;
 		}
 
 		if (setjmp(png_jmpbuf(png_ptr))) {
 			png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+			pngSaveError(imgData.Path);
 			return;
 		}
 
 		png_init_io(png_ptr, fp);
 
 		if (!(imgData.BPP == 3 || imgData.BPP == 4)) {
-			//TODO: UNSUPPORTED
+			LOG_ERROR("save png file with bpp %d unsupported", imgData.BPP);
 			return;
 		}
 
@@ -72,6 +83,8 @@ namespace imgio {
 
 		png_destroy_write_struct(&png_ptr, nullptr);
 		fclose(fp);
+
+		LOG_INFO("success to save file %s", imgData.Path.c_str());
 	}
 
 	ImgData loadPng(const std::string & path) {
@@ -81,7 +94,7 @@ namespace imgio {
 		FILE* fp = fopen(imgData.Path.c_str(), "rb");
 		if (!fp)
 		{
-			//TODO: log warning
+			LOG_ERROR("can not open file %s", imgData.Path.c_str());
 			return imgData;
 		}
 
@@ -91,14 +104,14 @@ namespace imgio {
 		fread(header, 1, headerN, fp);
 		int is_png = !png_sig_cmp(header, 0, headerN);
 		if (!is_png) {
-			//TODO: log warning
+			LOG_ERROR("the file %s is not png file", imgData.Path.c_str());
 			return imgData;
 		}
 
 
 		png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 		if (!png_ptr) {
-			//TODO: log warning
+			pngLoadError(imgData.Path);
 			return imgData;
 		}
 
@@ -106,16 +119,15 @@ namespace imgio {
 		if (!info_ptr)
 		{
 			png_destroy_read_struct(&png_ptr, nullptr, nullptr);
-			//TODO: log warning
+			pngLoadError(imgData.Path);
 			return imgData;
 		}
 
 		png_infop end_info = png_create_info_struct(png_ptr);
 		if (!end_info)
 		{
-			png_destroy_read_struct(&png_ptr, &info_ptr,
-				(png_infopp)NULL);
-			//TODO: log warning
+			png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+			pngLoadError(imgData.Path);
 			return imgData;
 		}
 
@@ -147,8 +159,6 @@ namespace imgio {
 		}
 
 		png_set_rows(png_ptr, info_ptr, rows.data());
-		// Read png image data and save in row pointer
-		// After reading the image, you can deal with the image data with row pointers
 		png_read_image(png_ptr, rows.data());
 
 
@@ -168,6 +178,8 @@ namespace imgio {
 		png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
 
 		fclose(fp);
+
+		LOG_INFO("success to load file %s", imgData.Path.c_str());
 
 		return imgData;
 	}
