@@ -1,6 +1,10 @@
 #include "Framebuffer.h"
 
 #include "Texture2d.h"
+#include "helper.h"
+
+
+#include "common/Logger.h"
 
 namespace llr
 {
@@ -46,7 +50,7 @@ namespace llr
 
 		GLenum fbState = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (fbState != GL_FRAMEBUFFER_COMPLETE) {
-			LLR_WARNING("Fail to attach texture to framebuffer: Err code %d", fbState);
+			LOG_WARNING("Fail to attach texture to framebuffer: Err code %d", fbState);
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

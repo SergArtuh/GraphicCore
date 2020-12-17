@@ -7,6 +7,8 @@
 
 #include "ReferenceCounter.h"
 
+#include <string>
+
 namespace llr
 {
 	class  Texture2D final

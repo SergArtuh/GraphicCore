@@ -5,13 +5,16 @@
 
 #include "GlAdapter.h"
 
+#include "helper.h"
+#include "common/Logger.h"
+
 namespace llr
 {
 	GLint getUniformLocation(const char* name, GLint program) {
 		GLint location = glGetUniformLocation(program, name);
 
 		if (location == UNUSED) {
-			LLR_ERROR("Could not find shader(Program ID: %d) uniform with name %s", program, name);
+			LOG_ERROR("Could not find shader(Program ID: %d) uniform with name %s", program, name);
 		}
 		return location;
 	}
@@ -57,7 +60,7 @@ namespace llr
 			glGetShaderInfoLog(shaderId, maxLength, &maxLength, &infoLog[0]); GL_CHECK
 			glDeleteShader(shaderId); GL_CHECK
 
-			LLR_ERROR(infoLog.data());
+			LOG_ERROR(infoLog.data());
 
 			return UNUSED;
 		}
@@ -93,7 +96,7 @@ namespace llr
 			std::vector<GLchar> infoLog(maxLength);
 			glGetProgramInfoLog(m_programId, maxLength, &maxLength, &infoLog[0]); GL_CHECK
 
-			LLR_ERROR(infoLog.data());
+			LOG_ERROR(infoLog.data());
 
 			
 			glDeleteProgram(m_programId); GL_CHECK
@@ -141,7 +144,7 @@ namespace llr
 	void Shader::SetConstantBuffer(const ConstantBuffer buffer, const int location) {
 
 		if (!buffer.IsValid()) {
-			LLR_WARNING("Try to set to a shader(Program ID: %d) Invali ConstantBuffer", m_programId);
+			LOG_WARNING("Try to set to a shader(Program ID: %d) Invali ConstantBuffer", m_programId);
 			return;
 		}
 
@@ -154,7 +157,7 @@ namespace llr
 
 	void Shader::SetTexture2D(const Texture2D texture, const int location) {
 		if (!texture.IsValid()) {
-			LLR_WARNING("Try to set to a shader(Program ID: %d) Invali Texture2d", m_programId);
+			LOG_WARNING("Try to set to a shader(Program ID: %d) Invali Texture2d", m_programId);
 			return;
 		}
 
@@ -164,7 +167,7 @@ namespace llr
 	void Shader::SetVertexBuffer(const VertexBuffer buffer, const int location, const size_t stride)
 	{
 		if (!buffer.IsValid()) {
-			LLR_WARNING("Try to set to a shader(Program ID: %d) Invali VertexBuffer", m_programId);
+			LOG_WARNING("Try to set to a shader(Program ID: %d) Invali VertexBuffer", m_programId);
 			return;
 		}
 
@@ -192,7 +195,7 @@ namespace llr
 	void Shader::Draw()
 	{
 		if (!IsValid()) {
-			LLR_WARNING("Try to draw invalid shader");
+			LOG_WARNING("Try to draw invalid shader");
 			return;
 		}
 
@@ -227,7 +230,7 @@ namespace llr
 		}
 		else {
 			if (!m_indexBuffer.IsValid()) {
-				LLR_WARNING("Try to draw shader (Program ID: %d) with invalid index buffer", m_programId);
+				LOG_WARNING("Try to draw shader (Program ID: %d) with invalid index buffer", m_programId);
 			}
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer.GetId()); GL_CHECK

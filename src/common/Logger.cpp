@@ -1,17 +1,11 @@
-#include "api.h"
-
-#include <GL/glew.h>
-#include <Windows.h>
-
-#include<vector>
-
-#include "wnd/window.h"
+#include "Logger.h"
+#include <stdarg.h>
 
 
 #define MAX_BUFFER_SIZE 2048
 
 
-namespace llr {
+namespace common {
 
 	Logger::Logger() : m_logStrategy{ new DefaultLogStrategy } {
 	}

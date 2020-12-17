@@ -1,5 +1,6 @@
-#include "helper.h"
 #include "api.h"
+#include "helper.h"
+#include "common/Logger.h"
 
 namespace llr {
 	namespace helper {
@@ -12,7 +13,7 @@ namespace llr {
 			case llr::EDataType::UINT: return sizeof(int);
 			case llr::EDataType::NONE:
 			default: 
-				LLR_ERROR("Unknown data type enum");
+				LOG_ERROR("Unknown data type enum");
 				return 0;
 			}
 		}

@@ -2,6 +2,8 @@
 #include "api.h"
 #include "enum.h"
 
+#include "common/types.h"
+
 #include "GL/glew.h"
 
 #include "ReferenceCounter.h"

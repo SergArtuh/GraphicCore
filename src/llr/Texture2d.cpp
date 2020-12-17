@@ -1,6 +1,8 @@
 #include "Texture2d.h"
 #include "common/imgio.h"
 
+#include "helper.h"
+
 namespace llr
 {
 	GLenum TextureFormat2GLenum(ETextureFormat format)

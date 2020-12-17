@@ -5,10 +5,10 @@
 
 #include "gapi/enum.h"
 
-#include "llr/api.h"
+#include "common/Logger.h"
 
 
-class GraphicCoreLogStrategy : public llr::ILoggerStrategy {
+class GraphicCoreLogStrategy : public common::ILoggerStrategy {
 public:
 	virtual void Log(const char const* msg) override {
 		m_callback(msg);
@@ -224,5 +224,5 @@ void Draw(gapi::PGapi gapi, gapi::Context* context, gapi::Scene* scene)
 void SetLogCallback(LogMsgCallback callback) {
 	auto logStrategy = new GraphicCoreLogStrategy();
 	logStrategy->SetCallback(callback);
-	llr::Logger::Get().SetStrategy(logStrategy);
+	common::Logger::Get().SetStrategy(logStrategy);
 }

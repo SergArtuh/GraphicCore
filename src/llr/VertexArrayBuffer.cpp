@@ -5,6 +5,8 @@
 
 #include "GlAdapter.h"
 
+#include "helper.h"
+
 namespace llr
 {
 	VertexArrayBuffer::VertexArrayBuffer(const VertexArrayBuffer & r) : m_bufferId(r.m_bufferId), m_idxSize(r.m_idxSize), m_idxDataType(r.m_idxDataType), m_referenceCounter(r.m_referenceCounter) {
