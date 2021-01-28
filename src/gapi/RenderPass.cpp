@@ -50,18 +50,30 @@ namespace gapi {
 		window.makeContextCurrent();
 		
 		for (const auto stage : GetRenderPassStage()) {
+
+			llr::Shader & llrShader = m_shader->GetShaderLLr();
+			PRenderPassOutput out = stage->GetRenderPassOutput();
+			if (out && out->IsValid()) {
+				llrShader.SetFramebuffer(out->GetFramebuffer().GetFramebufferLlr());
+			}
+			else {
+				llrShader.SetFramebuffer( llr::Framebuffer());
+			}
+
 			for (const auto input : stage->GetRenderPassInputs()) {
 				const auto location = input.first;
 				const auto buffer = input.second->GetConstantBuffer();
 
-				m_shader->GetShaderLLr().SetConstantBuffer(buffer, location);
+				llrShader.SetConstantBuffer(buffer, location);
 			}
+
+			
 
 			for (const auto input : stage->GetTextures2D()) {
 				const auto location = input.first;
-				const auto texture2d = input.second->GetTexture2D();
+				const auto texture2d = input.second->GetTexture2DLlr();
 
-				m_shader->GetShaderLLr().SetTexture2D(texture2d, location);
+				llrShader.SetTexture2D(texture2d, location);
 			}
 
 

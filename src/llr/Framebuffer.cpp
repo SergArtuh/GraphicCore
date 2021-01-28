@@ -8,34 +8,29 @@
 
 namespace llr
 {
-	Framebuffer::Framebuffer(CSize width, const CSize heigth) : m_width(width), m_heigth(heigth){
-		glGenFramebuffers(1, &m_bufferId);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_bufferId);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
 	Framebuffer::~Framebuffer() {
 		m_referenceCounter.Decrease();
 
 		if (!m_referenceCounter && m_bufferId != UNUSED) {
-			glDeleteBuffers(1, &m_bufferId); GL_CHECK
-				m_bufferId = UNUSED;
+			Denit();
 		}
 	}
-	Framebuffer::Framebuffer(const Framebuffer& r) : m_bufferId(r.m_bufferId), m_width(r.m_width), m_heigth(r.m_heigth){
+	Framebuffer::Framebuffer(const Framebuffer& r) : m_bufferId(r.m_bufferId) {
 		m_referenceCounter.Increase();
 	}
 	Framebuffer& Framebuffer::operator=(const Framebuffer& r) {
 		m_referenceCounter.Increase();
 
 		m_bufferId = r.m_bufferId;
-		m_width = r.m_width;
-		m_heigth = r.m_heigth;
 		m_referenceCounter = r.m_referenceCounter;
 
 		return *this;
 	}
 	void Framebuffer::SetTextures2d(const Texture2D& texture, const int location) {
+		if (!IsValid()) {
+			Init();
+		}
+
 		glBindFramebuffer(GL_FRAMEBUFFER, GetId());
 
 
@@ -54,5 +49,14 @@ namespace llr
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	void Framebuffer::Init() {
+		glGenFramebuffers(1, &m_bufferId);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_bufferId);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	void Framebuffer::Denit() {
+		glDeleteBuffers(1, &m_bufferId); GL_CHECK
+		m_bufferId = UNUSED;
 	}
 }

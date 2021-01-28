@@ -8,6 +8,7 @@
 #include "RenderPass.h"
 #include "RenderPassStage.h"
 #include "RenderPassInput.h"
+#include "RenderPassOutput.h"
 #include "Camera.h"
 #include "Geometry.h"
 
@@ -79,7 +80,17 @@ namespace gapi {
 		}
 	}
 
-	Texture2D* Gapi::CreateTexture2d(CSize width, CSize height, ETextureFormat format) {
+	RenderPassOutput* Gapi::CreateRenderPassOutput() {
+		return new RenderPassOutput;
+	}
+
+	void Gapi::DeleteRenderPassOutput(RenderPassOutput* renderPassOutput) {
+		if (renderPassOutput) {
+			delete renderPassOutput;
+		}
+	}
+
+	PTexture2D Gapi::CreateTexture2d(CSize width, CSize height, ETextureFormat format) {
 		return new Texture2D(width, height, format);
 	}
 

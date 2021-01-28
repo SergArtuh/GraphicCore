@@ -17,7 +17,6 @@ namespace llr
 	{
 	public:
 		Framebuffer() = default;
-		Framebuffer(CSize width, const CSize heigth);
 		~Framebuffer();
 
 		Framebuffer(const Framebuffer&);
@@ -32,11 +31,11 @@ namespace llr
 		bool IsValid() const { return m_bufferId != (GLuint)UNUSED; }
 
 	private:
+		void Init();
+		void Denit();
+
 		ReferenceCounter m_referenceCounter;
 
 		GLuint m_bufferId = ((GLuint) UNUSED );
-
-		Size m_width = 0;
-		Size m_heigth = 0;
 	};
 }

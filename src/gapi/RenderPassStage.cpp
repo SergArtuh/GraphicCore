@@ -25,6 +25,14 @@ namespace gapi {
 		return m_renderPassInputs;
 	}
 
+	void RenderPassStage::SetRenderPassOutput(PRenderPassOutput output) {
+		m_renderPassOutput = output;
+	}
+
+	PRenderPassOutput RenderPassStage::GetRenderPassOutput() const {
+		return m_renderPassOutput;
+	}
+
 	void RenderPassStage::SetGeometryTarget(ERenderPassInputGeometryTarget target) {
 		m_geometryTarget = target;
 	}

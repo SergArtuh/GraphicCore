@@ -132,6 +132,11 @@ void SaveTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d, CStr path)
 	texture2d->Save(pathStr);
 }
 
+void LoadTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d, CStr path) {
+	const std::string pathStr(path);
+	texture2d->Load(pathStr);
+}
+
 gapi::RenderPassInput* CreateRenderPassInput(gapi::PGapi gapi, CSize size) {
 	return gapi->CreateRenderPassInput(size);
 }
@@ -147,6 +152,19 @@ void* GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput) {
 void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput) {
 	renderPassInput->Update();
 }
+
+gapi::PRenderPassOutput CreateRenderPassOutput(gapi::PGapi gapi) {
+	return gapi->CreateRenderPassOutput();
+}
+
+void DeleteRenderPassOutput(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput) {
+	gapi->DeleteRenderPassOutput(renderPassOutput);
+}
+
+void SetRenderPassOutputTexture2d(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput, gapi::PTexture2D texture) {
+	renderPassOutput->SetTexture2D(texture);
+}
+
 
 gapi::RenderPassStage* CreateRenderPassStage(gapi::PGapi gapi)
 {
@@ -165,6 +183,10 @@ void DeleteRenderPassStage(gapi::PGapi gapi, gapi::PRenderPassStage renderPassSt
 void SetRenderPassStageInput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::RenderPassInput* renderPassInput, UI32 location)
 {
 	gapi->SetRenderPassStageInput(renderPassStage, renderPassInput, location);
+}
+
+void SetRenderPassStageOutput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::PRenderPassOutput output) {
+	renderPassStage->SetRenderPassOutput(output);
 }
 
 void SetRenderPassStageGeometryTarget(gapi::PRenderPassStage renderPassStage, int target) {

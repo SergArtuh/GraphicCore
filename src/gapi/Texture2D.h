@@ -11,6 +11,7 @@ namespace gapi {
 		using CData = const Data;
 
 		friend class Gapi;
+		friend class RenderPassOutput;
 
 	protected:
 		Texture2D(CSize width, CSize height, ETextureFormat format = ETextureFormat::RGBA);
@@ -24,7 +25,9 @@ namespace gapi {
 
 		void Save(const std::string & path);
 
-		const llr::Texture2D GetTexture2D() const;
+		void Load(const std::string& path);
+
+		const llr::Texture2D GetTexture2DLlr() const;
 
 		bool IsValid() const;
 	private:

@@ -11,13 +11,19 @@ namespace gapi {
 	}
 
 	void Texture2D::Save(const std::string& path) {
-		const std::string pathT = std::string("C:\\tmp\\test") + std::string(path);
-		const std::string command = std::string("mkdir ") + pathT;
-		system(command.c_str());
+		m_texture.Save(path);
+	}
+
+	void Texture2D::Load(const std::string& path) {
+		m_texture.Load(path);
 	}
 
 
-	const llr::Texture2D Texture2D::GetTexture2D() const {
+	const llr::Texture2D Texture2D::GetTexture2DLlr() const {
 		return m_texture;
+	}
+
+	bool Texture2D::IsValid() const {
+		return m_texture.IsValid();
 	}
 }

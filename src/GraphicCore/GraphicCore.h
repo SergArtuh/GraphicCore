@@ -9,6 +9,7 @@
 #include "gapi/RenderPass.h"
 #include "gapi/RenderPassStage.h"
 #include "gapi/RenderPassInput.h"
+#include "gapi/RenderPassOutput.h"
 #include "gapi/Texture2D.h"
 #include "gapi/Geometry.h"
 #include "gapi/Camera.h"
@@ -68,23 +69,34 @@ extern "C" {
 
 	void SaveTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d, CStr path);
 
+	void LoadTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d, CStr path);
 
-	gapi::RenderPassInput * CreateRenderPassInput(gapi::PGapi gapi, CSize size);
 
-	void DeleteRenderPassInput(gapi::PGapi gapi, gapi::RenderPassInput* renderPassInput);
+	gapi::PRenderPassInput CreateRenderPassInput(gapi::PGapi gapi, CSize size);
+
+	void DeleteRenderPassInput(gapi::PGapi gapi, gapi::PRenderPassInput renderPassInput);
 
 	void * GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput);
 
 	void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput);
 
 
+	gapi::PRenderPassOutput CreateRenderPassOutput(gapi::PGapi gapi);
+
+	void DeleteRenderPassOutput(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput);
+
+	void SetRenderPassOutputTexture2d(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput, gapi::PTexture2D texture);
+
+
 	gapi::PRenderPassStage CreateRenderPassStage(gapi::PGapi gapi);
 
 	void DeleteRenderPassStage(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage);
 
-	void SetRenderPassStageInput(gapi::PGapi gapi, gapi::PRenderPassStage renderPass, gapi::RenderPassInput* renderPassInput, UI32 location);
+	void SetRenderPassStageInput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::RenderPassInput* renderPassInput, UI32 location);
 
-	void SetRenderPassStageTexture2d(gapi::PGapi gapi, gapi::PRenderPassStage renderPass, gapi::PTexture2D texture2d, UI32 location);
+	void SetRenderPassStageOutput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::PRenderPassOutput output);
+
+	void SetRenderPassStageTexture2d(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::PTexture2D texture2d, UI32 location);
 
 	void SetRenderPassStageGeometryTarget(gapi::PRenderPassStage renderPassStage, int target);
 

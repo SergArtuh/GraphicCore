@@ -6,6 +6,7 @@
 
 #include "enum.h"
 #include "RenderPassInput.h"
+#include "RenderPassOutput.h"
 #include "Texture2D.h"
 
 namespace gapi {
@@ -35,6 +36,11 @@ namespace gapi {
 		CRenderPassInputs GetRenderPassInputs() const;
 
 
+		void SetRenderPassOutput(PRenderPassOutput output);
+
+		PRenderPassOutput GetRenderPassOutput() const;
+
+
 		void SetTexture2D(PTexture2D texture, I32 location = 0);
 
 		CTextures& GetTextures2D();
@@ -55,6 +61,7 @@ namespace gapi {
 
 	private:
 		RenderPassInputs m_renderPassInputs;
+		PRenderPassOutput m_renderPassOutput = nullptr;
 
 		ERenderPassInputGeometryTarget m_geometryTarget = ERenderPassInputGeometryTarget::ALL_SCENE;
 		Geometries m_geometries;

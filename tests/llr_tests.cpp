@@ -574,11 +574,12 @@ TEST(llr_tests, Framebuffer) {
 	vao.SetVertexBuffer(vb, 0);
 	vao.SetIndexBuffer(ib);
 
-	llr::Framebuffer fb(WIDTH, HEIGHT);
-	EXPECT_TRUE(fb.IsValid());
+	llr::Framebuffer fb;
+	EXPECT_TRUE(!fb.IsValid());
 
 	llr::Texture2D texture = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
 	fb.SetTextures2d(texture, 0);
+	EXPECT_TRUE(fb.IsValid());
 
 	shader.SetFramebuffer(fb);
 

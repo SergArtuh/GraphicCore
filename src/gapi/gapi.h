@@ -20,6 +20,7 @@ namespace gapi {
 	class RenderPass;
 	class RenderPassStage;
 	class RenderPassInput;
+	class RenderPassOutput;
 	class Camera;
 	class Geometry;
 	class Texture2D;
@@ -49,6 +50,11 @@ namespace gapi {
 		RenderPassInput * CreateRenderPassInput(Size size);
 
 		void DeleteRenderPassInput(RenderPassInput * renderPassInput);
+
+
+		RenderPassOutput* CreateRenderPassOutput();
+
+		void DeleteRenderPassOutput(RenderPassOutput* renderPassOutput);
 
 
 		Texture2D* CreateTexture2d(CSize width, CSize height, ETextureFormat format);
