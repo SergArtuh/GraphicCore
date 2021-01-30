@@ -85,7 +85,7 @@ extern "C" {
 
 	void DeleteRenderPassOutput(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput);
 
-	void SetRenderPassOutputTexture2d(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput, gapi::PTexture2D texture);
+	void SetRenderPassOutputTexture2d(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput, gapi::PTexture2D texture, UI32 location);
 
 
 	gapi::PRenderPassStage CreateRenderPassStage(gapi::PGapi gapi);

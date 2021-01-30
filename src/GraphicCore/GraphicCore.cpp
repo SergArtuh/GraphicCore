@@ -161,8 +161,8 @@ void DeleteRenderPassOutput(gapi::PGapi gapi, gapi::PRenderPassOutput renderPass
 	gapi->DeleteRenderPassOutput(renderPassOutput);
 }
 
-void SetRenderPassOutputTexture2d(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput, gapi::PTexture2D texture) {
-	renderPassOutput->SetTexture2D(texture);
+void SetRenderPassOutputTexture2d(gapi::PGapi gapi, gapi::PRenderPassOutput renderPassOutput, gapi::PTexture2D texture, UI32 location) {
+	renderPassOutput->SetTexture2D(texture, location);
 }
 
 

@@ -60,6 +60,24 @@ namespace {
 		"	 colorOut = color;\n"
 		"}";
 
+	const char* g_testShader2V = "#version 430 core\n"
+		"layout(location = 0) in vec3 vertexPos;\n"
+		"void main() {\n"
+		"	gl_Position = vec4(vertexPos, 1.0);\n"
+		"}";
+
+
+	const char* g_testShader2F = "#version 430 core\n"
+		"uniform vec4 color = vec4(0,0,0,0);\n"
+		"layout(location = 0) out vec4 out0;\n"
+		"layout(location = 1) out vec4 out1;\n"
+		"layout(location = 2) out vec4 out2;\n"
+		"void main() {\n"
+		"	 out0 = vec4(color.r, 0,0,1);\n"
+		"	 out1 = vec4(0, color.g,0,1);\n"
+		"	 out2 = vec4(0, 0,color.b,1);\n"
+		"}";
+
 
 	struct TestConstBuffer0 {
 		TestConstBuffer0() = default;
@@ -629,4 +647,114 @@ TEST(llr_tests, Framebuffer) {
 	texture.Read(0, WIDTH, 0, HEIGHT, textureData.data());
 
 	dataCheck(red);
+}
+
+
+TEST(llr_tests, ShaderOutput) {
+
+
+	const size_t WIDTH = 250;
+	const size_t HEIGHT = 250;
+
+	wnd::Window window(WIDTH, HEIGHT, "Unit Tests");
+
+	llr::Shader shader = CreateShader({
+		llr::ShaderSource(g_testShader2V, llr::EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader2F, llr::EShaderSourceType::FRAGMENT)
+		});
+
+	EXPECT_TRUE(shader.IsValid());
+	std::vector<float> dataVertex{ -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f };
+	std::vector<unsigned int> dataIndex{ 0, 1, 2 };
+
+	const size_t dataVertexSizeInBytes = dataVertex.size() * sizeof(dataVertex[0]);
+	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);
+
+
+
+
+	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	vb.Write(0, dataVertex.size(), dataVertex.data());
+
+	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	ib.Write(0, dataIndex.size(), dataIndex.data());
+
+	shader.SetIndexBuffer(ib);
+
+	llr::VertexArrayBuffer vao;
+	vao.SetVertexBuffer(vb, 0);
+	vao.SetIndexBuffer(ib);
+
+	llr::Framebuffer fb;
+	EXPECT_TRUE(!fb.IsValid());
+
+	llr::Texture2D texture0 = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
+	llr::Texture2D texture1 = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
+	llr::Texture2D texture2 = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
+
+	fb.SetTextures2d(texture0, 0);
+	fb.SetTextures2d(texture1, 1);
+	fb.SetTextures2d(texture2, 2);
+
+	EXPECT_TRUE(fb.IsValid());
+
+	shader.SetFramebuffer(fb);
+
+
+	float colorConstantDefault[4]{};
+	float colorConstantData[]{ 0.2f, 0.4f, 0.6f, 0.8f };
+	const float red[4] = { 0.98f,0.f,0.f,1.f };
+	const float green[4] = { 0,0.95,0,1 };
+	const float blue[4] = { 0,0,0.92,1 };
+	const float white[4] = { 0.98f,0.95,0.92,1.f };
+	float* pixelsData = new float[600 * 600 * 4];
+
+	shader.SetConstant("color", white[0], white[1], white[2], white[3]);
+	shader.SetVertexBuffer(vb, 0);
+	shader.SetIndexBuffer(ib);
+
+	RendererTest renderer(shader);
+
+	window.addRenderer(&renderer);
+
+	window.draw();
+
+
+	auto dataCheck = [ WIDTH, HEIGHT](const std::vector<float> & textureData, float checkPizel[4]) {
+		float controllSum = 0.f;
+		const float* data = textureData.data();
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WIDTH; ++j) {
+				const float* pixel = data + ((WIDTH * j + HEIGHT - i - 1) * 4);
+				if (j < i) {
+					controllSum += checkPizel[0] - pixel[0];
+					controllSum += checkPizel[1] - pixel[1];
+					controllSum += checkPizel[2] - pixel[2];
+					controllSum += checkPizel[3] - pixel[3];
+				}
+				else {
+					controllSum += pixel[0];
+					controllSum += pixel[1];
+					controllSum += pixel[2];
+					controllSum += pixel[3];
+				}
+			}
+		}
+		EXPECT_TRUE(abs(controllSum) < CONTROLL_SUM_EPSILON);
+	};
+
+
+	texture0.Save(tmpDirLocation + "testShaderOutRed.png");
+	texture1.Save(tmpDirLocation + "testShaderOutGreen.png");
+	texture2.Save(tmpDirLocation + "testShaderOutBlue.png");
+
+	std::vector<float> textureData(WIDTH * HEIGHT * 4, 0.f);
+	texture0.Read(0, WIDTH, 0, HEIGHT, textureData.data());
+	dataCheck(textureData, (float*)red);
+
+	texture1.Read(0, WIDTH, 0, HEIGHT, textureData.data());
+	dataCheck(textureData, (float*)green);
+
+	texture2.Read(0, WIDTH, 0, HEIGHT, textureData.data());
+	dataCheck(textureData, (float*)blue);
 }

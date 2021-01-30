@@ -26,22 +26,32 @@ namespace llr
 
 		return *this;
 	}
-	void Framebuffer::SetTextures2d(const Texture2D& texture, const int location) {
+
+	void Framebuffer::Init() {
+		glGenFramebuffers(1, &m_bufferId);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_bufferId);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	void Framebuffer::Denit() {
+		glDeleteBuffers(1, &m_bufferId); GL_CHECK
+			m_bufferId = UNUSED;
+	}
+	void Framebuffer::Update() {
 		if (!IsValid()) {
 			Init();
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, GetId());
 
+		std::vector<GLenum> drawBuffers;
 
-		GLenum drawBuffer = GL_COLOR_ATTACHMENT0 + location;
+		for (auto tex : m_textures2d) {
+			GLenum drawbufferId = GL_COLOR_ATTACHMENT0 + tex.first;
+			glFramebufferTexture(GL_FRAMEBUFFER, drawbufferId, tex.second.GetId(), 0);
+			drawBuffers.push_back(drawbufferId);
+		}
 
-		glBindTexture(GL_TEXTURE_2D, texture.GetId());
-
-		glFramebufferTexture(GL_FRAMEBUFFER, drawBuffer, texture.GetId(), 0);
-
-		GLenum drawBuffers[1] = { drawBuffer };
-		glDrawBuffers(1, drawBuffers); // "1" is the size of DrawBuffers
+		glDrawBuffers(drawBuffers.size(), drawBuffers.data());
 
 		GLenum fbState = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 		if (fbState != GL_FRAMEBUFFER_COMPLETE) {
@@ -50,13 +60,9 @@ namespace llr
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	void Framebuffer::Init() {
-		glGenFramebuffers(1, &m_bufferId);
-		glBindFramebuffer(GL_FRAMEBUFFER, m_bufferId);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-	void Framebuffer::Denit() {
-		glDeleteBuffers(1, &m_bufferId); GL_CHECK
-		m_bufferId = UNUSED;
+
+	void Framebuffer::SetTextures2d(const Texture2D& texture, const int location) {
+		m_textures2d.emplace(location, texture);
+		Update();
 	}
 }
