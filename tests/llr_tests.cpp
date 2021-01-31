@@ -78,6 +78,24 @@ namespace {
 		"	 out2 = vec4(0, 0,color.b,1);\n"
 		"}";
 
+	const char* g_testShader3V = "#version 430 core\n"
+		"layout(location = 0) in vec3 vertexPos;\n"
+		"layout(location = 1) in vec2 offset;\n"
+		"layout(location = 2) in vec3 color;\n"
+		"out vec3 instanceColor;\n"
+		"void main() {\n"
+		"	instanceColor = color;\n"
+		"	gl_Position = vec4(vertexPos, 1.0) + vec4(offset, 0,0);\n"
+		"}";
+
+
+	const char* g_testShader3F = "#version 430 core\n"
+		"in vec3 instanceColor;\n"
+		"out vec4 colorOut;\n"
+		"void main() {\n"
+		"	colorOut = vec4(instanceColor, 1);\n"
+		"}";
+
 
 	struct TestConstBuffer0 {
 		TestConstBuffer0() = default;
@@ -127,6 +145,13 @@ private:
 template<class T> 
 T CreateBuffer(size_t dataCount, llr::EDataType dataType) {
 	T buffer(dataCount, dataType);
+	EXPECT_TRUE(buffer.IsValid());
+	return buffer;
+}
+
+template<>
+llr::VertexBuffer CreateBuffer<llr::VertexBuffer>(size_t dataCount, llr::EDataType dataType) {
+	llr::VertexBuffer buffer(dataCount, dataType, 1);
 	EXPECT_TRUE(buffer.IsValid());
 	return buffer;
 }
@@ -681,10 +706,6 @@ TEST(llr_tests, ShaderOutput) {
 
 	shader.SetIndexBuffer(ib);
 
-	llr::VertexArrayBuffer vao;
-	vao.SetVertexBuffer(vb, 0);
-	vao.SetIndexBuffer(ib);
-
 	llr::Framebuffer fb;
 	EXPECT_TRUE(!fb.IsValid());
 
@@ -757,4 +778,144 @@ TEST(llr_tests, ShaderOutput) {
 
 	texture2.Read(0, WIDTH, 0, HEIGHT, textureData.data());
 	dataCheck(textureData, (float*)blue);
+}
+
+
+
+TEST(llr_tests, Instance) {
+
+
+	const size_t WIDTH = 250;
+	const size_t HEIGHT = 250;
+
+	wnd::Window window(WIDTH, HEIGHT, "Unit Tests");
+
+	llr::Shader shader = CreateShader({
+		llr::ShaderSource(g_testShader3V, llr::EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader3F, llr::EShaderSourceType::FRAGMENT)
+		});
+
+	EXPECT_TRUE(shader.IsValid());
+	std::vector<float> dataVertex{ 
+		-1.f, 0.f, 0.f,
+		-1., 1.f, 0.f,
+		0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f 
+	};
+
+	std::vector<unsigned int> dataIndex{ 0, 1, 2, 1, 2 ,3};
+
+	const size_t dataVertexSizeInBytes = dataVertex.size() * sizeof(dataVertex[0]);
+	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);
+
+	const float red[4] =	{ 1, 0, 0, 1 };
+	const float green[4] =	{ 0, 1, 0, 1 };
+	const float blue[4] =	{ 0, 0, 1, 1 };
+	const float yellow[4] = { 1, 1, 0, 1 };
+
+
+	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	vb.Write(0, dataVertex.size(), dataVertex.data());
+
+	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	ib.Write(0, dataIndex.size(), dataIndex.data());
+
+
+	std::vector<float> instanceOffsetData{ 
+		0.0f, 0.0f,
+		1.f, 0.f,
+		0.0f, -1.0f,
+		1.f, -1.f,
+	};
+
+	llr::VertexBuffer instanceOffset(instanceOffsetData.size(), llr::EDataType::FLOAT, 2, true);
+	instanceOffset.Write(0, instanceOffsetData.size(), instanceOffsetData.data());
+
+
+	std::vector<float> instanceColorData{ 
+		1.0f, 0.0f, 0.f,
+		0.f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.f,
+		1.f, 1.0f, 0.0f 
+	};
+
+	llr::VertexBuffer instanceColor(instanceColorData.size(), llr::EDataType::FLOAT, 3, true);
+	instanceColor.Write(0, instanceColorData.size(), instanceColorData.data());
+
+	shader.SetIndexBuffer(ib);
+
+
+
+	llr::Framebuffer fb;
+	EXPECT_TRUE(!fb.IsValid());
+
+	llr::Texture2D textureOut = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
+
+	fb.SetTextures2d(textureOut, 0);
+
+	EXPECT_TRUE(fb.IsValid());
+
+	shader.SetFramebuffer(fb);
+
+	float* pixelsData = new float[600 * 600 * 4];
+
+	shader.SetVertexBuffer(vb, 0);
+	shader.SetVertexBuffer(instanceOffset, 1);
+	shader.SetVertexBuffer(instanceColor, 2);
+
+	shader.SetIndexBuffer(ib);
+
+	shader.SetInstanceCount(4);
+
+	RendererTest renderer(shader);
+
+	window.addRenderer(&renderer);
+
+	window.draw();
+
+
+	auto dataCheck = [WIDTH, HEIGHT, red, green, blue, yellow](const std::vector<float>& textureData) {
+		float controllSum = 0.f;
+		const float* data = textureData.data();
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WIDTH; ++j) {
+				const float* pixel = data + ((WIDTH * j + HEIGHT - i - 1) * 4);
+				if(i < HEIGHT / 2)
+					if (j < WIDTH / 2) {
+						controllSum += red[0] - pixel[0];
+						controllSum += red[1] - pixel[1];
+						controllSum += red[2] - pixel[2];
+						controllSum += red[3] - pixel[3];
+					}
+					else {
+						controllSum += green[0] - pixel[0];
+						controllSum += green[1] - pixel[1];
+						controllSum += green[2] - pixel[2];
+						controllSum += green[3] - pixel[3];
+					}
+				else {
+					if (j < WIDTH / 2) {
+						controllSum += blue[0] - pixel[0];
+						controllSum += blue[1] - pixel[1];
+						controllSum += blue[2] - pixel[2];
+						controllSum += blue[3] - pixel[3];
+					}
+					else {
+						controllSum += yellow[0] - pixel[0];
+						controllSum += yellow[1] - pixel[1];
+						controllSum += yellow[2] - pixel[2];
+						controllSum += yellow[3] - pixel[3];
+					}
+				}
+			}
+		}
+		EXPECT_TRUE(abs(controllSum) < CONTROLL_SUM_EPSILON);
+	};
+
+
+	textureOut.Save(tmpDirLocation + "testInstanced.png");
+
+	std::vector<float> textureData(WIDTH * HEIGHT * 4, 0.f);
+	textureOut.Read(0, WIDTH, 0, HEIGHT, textureData.data());
+	dataCheck(textureData);
 }

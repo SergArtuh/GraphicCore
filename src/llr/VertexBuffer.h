@@ -12,7 +12,7 @@ namespace llr
 	class  VertexBuffer final {
 	public:
 		VertexBuffer();
-		VertexBuffer(size_t size, EDataType dataType, size_t count = 0);
+		VertexBuffer(size_t size, EDataType dataType, size_t count, bool isInstansable = false);
 		~VertexBuffer();
 
 		VertexBuffer(const VertexBuffer&);
@@ -36,6 +36,8 @@ namespace llr
 
 		bool IsValid() const { return m_bufferId != (GLuint)UNUSED; }
 
+		bool IsInstansable() const;
+
 	private:
 		void AddReference();
 
@@ -48,6 +50,8 @@ namespace llr
 		size_t m_size = 0;
 		size_t m_count = 0;
 		EDataType m_dataType = EDataType::NONE;
+
+		bool m_isInsnansable = false;
 		
 	};
 }

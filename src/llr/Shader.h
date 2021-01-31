@@ -74,6 +74,8 @@ namespace llr
 
 		void SetConstant(const char* name, const unsigned int c0, const unsigned int c1, const unsigned int c2, const float c3);
 
+		void SetInstanceCount(UI32 count);
+
 	private:
 		ReferenceCounter m_referenceCounter;
 
@@ -84,6 +86,7 @@ namespace llr
 		std::map<int, Texture2D> m_textures2d;
 		IndexBuffer m_indexBuffer;
 		Framebuffer m_framebuffer;
+		UI32 m_instanceCount = 0;
 
 		GLuint m_programId = ((GLuint) UNUSED );
 	};

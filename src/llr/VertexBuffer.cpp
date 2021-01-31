@@ -6,19 +6,19 @@
 namespace llr
 {
 	VertexBuffer::VertexBuffer() {}
-	VertexBuffer::VertexBuffer(size_t size, EDataType dataType, size_t count) : 
-		m_size(size), m_count(count), m_dataType(dataType) {
+	VertexBuffer::VertexBuffer(size_t size, EDataType dataType, size_t count, bool isInstansable) :
+		m_size(size), m_count(count), m_dataType(dataType), m_isInsnansable(isInstansable) {
 		glGenBuffers(1, &m_bufferId); GL_CHECK
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId); GL_CHECK
 		glBufferData(GL_ARRAY_BUFFER, size * helper::getDataTypeSize(m_dataType), 0, GL_STATIC_DRAW); GL_CHECK		 
 	}
 	VertexBuffer::VertexBuffer(const VertexBuffer & r) : 
-		m_bufferId(r.m_bufferId), m_size(r.m_size), m_count(r.m_count), m_dataType(r.m_dataType), m_referenceCounter(r.m_referenceCounter){
+		m_bufferId(r.m_bufferId), m_size(r.m_size), m_count(r.m_count), m_dataType(r.m_dataType), m_referenceCounter(r.m_referenceCounter), m_isInsnansable(r.m_isInsnansable){
 		AddReference();
 	}
 
-	VertexBuffer::VertexBuffer(VertexBuffer && r) : m_bufferId(r.m_bufferId), m_size(r.m_size), m_count(r.m_count), m_dataType(r.m_dataType), m_referenceCounter(std::move(r.m_referenceCounter)) {
+	VertexBuffer::VertexBuffer(VertexBuffer && r) : m_bufferId(r.m_bufferId), m_size(r.m_size), m_count(r.m_count), m_dataType(r.m_dataType), m_referenceCounter(std::move(r.m_referenceCounter)), m_isInsnansable(r.m_isInsnansable) {
 		r.m_bufferId = UNUSED;
 		r.m_size = 0;
 		r.m_count = 0;
@@ -32,6 +32,7 @@ namespace llr
 		m_size = r.m_size;
 		m_count = r.m_count;
 		m_dataType = r.m_dataType;
+		m_isInsnansable = r.m_isInsnansable;
 		m_referenceCounter = r.m_referenceCounter;
 
 		AddReference();
@@ -77,6 +78,10 @@ namespace llr
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId); GL_CHECK
 		glGetBufferSubData(GL_ARRAY_BUFFER, offset, size * helper::getDataTypeSize(m_dataType), o_data); GL_CHECK
 		glBindBuffer(GL_ARRAY_BUFFER, 0); GL_CHECK
+	}
+
+	bool VertexBuffer::IsInstansable() const {
+		return m_isInsnansable;
 	}
 
 	void VertexBuffer::AddReference() {

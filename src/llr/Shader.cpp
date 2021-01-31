@@ -245,9 +245,15 @@ namespace llr
 
 				glEnableVertexAttribArray(location);  GL_CHECK
 				glBindBuffer(GL_ARRAY_BUFFER, buffer.GetId()); GL_CHECK
+				glVertexAttribDivisor(location, (buffer.IsInstansable()) ? 1 : 0); GL_CHECK
 			}
 
-			glDrawElements(GL_TRIANGLES, (GLsizei)m_indexBuffer.GetSize(), adapter::DataType(m_indexBuffer.GetDataType()), NULL); GL_CHECK
+			if (m_instanceCount > 0) {
+				glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)m_indexBuffer.GetSize(), adapter::DataType(m_indexBuffer.GetDataType()), NULL, m_instanceCount); GL_CHECK
+			}
+			else {
+				glDrawElements(GL_TRIANGLES, (GLsizei)m_indexBuffer.GetSize(), adapter::DataType(m_indexBuffer.GetDataType()), NULL); GL_CHECK
+			}
 		}
 		
 
@@ -334,5 +340,8 @@ namespace llr
 		}
 
 		glUseProgram(0);
+	}
+	void Shader::SetInstanceCount(UI32 count) {
+		m_instanceCount = count;
 	}
 }
