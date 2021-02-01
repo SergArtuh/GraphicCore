@@ -111,7 +111,7 @@ void DeleteShader(gapi::PGapi gapi, gapi::Shader* shader) {
 
 gapi::PTexture2D CreateTexture2D(gapi::PGapi gapi, CSize width, CSize height, I32 format)
 {
-	return gapi->CreateTexture2d(width, height, static_cast<gapi::ETextureFormat>(format));
+	return gapi->CreateTexture2d(width, height, static_cast<ETextureFormat>(format));
 }
 
 void DeleteTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d)
@@ -190,7 +190,7 @@ void SetRenderPassStageOutput(gapi::PGapi gapi, gapi::PRenderPassStage renderPas
 }
 
 void SetRenderPassStageGeometryTarget(gapi::PRenderPassStage renderPassStage, int target) {
-	renderPassStage->SetGeometryTarget(static_cast<gapi::ERenderPassInputGeometryTarget>(target));
+	renderPassStage->SetGeometryTarget(static_cast<ERenderPassInputGeometryTarget>(target));
 }
 
 void AddRenderPassStageGeometry(gapi::PRenderPassStage renderPassStage, gapi::Geometry* geometry) {
