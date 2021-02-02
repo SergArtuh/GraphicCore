@@ -1,6 +1,6 @@
 #pragma once
 #include "api.h"
-#include "enum.h"
+
 #include "llr/Texture2d.h"
 
 #include <vector>

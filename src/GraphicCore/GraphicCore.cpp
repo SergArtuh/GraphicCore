@@ -3,8 +3,6 @@
 #include <list>
 #include<stdarg.h>
 
-#include "gapi/enum.h"
-
 #include "common/Logger.h"
 
 
@@ -153,6 +151,19 @@ void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput) {
 	renderPassInput->Update();
 }
 
+gapi::PRenderPassInstanceArrayInput CreateRenderPassInstanceArrayInput(gapi::PGapi gapi, CSize size, I32 type, CSize count)
+{
+	return gapi->CreateRenderPassInstanceArrayInput(size, static_cast<EDataType>(type) ,count);
+}
+
+void DeleteRenderPassInstanceArrayInput(gapi::PGapi gapi, gapi::PRenderPassInstanceArrayInput instanceArrayInput) {
+	gapi->DeleteRenderPassInstanceArrayInput(instanceArrayInput);
+}
+
+void WriteRenderPassInstanceArrayInput(gapi::PGapi gapi, gapi::PRenderPassInstanceArrayInput instanceArrayInput, void * arrayData, CSize arrayDataN, CSize offset) {
+	instanceArrayInput->Write(offset, arrayDataN, arrayData);
+}
+
 gapi::PRenderPassOutput CreateRenderPassOutput(gapi::PGapi gapi) {
 	return gapi->CreateRenderPassOutput();
 }
@@ -199,6 +210,14 @@ void AddRenderPassStageGeometry(gapi::PRenderPassStage renderPassStage, gapi::Ge
 
 void RemoveRenderPassStageGeometry(gapi::PRenderPassStage renderPassStage, gapi::Geometry* geometry) {
 	renderPassStage->RemoveGeomerty(geometry);
+}
+
+void SetRenderPassInstanceArray(gapi::PRenderPassStage renderPassStage, gapi::PRenderPassInstanceArrayInput instanceArray, CI32 location) {
+	renderPassStage->SetRenderPassInstanceArray(instanceArray, location);
+}
+
+void SetRenderPassInstanceCount(gapi::PRenderPassStage renderPassStage, CSize count) {
+	renderPassStage->SetRenderPassInstanceCount(count);
 }
 
 gapi::RenderPass* CreateRenderPass(gapi::PGapi gapi, gapi::Shader * shader) {

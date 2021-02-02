@@ -3,7 +3,7 @@
 #include "llr/Texture2d.h"
 
 namespace gapi {
-	Texture2D::Texture2D(CSize width, CSize height, ETextureFormat format) : m_texture(width, height, static_cast<llr::ETextureFormat>(format)) {
+	Texture2D::Texture2D(CSize width, CSize height, ETextureFormat format) : m_texture(width, height, static_cast<ETextureFormat>(format)) {
 	}
 
 	void Texture2D::Write(CSize xMin, const CSize xMax, CSize yMin, CSize yMax, const void* data) {

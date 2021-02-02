@@ -48,6 +48,7 @@ namespace llr
 		glBindBuffer(GL_ARRAY_BUFFER, buffer.GetId()); GL_CHECK
 
 		glVertexAttribPointer(location, (GLsizei)buffer.GetCount(), adapter::DataType(buffer.GetDataType()), GL_FALSE, (GLsizei)0, nullptr); GL_CHECK
+		glVertexAttribDivisor(location, (buffer.IsInstansable()) ? 1 : 0); GL_CHECK
 
 		Unbind();
 		glBindBuffer(GL_ARRAY_BUFFER, 0); GL_CHECK

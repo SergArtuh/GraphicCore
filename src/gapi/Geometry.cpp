@@ -6,8 +6,8 @@
 namespace gapi {
 	Geometry::Geometry(std::vector<float> vertices3f, std::vector<UI32> indexes) 
 	{
-		llr::VertexBuffer vertexBuffer(vertices3f.size(), llr::EDataType::FLOAT, 3);
-		llr::IndexBuffer indexBuffer(indexes.size(), llr::EDataType::UINT);
+		llr::VertexBuffer vertexBuffer(vertices3f.size(), EDataType::FLOAT, 3);
+		llr::IndexBuffer indexBuffer(indexes.size(), EDataType::UINT);
 
 		vertexBuffer.Write(0, vertices3f.size(), vertices3f.data());
 		indexBuffer.Write(0, indexes.size(), indexes.data());

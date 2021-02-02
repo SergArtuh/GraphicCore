@@ -3,7 +3,6 @@
 #include "GL/glew.h"
 
 #include "api.h"
-#include "enum.h"
 
 #include "ReferenceCounter.h"
 

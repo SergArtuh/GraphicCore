@@ -143,21 +143,21 @@ private:
 };
 
 template<class T> 
-T CreateBuffer(size_t dataCount, llr::EDataType dataType) {
+T CreateBuffer(size_t dataCount, EDataType dataType) {
 	T buffer(dataCount, dataType);
 	EXPECT_TRUE(buffer.IsValid());
 	return buffer;
 }
 
 template<>
-llr::VertexBuffer CreateBuffer<llr::VertexBuffer>(size_t dataCount, llr::EDataType dataType) {
+llr::VertexBuffer CreateBuffer<llr::VertexBuffer>(size_t dataCount, EDataType dataType) {
 	llr::VertexBuffer buffer(dataCount, dataType, 1);
 	EXPECT_TRUE(buffer.IsValid());
 	return buffer;
 }
 
 template<class T, class DT> 
-void bufferTest(size_t dataCount, DT testValue0, DT testValue1, DT testValue2, llr::EDataType dataType) {
+void bufferTest(size_t dataCount, DT testValue0, DT testValue1, DT testValue2, EDataType dataType) {
 	const size_t dataNewCount = dataCount / 10;
 	const size_t dataOffset = dataCount / 20;
 
@@ -205,8 +205,8 @@ void simpleShaderTest(const char * vertShader, const char* fragShader, const std
 	llr::Llr llr(window);
 
 	llr::Shader shader = CreateShader({
-		llr::ShaderSource(vertShader, llr::EShaderSourceType::VERTEX),
-		llr::ShaderSource(fragShader, llr::EShaderSourceType::FRAGMENT) 
+		llr::ShaderSource(vertShader, EShaderSourceType::VERTEX),
+		llr::ShaderSource(fragShader, EShaderSourceType::FRAGMENT) 
 		});
 
 	EXPECT_TRUE(shader.IsValid());
@@ -214,10 +214,10 @@ void simpleShaderTest(const char * vertShader, const char* fragShader, const std
 	const size_t dataVertexSizeInBytes = dataVertex.size() * sizeof(dataVertex[0]);
 	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);
 
-	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	llr::VertexBuffer vb(dataVertex.size(), EDataType::FLOAT, 3);
 	vb.Write(0, dataVertex.size(), dataVertex.data());
 
-	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	llr::IndexBuffer ib(dataIndex.size(), EDataType::UINT);
 	ib.Write(0, dataIndex.size(), dataIndex.data());
 
 	float colorConstantDefault[4]{};
@@ -298,7 +298,7 @@ void shaderVAOTest(llr::Shader shader, llr::VertexArrayBuffer vao, wnd::Window &
 
 
 template<class T>
-void texture2dTest(const size_t width, const size_t heigth, llr::ETextureFormat format, const std::vector<T> & dataVertex, const std::string& saveFile) {
+void texture2dTest(const size_t width, const size_t heigth, ETextureFormat format, const std::vector<T> & dataVertex, const std::string& saveFile) {
 	bool isSaveMode = !saveFile.empty();
 	llr::Texture2D texture = llr::Texture2D(width, heigth, format);
 	llr::Texture2D textureCheck = llr::Texture2D(width, heigth, format);
@@ -328,7 +328,7 @@ void texture2dTest(const size_t width, const size_t heigth, llr::ETextureFormat 
 
 
 template<class T, int TS>
-void texture2dTestFillCollor(const size_t width, const size_t heigth, llr::ETextureFormat format, Vector<T, TS> initVslue, const std::string& saveFile = "") {
+void texture2dTestFillCollor(const size_t width, const size_t heigth, ETextureFormat format, Vector<T, TS> initVslue, const std::string& saveFile = "") {
 	llr::Texture2D texture = llr::Texture2D(width, heigth, format);
 
 	std::vector<T> dataVertex(width * heigth * TS);
@@ -343,14 +343,14 @@ void texture2dTestFillCollor(const size_t width, const size_t heigth, llr::EText
 	texture.Write(0, width, 0, heigth, dataVertex.data());
 }
 
-void texture2dTestWhiteNoise(const size_t width, const size_t heigth, llr::ETextureFormat format, const std::string & saveFile = "") {
+void texture2dTestWhiteNoise(const size_t width, const size_t heigth, ETextureFormat format, const std::string & saveFile = "") {
 	llr::Texture2D texture = llr::Texture2D(width, heigth, format);
 
 	Size bpp = 0;
-	if (format == llr::ETextureFormat::RGB) {
+	if (format == ETextureFormat::RGB) {
 		bpp = 3;
 	}
-	else if(format == llr::ETextureFormat::RGBA) {
+	else if(format == ETextureFormat::RGBA) {
 		bpp = 4;
 	}
 	else {
@@ -407,13 +407,13 @@ TEST(llr_tests, VertexBuffer) {
 	window.makeContextCurrent();
 	llr::Llr llr(window);
 
-	bufferTest<llr::VertexBuffer>(2048, 1.f, 2.f, 3.f, llr::EDataType::FLOAT);
-	bufferTest<llr::VertexBuffer>(1e6, 1.f, 2.f, 3.f, llr::EDataType::FLOAT);
-	bufferTest<llr::VertexBuffer>(1e6, -1.f, -2.f, -3.f, llr::EDataType::FLOAT);
+	bufferTest<llr::VertexBuffer>(2048, 1.f, 2.f, 3.f, EDataType::FLOAT);
+	bufferTest<llr::VertexBuffer>(1e6, 1.f, 2.f, 3.f, EDataType::FLOAT);
+	bufferTest<llr::VertexBuffer>(1e6, -1.f, -2.f, -3.f, EDataType::FLOAT);
 
 	
-	bufferTest< llr::VertexBuffer>(2048, 1U, 2U, 3U, llr::EDataType::UINT);
-	bufferTest< llr::VertexBuffer>(2048, -1, -2, -3, llr::EDataType::INT);
+	bufferTest< llr::VertexBuffer>(2048, 1U, 2U, 3U, EDataType::UINT);
+	bufferTest< llr::VertexBuffer>(2048, -1, -2, -3, EDataType::INT);
 }
 
 
@@ -422,8 +422,8 @@ TEST(llr_tests, IndexBuffer) {
 	window.makeContextCurrent();
 	llr::Llr llr(window);
 
-	bufferTest< llr::IndexBuffer>(2048, 1U, 2U, 3U, llr::EDataType::UINT);
-	bufferTest< llr::IndexBuffer>(1e6, 1, 2, 3, llr::EDataType::UINT);
+	bufferTest< llr::IndexBuffer>(2048, 1U, 2U, 3U, EDataType::UINT);
+	bufferTest< llr::IndexBuffer>(1e6, 1, 2, 3, EDataType::UINT);
 }
 
 TEST(llr_tests, ConstantBuffer) {
@@ -479,8 +479,8 @@ TEST(llr_tests, ShaderVAO) {
 	wnd::Window window(600, 600, "Unit Tests");
 
 	llr::Shader shader = CreateShader({
-		llr::ShaderSource(g_testShader0V, llr::EShaderSourceType::VERTEX),
-		llr::ShaderSource(g_testShader0F, llr::EShaderSourceType::FRAGMENT)
+		llr::ShaderSource(g_testShader0V, EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader0F, EShaderSourceType::FRAGMENT)
 		});
 
 	EXPECT_TRUE(shader.IsValid());
@@ -493,10 +493,10 @@ TEST(llr_tests, ShaderVAO) {
 	
 
 
-	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	llr::VertexBuffer vb(dataVertex.size(), EDataType::FLOAT, 3);
 	vb.Write(0, dataVertex.size(), dataVertex.data());
 
-	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	llr::IndexBuffer ib(dataIndex.size(), EDataType::UINT);
 	ib.Write(0, dataIndex.size(), dataIndex.data());
 
 	shader.SetIndexBuffer(ib);
@@ -537,22 +537,22 @@ TEST(llr_tests, Texture2D) {
 
 	wnd::Window window(600, 600, "Unit Tests");
 
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RED, Vec1f{ {1.f} });
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 1.f, 2.f, 3.f } });
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { 1.f, 2.f, 3.f, 4.f } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RED, Vec1f{ {1.f} });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGB, Vec3f{ { 1.f, 2.f, 3.f } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGBA, Vec4f{ { 1.f, 2.f, 3.f, 4.f } });
 
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RED, Vec1f{ {-12.f} });
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { -14.f, -0.5f, 66.f } });
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { -16.f, -0.8f, 13.f, 42.f } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RED, Vec1f{ {-12.f} });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGB, Vec3f{ { -14.f, -0.5f, 66.f } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGBA, Vec4f{ { -16.f, -0.8f, 13.f, 42.f } });
 
 
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RED_INTEGER, Vec1i{ {1} });
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB_INTEGER, Vec3i{ { 1, 2, 3 } });
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { 1, 2, 3, 4 } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RED_INTEGER, Vec1i{ {1} });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGB_INTEGER, Vec3i{ { 1, 2, 3 } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGBA_INTEGER, Vec4i{ { 1, 2, 3, 4 } });
 
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RED_INTEGER, Vec1i{ {-15} });
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB_INTEGER, Vec3i{ { -18, -21, 98 } });
-	texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA_INTEGER, Vec4i{ { -162251, -2, 2878, 455 } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RED_INTEGER, Vec1i{ {-15} });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGB_INTEGER, Vec3i{ { -18, -21, 98 } });
+	texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGBA_INTEGER, Vec4i{ { -162251, -2, 2878, 455 } });
 
 
 } 
@@ -571,14 +571,14 @@ TEST(llr_tests, Texture2D_IO) {
 		const size_t WIDTH = Widths[i];
 		const size_t HEIGHT = Heights[i];
 
-		texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 1.f, 0.f, 0.f } }, tmpDirLocation + "testRedColorRGB.png");
-		texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 0.f, 1.f, 0.f} }, tmpDirLocation + "testGreenColorRGB.png");
-		texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGB, Vec3f{ { 0.f, 0.f, 1.f} }, tmpDirLocation + "testBlueColorRGB.png");
-		texture2dTestFillCollor(WIDTH, HEIGHT, llr::ETextureFormat::RGBA, Vec4f{ { 1.f, 1.f, 1.f, 1.f} }, tmpDirLocation + "testBlueAlphaRGBA.png");
+		texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGB, Vec3f{ { 1.f, 0.f, 0.f } }, tmpDirLocation + "testRedColorRGB.png");
+		texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGB, Vec3f{ { 0.f, 1.f, 0.f} }, tmpDirLocation + "testGreenColorRGB.png");
+		texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGB, Vec3f{ { 0.f, 0.f, 1.f} }, tmpDirLocation + "testBlueColorRGB.png");
+		texture2dTestFillCollor(WIDTH, HEIGHT, ETextureFormat::RGBA, Vec4f{ { 1.f, 1.f, 1.f, 1.f} }, tmpDirLocation + "testBlueAlphaRGBA.png");
 
 
-		texture2dTestWhiteNoise(WIDTH, HEIGHT, llr::ETextureFormat::RGB, tmpDirLocation + "testNoiseRGB.png");
-		texture2dTestWhiteNoise(WIDTH, HEIGHT, llr::ETextureFormat::RGB, tmpDirLocation + "testNoiseRGBA.png");
+		texture2dTestWhiteNoise(WIDTH, HEIGHT, ETextureFormat::RGB, tmpDirLocation + "testNoiseRGB.png");
+		texture2dTestWhiteNoise(WIDTH, HEIGHT, ETextureFormat::RGB, tmpDirLocation + "testNoiseRGBA.png");
 	}
 }
 
@@ -591,8 +591,8 @@ TEST(llr_tests, Framebuffer) {
 	wnd::Window window(WIDTH, HEIGHT, "Unit Tests");
 
 	llr::Shader shader = CreateShader({
-		llr::ShaderSource(g_testShader1V, llr::EShaderSourceType::VERTEX),
-		llr::ShaderSource(g_testShader1F, llr::EShaderSourceType::FRAGMENT)
+		llr::ShaderSource(g_testShader1V, EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader1F, EShaderSourceType::FRAGMENT)
 		});
 
 	EXPECT_TRUE(shader.IsValid());
@@ -605,10 +605,10 @@ TEST(llr_tests, Framebuffer) {
 
 
 
-	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	llr::VertexBuffer vb(dataVertex.size(), EDataType::FLOAT, 3);
 	vb.Write(0, dataVertex.size(), dataVertex.data());
 
-	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	llr::IndexBuffer ib(dataIndex.size(), EDataType::UINT);
 	ib.Write(0, dataIndex.size(), dataIndex.data());
 
 	shader.SetIndexBuffer(ib);
@@ -620,7 +620,7 @@ TEST(llr_tests, Framebuffer) {
 	llr::Framebuffer fb;
 	EXPECT_TRUE(!fb.IsValid());
 
-	llr::Texture2D texture = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
+	llr::Texture2D texture = llr::Texture2D(WIDTH, HEIGHT, ETextureFormat::RGBA);
 	fb.SetTextures2d(texture, 0);
 	EXPECT_TRUE(fb.IsValid());
 
@@ -684,8 +684,8 @@ TEST(llr_tests, ShaderOutput) {
 	wnd::Window window(WIDTH, HEIGHT, "Unit Tests");
 
 	llr::Shader shader = CreateShader({
-		llr::ShaderSource(g_testShader2V, llr::EShaderSourceType::VERTEX),
-		llr::ShaderSource(g_testShader2F, llr::EShaderSourceType::FRAGMENT)
+		llr::ShaderSource(g_testShader2V, EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader2F, EShaderSourceType::FRAGMENT)
 		});
 
 	EXPECT_TRUE(shader.IsValid());
@@ -698,10 +698,10 @@ TEST(llr_tests, ShaderOutput) {
 
 
 
-	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	llr::VertexBuffer vb(dataVertex.size(), EDataType::FLOAT, 3);
 	vb.Write(0, dataVertex.size(), dataVertex.data());
 
-	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	llr::IndexBuffer ib(dataIndex.size(), EDataType::UINT);
 	ib.Write(0, dataIndex.size(), dataIndex.data());
 
 	shader.SetIndexBuffer(ib);
@@ -709,9 +709,9 @@ TEST(llr_tests, ShaderOutput) {
 	llr::Framebuffer fb;
 	EXPECT_TRUE(!fb.IsValid());
 
-	llr::Texture2D texture0 = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
-	llr::Texture2D texture1 = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
-	llr::Texture2D texture2 = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
+	llr::Texture2D texture0 = llr::Texture2D(WIDTH, HEIGHT, ETextureFormat::RGBA);
+	llr::Texture2D texture1 = llr::Texture2D(WIDTH, HEIGHT, ETextureFormat::RGBA);
+	llr::Texture2D texture2 = llr::Texture2D(WIDTH, HEIGHT, ETextureFormat::RGBA);
 
 	fb.SetTextures2d(texture0, 0);
 	fb.SetTextures2d(texture1, 1);
@@ -791,8 +791,8 @@ TEST(llr_tests, Instance) {
 	wnd::Window window(WIDTH, HEIGHT, "Unit Tests");
 
 	llr::Shader shader = CreateShader({
-		llr::ShaderSource(g_testShader3V, llr::EShaderSourceType::VERTEX),
-		llr::ShaderSource(g_testShader3F, llr::EShaderSourceType::FRAGMENT)
+		llr::ShaderSource(g_testShader3V, EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader3F, EShaderSourceType::FRAGMENT)
 		});
 
 	EXPECT_TRUE(shader.IsValid());
@@ -814,10 +814,10 @@ TEST(llr_tests, Instance) {
 	const float yellow[4] = { 1, 1, 0, 1 };
 
 
-	llr::VertexBuffer vb(dataVertex.size(), llr::EDataType::FLOAT, 3);
+	llr::VertexBuffer vb(dataVertex.size(), EDataType::FLOAT, 3);
 	vb.Write(0, dataVertex.size(), dataVertex.data());
 
-	llr::IndexBuffer ib(dataIndex.size(), llr::EDataType::UINT);
+	llr::IndexBuffer ib(dataIndex.size(), EDataType::UINT);
 	ib.Write(0, dataIndex.size(), dataIndex.data());
 
 
@@ -828,7 +828,7 @@ TEST(llr_tests, Instance) {
 		1.f, -1.f,
 	};
 
-	llr::VertexBuffer instanceOffset(instanceOffsetData.size(), llr::EDataType::FLOAT, 2, true);
+	llr::VertexBuffer instanceOffset(instanceOffsetData.size(), EDataType::FLOAT, 2, true);
 	instanceOffset.Write(0, instanceOffsetData.size(), instanceOffsetData.data());
 
 
@@ -839,7 +839,7 @@ TEST(llr_tests, Instance) {
 		1.f, 1.0f, 0.0f 
 	};
 
-	llr::VertexBuffer instanceColor(instanceColorData.size(), llr::EDataType::FLOAT, 3, true);
+	llr::VertexBuffer instanceColor(instanceColorData.size(), EDataType::FLOAT, 3, true);
 	instanceColor.Write(0, instanceColorData.size(), instanceColorData.data());
 
 	shader.SetIndexBuffer(ib);
@@ -849,7 +849,7 @@ TEST(llr_tests, Instance) {
 	llr::Framebuffer fb;
 	EXPECT_TRUE(!fb.IsValid());
 
-	llr::Texture2D textureOut = llr::Texture2D(WIDTH, HEIGHT, llr::ETextureFormat::RGBA);
+	llr::Texture2D textureOut = llr::Texture2D(WIDTH, HEIGHT, ETextureFormat::RGBA);
 
 	fb.SetTextures2d(textureOut, 0);
 
@@ -914,6 +914,150 @@ TEST(llr_tests, Instance) {
 
 
 	textureOut.Save(tmpDirLocation + "testInstanced.png");
+
+	std::vector<float> textureData(WIDTH * HEIGHT * 4, 0.f);
+	textureOut.Read(0, WIDTH, 0, HEIGHT, textureData.data());
+	dataCheck(textureData);
+}
+
+
+TEST(llr_tests, InstanceVAO) {
+
+
+	const size_t WIDTH = 250;
+	const size_t HEIGHT = 250;
+
+	wnd::Window window(WIDTH, HEIGHT, "Unit Tests");
+
+	llr::Shader shader = CreateShader({
+		llr::ShaderSource(g_testShader3V, EShaderSourceType::VERTEX),
+		llr::ShaderSource(g_testShader3F, EShaderSourceType::FRAGMENT)
+		});
+
+	EXPECT_TRUE(shader.IsValid());
+	std::vector<float> dataVertex{
+		-1.f, 0.f, 0.f,
+		-1., 1.f, 0.f,
+		0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f
+	};
+
+	std::vector<unsigned int> dataIndex{ 0, 1, 2, 1, 2 ,3 };
+
+	const size_t dataVertexSizeInBytes = dataVertex.size() * sizeof(dataVertex[0]);
+	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);
+
+	const float red[4] = { 1, 0, 0, 1 };
+	const float green[4] = { 0, 1, 0, 1 };
+	const float blue[4] = { 0, 0, 1, 1 };
+	const float yellow[4] = { 1, 1, 0, 1 };
+
+
+	llr::VertexBuffer vb(dataVertex.size(), EDataType::FLOAT, 3);
+	vb.Write(0, dataVertex.size(), dataVertex.data());
+
+	llr::IndexBuffer ib(dataIndex.size(), EDataType::UINT);
+	ib.Write(0, dataIndex.size(), dataIndex.data());
+
+
+	std::vector<float> instanceOffsetData{
+		0.0f, 0.0f,
+		1.f, 0.f,
+		0.0f, -1.0f,
+		1.f, -1.f,
+	};
+
+	llr::VertexBuffer instanceOffset(instanceOffsetData.size(), EDataType::FLOAT, 2, true);
+	instanceOffset.Write(0, instanceOffsetData.size(), instanceOffsetData.data());
+
+
+	std::vector<float> instanceColorData{
+		1.0f, 0.0f, 0.f,
+		0.f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.f,
+		1.f, 1.0f, 0.0f
+	};
+
+	llr::VertexBuffer instanceColor(instanceColorData.size(), EDataType::FLOAT, 3, true);
+	instanceColor.Write(0, instanceColorData.size(), instanceColorData.data());
+
+	
+
+
+
+	llr::Framebuffer fb;
+	EXPECT_TRUE(!fb.IsValid());
+
+	llr::Texture2D textureOut = llr::Texture2D(WIDTH, HEIGHT, ETextureFormat::RGBA);
+
+	fb.SetTextures2d(textureOut, 0);
+
+	EXPECT_TRUE(fb.IsValid());
+
+	shader.SetFramebuffer(fb);
+
+	float* pixelsData = new float[600 * 600 * 4];
+
+	
+
+	llr::VertexArrayBuffer vao;
+	vao.SetIndexBuffer(ib);
+	vao.SetVertexBuffer(vb, 0);
+	vao.SetVertexBuffer(instanceOffset, 1);
+	vao.SetVertexBuffer(instanceColor, 2);
+
+	shader.SetVertexArrayBuffer(vao);
+
+
+	shader.SetInstanceCount(4);
+
+	RendererTest renderer(shader);
+
+	window.addRenderer(&renderer);
+
+	window.draw();
+
+
+	auto dataCheck = [WIDTH, HEIGHT, red, green, blue, yellow](const std::vector<float>& textureData) {
+		float controllSum = 0.f;
+		const float* data = textureData.data();
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WIDTH; ++j) {
+				const float* pixel = data + ((WIDTH * j + HEIGHT - i - 1) * 4);
+				if (i < HEIGHT / 2)
+					if (j < WIDTH / 2) {
+						controllSum += red[0] - pixel[0];
+						controllSum += red[1] - pixel[1];
+						controllSum += red[2] - pixel[2];
+						controllSum += red[3] - pixel[3];
+					}
+					else {
+						controllSum += green[0] - pixel[0];
+						controllSum += green[1] - pixel[1];
+						controllSum += green[2] - pixel[2];
+						controllSum += green[3] - pixel[3];
+					}
+				else {
+					if (j < WIDTH / 2) {
+						controllSum += blue[0] - pixel[0];
+						controllSum += blue[1] - pixel[1];
+						controllSum += blue[2] - pixel[2];
+						controllSum += blue[3] - pixel[3];
+					}
+					else {
+						controllSum += yellow[0] - pixel[0];
+						controllSum += yellow[1] - pixel[1];
+						controllSum += yellow[2] - pixel[2];
+						controllSum += yellow[3] - pixel[3];
+					}
+				}
+			}
+		}
+		EXPECT_TRUE(abs(controllSum) < CONTROLL_SUM_EPSILON);
+	};
+
+
+	textureOut.Save(tmpDirLocation + "testInstancedVao.png");
 
 	std::vector<float> textureData(WIDTH * HEIGHT * 4, 0.f);
 	textureOut.Read(0, WIDTH, 0, HEIGHT, textureData.data());

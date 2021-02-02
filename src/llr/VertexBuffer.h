@@ -1,8 +1,6 @@
 #pragma once
 #include "api.h"
 
-#include "enum.h"
-
 #include "GL/glew.h"
 
 #include "ReferenceCounter.h"
@@ -12,7 +10,7 @@ namespace llr
 	class  VertexBuffer final {
 	public:
 		VertexBuffer();
-		VertexBuffer(size_t size, EDataType dataType, size_t count, bool isInstansable = false);
+		VertexBuffer(CSize size, EDataType dataType, CSize count, bool isInstansable = false);
 		~VertexBuffer();
 
 		VertexBuffer(const VertexBuffer&);

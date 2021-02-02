@@ -1,7 +1,6 @@
 #pragma once
 #include "api.h"
 
-#include "enum.h"
 
 #include "GL/glew.h"
 

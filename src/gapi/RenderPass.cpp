@@ -82,6 +82,20 @@ namespace gapi {
 					continue;
 				}
 
+				if (Size instanceCount = stage->GetRenderPassInstanceCount()) {
+					auto vao = geom->GetVertexArrayBuffer();
+
+					for (const auto instanceArray : stage->GetRenderPassInstanceArrays()) {
+						const auto location = instanceArray.first;
+						const auto buffer = instanceArray.second->GetVertexBufferLlr();
+
+						vao.SetVertexBuffer(buffer, location);
+					}
+
+					llrShader.SetInstanceCount(instanceCount);
+				}
+			
+
 				m_shader->SetGeometry(*geom);
 				m_shader->Draw();
 			}

@@ -2,14 +2,14 @@
 
 #include "types.h"
 
-enum class EDataType {
+enum class EDataType : I32 {
 	NONE = -1,
 	FLOAT = 0,
 	INT,
 	UINT
 };
 
-enum class ETextureFormat : int
+enum class ETextureFormat : I32
 {
 	RED,
 	RED_INTEGER,

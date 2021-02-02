@@ -56,4 +56,20 @@ namespace gapi {
 	CGeometries & RenderPassStage::GetGeometries() {
 		return m_geometries;
 	}
+	
+	void RenderPassStage::SetRenderPassInstanceArray(PRenderPassInstanceArrayInput instanceArray, CI32 location) {
+		m_instanceArrays.emplace(location, instanceArray);
+	}
+
+	RenderPassInstanceArrayInputs RenderPassStage::GetRenderPassInstanceArrays() {
+		return m_instanceArrays;
+	}
+
+	void RenderPassStage::SetRenderPassInstanceCount(CSize count) {
+		m_instanceCount = count;
+	}
+
+	Size RenderPassStage::GetRenderPassInstanceCount() const {
+		return m_instanceCount;
+	}
 }

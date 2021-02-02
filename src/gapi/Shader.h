@@ -1,7 +1,6 @@
 #pragma once
 #include "api.h"
 
-#include "llr/enum.h"
 #include "llr/Shader.h"
 
 #include <list>
@@ -17,18 +16,18 @@ namespace gapi {
 	public:
 		ShaderSourceType() {}
 		ShaderSourceType(I32 type) {
-			if (type < static_cast<I32>(llr::EShaderSourceType::FIRST)
-				|| type > static_cast<I32>(llr::EShaderSourceType::LAST)) {
+			if (type < static_cast<I32>(EShaderSourceType::FIRST)
+				|| type > static_cast<I32>(EShaderSourceType::LAST)) {
 				
 				return;
 			}
-			m_type = static_cast<llr::EShaderSourceType>(type);
+			m_type = static_cast<EShaderSourceType>(type);
 		}
-		operator llr::EShaderSourceType() { return m_type; }
-		operator const llr::EShaderSourceType() const { return m_type; }
+		operator EShaderSourceType() { return m_type; }
+		operator const EShaderSourceType() const { return m_type; }
 
 	private:
-		llr::EShaderSourceType m_type = llr::EShaderSourceType::NONE;
+		EShaderSourceType m_type = EShaderSourceType::NONE;
 	};
 
 	struct ShaderSource {
@@ -63,4 +62,6 @@ namespace gapi {
 	private:
 		llr::Shader m_shader;
 	};
+
+	using PShader = Shader*;
 }

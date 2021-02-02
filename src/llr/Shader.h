@@ -10,8 +10,6 @@
 
 #include "ReferenceCounter.h"
 
-#include "enum.h"
-
 #include "GL/glew.h"
 
 #include <vector> 
@@ -74,7 +72,7 @@ namespace llr
 
 		void SetConstant(const char* name, const unsigned int c0, const unsigned int c1, const unsigned int c2, const float c3);
 
-		void SetInstanceCount(UI32 count);
+		void SetInstanceCount(CUI32 count);
 
 	private:
 		ReferenceCounter m_referenceCounter;

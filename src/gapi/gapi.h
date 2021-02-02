@@ -2,8 +2,6 @@
 #include "api.h"
 #include "llr/llr.h"
 
-#include "enum.h"
-
 #include "Shader.h"
 
 #include <vector>
@@ -19,6 +17,7 @@ namespace gapi {
 	class Scene;
 	class RenderPass;
 	class RenderPassStage;
+	class RenderPassInstanceArrayInput;
 	class RenderPassInput;
 	class RenderPassOutput;
 	class Camera;
@@ -50,6 +49,11 @@ namespace gapi {
 		RenderPassInput * CreateRenderPassInput(Size size);
 
 		void DeleteRenderPassInput(RenderPassInput * renderPassInput);
+
+
+		RenderPassInstanceArrayInput * CreateRenderPassInstanceArrayInput(CSize size, EDataType type, CSize count);
+
+		void DeleteRenderPassInstanceArrayInput(RenderPassInstanceArrayInput * instanceArrayInput);
 
 
 		RenderPassOutput* CreateRenderPassOutput();

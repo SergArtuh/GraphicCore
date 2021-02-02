@@ -1,6 +1,5 @@
 #pragma once
-#include "enum.h"
-
+#include "api.h"
 #include "GL/glew.h"
 
 namespace llr {

@@ -8,6 +8,7 @@
 #include "RenderPass.h"
 #include "RenderPassStage.h"
 #include "RenderPassInput.h"
+#include "RenderPassInstanceArrayInput.h"
 #include "RenderPassOutput.h"
 #include "Camera.h"
 #include "Geometry.h"
@@ -77,6 +78,16 @@ namespace gapi {
 	void Gapi::DeleteRenderPassInput(RenderPassInput * renderPassInput) {
 		if (renderPassInput) {
 			delete renderPassInput;
+		}
+	}
+
+	PRenderPassInstanceArrayInput Gapi::CreateRenderPassInstanceArrayInput(CSize size, EDataType type, CSize count) {
+		return new RenderPassInstanceArrayInput(size, type, count);
+	}
+
+	void Gapi::DeleteRenderPassInstanceArrayInput(PRenderPassInstanceArrayInput instanceArrayInput) {
+		if (instanceArrayInput) {
+			delete instanceArrayInput;
 		}
 	}
 

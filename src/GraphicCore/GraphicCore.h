@@ -9,6 +9,7 @@
 #include "gapi/RenderPass.h"
 #include "gapi/RenderPassStage.h"
 #include "gapi/RenderPassInput.h"
+#include "gapi/RenderPassInstanceArrayInput.h"
 #include "gapi/RenderPassOutput.h"
 #include "gapi/Texture2D.h"
 #include "gapi/Geometry.h"
@@ -56,9 +57,9 @@ extern "C" {
 
 	void DeleteShaderSource(gapi::ShaderSource* shaderSource);
 
-	gapi::Shader * CreateShader(gapi::PGapi gapi, gapi::ShaderSource** sources, UI32 count);
+	gapi::PShader CreateShader(gapi::PGapi gapi, gapi::ShaderSource** sources, UI32 count);
 
-	void DeleteShader(gapi::PGapi gapi, gapi::Shader * shader);
+	void DeleteShader(gapi::PGapi gapi, gapi::PShader shader);
 
 
 	gapi::PTexture2D CreateTexture2D(gapi::Gapi * gapi, CSize width, CSize height, I32 format);
@@ -79,6 +80,13 @@ extern "C" {
 	void * GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput);
 
 	void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput);
+
+
+	gapi::PRenderPassInstanceArrayInput CreateRenderPassInstanceArrayInput(gapi::PGapi gapi, CSize size, I32 type, CSize count);
+
+	void DeleteRenderPassInstanceArrayInput(gapi::PGapi gapi, gapi::PRenderPassInstanceArrayInput instanceArrayInput);
+
+	void WriteRenderPassInstanceArrayInput(gapi::PGapi gapi, gapi::PRenderPassInstanceArrayInput instanceArrayInput, void * arrayData, CSize arrayDataN, CSize offset);
 
 
 	gapi::PRenderPassOutput CreateRenderPassOutput(gapi::PGapi gapi);
@@ -103,6 +111,10 @@ extern "C" {
 	void AddRenderPassStageGeometry(gapi::PRenderPassStage renderPassStage, gapi::Geometry* geometry);
 
 	void RemoveRenderPassStageGeometry(gapi::PRenderPassStage renderPassStage, gapi::Geometry* geometry);
+
+	void SetRenderPassInstanceArray(gapi::PRenderPassStage renderPassStage, gapi::PRenderPassInstanceArrayInput, CI32 location = 0);
+
+	void SetRenderPassInstanceCount(gapi::PRenderPassStage renderPassStage, CSize count);
 
 
 	gapi::RenderPass* CreateRenderPass(gapi::PGapi gapi, gapi::Shader * shader);

@@ -223,10 +223,15 @@ namespace llr
 			glBindTexture(GL_TEXTURE_2D, texture.GetId());
 		}
 
+
+		GLsizei idxSize = 0;
+		GLenum idxDataType = UNUSED;
+
 		if (m_vao.IsValid()) {
 			m_vao.Bind();
 
-			glDrawElements(GL_TRIANGLES, (GLsizei)m_vao.GetIndexSize(), adapter::DataType(m_vao.GetIndexDataType()), NULL); GL_CHECK
+			idxSize = (GLsizei)m_vao.GetIndexSize();
+			idxDataType = adapter::DataType(m_vao.GetIndexDataType());
 		}
 		else {
 			if (!m_indexBuffer.IsValid()) {
@@ -248,12 +253,16 @@ namespace llr
 				glVertexAttribDivisor(location, (buffer.IsInstansable()) ? 1 : 0); GL_CHECK
 			}
 
-			if (m_instanceCount > 0) {
-				glDrawElementsInstanced(GL_TRIANGLES, (GLsizei)m_indexBuffer.GetSize(), adapter::DataType(m_indexBuffer.GetDataType()), NULL, m_instanceCount); GL_CHECK
-			}
-			else {
-				glDrawElements(GL_TRIANGLES, (GLsizei)m_indexBuffer.GetSize(), adapter::DataType(m_indexBuffer.GetDataType()), NULL); GL_CHECK
-			}
+
+			idxSize = (GLsizei)m_indexBuffer.GetSize();
+			idxDataType = adapter::DataType(m_indexBuffer.GetDataType());
+		}
+
+		if (m_instanceCount > 0) {
+			glDrawElementsInstanced(GL_TRIANGLES, idxSize, idxDataType, NULL, m_instanceCount); GL_CHECK
+		}
+		else {
+			glDrawElements(GL_TRIANGLES, idxSize, idxDataType, NULL); GL_CHECK
 		}
 		
 
@@ -341,7 +350,7 @@ namespace llr
 
 		glUseProgram(0);
 	}
-	void Shader::SetInstanceCount(UI32 count) {
+	void Shader::SetInstanceCount(CUI32 count) {
 		m_instanceCount = count;
 	}
 }

@@ -4,6 +4,8 @@
 
 #include <vector>
 
+//TODO: rename RenderPassConstantInput
+
 namespace gapi {
 
 	class GAPI_EXPORT RenderPassInput {

@@ -4,8 +4,8 @@
 #include <map>
 #include <list>
 
-#include "enum.h"
 #include "RenderPassInput.h"
+#include "RenderPassInstanceArrayInput.h"
 #include "RenderPassOutput.h"
 #include "Texture2D.h"
 
@@ -13,7 +13,8 @@ namespace gapi {
 
 	class Geometry;
 
-	using RenderPassInputs = std::map<int, RenderPassInput*>;
+	using RenderPassInputs = std::map<int, PRenderPassInput>;
+	using RenderPassInstanceArrayInputs= std::map<int, PRenderPassInstanceArrayInput>;
 	using CRenderPassInputs = const RenderPassInputs;
 
 	using Geometries = std::list<Geometry*>;
@@ -58,9 +59,21 @@ namespace gapi {
 
 		CGeometries & GetGeometries();
 
+		void SetRenderPassInstanceArray(PRenderPassInstanceArrayInput, CI32 location = 0);
+
+		RenderPassInstanceArrayInputs GetRenderPassInstanceArrays();
+
+		void SetRenderPassInstanceCount(CSize count);
+
+		Size GetRenderPassInstanceCount() const;
+
 
 	private:
 		RenderPassInputs m_renderPassInputs;
+
+		RenderPassInstanceArrayInputs m_instanceArrays;
+		Size m_instanceCount = 0;
+
 		PRenderPassOutput m_renderPassOutput = nullptr;
 
 		ERenderPassInputGeometryTarget m_geometryTarget = ERenderPassInputGeometryTarget::ALL_SCENE;

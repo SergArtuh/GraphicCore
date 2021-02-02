@@ -2,8 +2,6 @@
 #include "api.h"
 #include "GL/glew.h"
 
-#include "enum.h"
-
 #include "ReferenceCounter.h"
 
 namespace llr
