@@ -17,7 +17,7 @@ namespace gapi {
 	public:
 		bool operator==(const RenderPassInstanceArrayInput& r);
 
-		void Write(const size_t offset, const size_t size, const void* data);
+		void Write(CSize offset, CSize size, const Data data);
 
 		const llr::VertexBuffer GetVertexBufferLlr() const;
 

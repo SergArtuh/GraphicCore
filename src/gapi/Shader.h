@@ -9,8 +9,10 @@ namespace gapi {
 	class Geometry;
 	class Camera;
 
-	using CGeometry = const Geometry;
-	using CCamera = const Camera;
+	enum class ReservedShaderInputConstant : I32{
+		CAMERA = 0
+	};
+
 
 	class ShaderSourceType {
 	public:
@@ -51,10 +53,10 @@ namespace gapi {
 		llr::Shader& GetShaderLLr();
 		const llr::Shader& GetShaderLLr() const;
 
-		void SetGeometry(CGeometry & geometry);
+		void SetGeometry(const Geometry & geometry);
 
 		[[deprecated]]
-		void SetCamera(CCamera & camera);
+		void SetCamera(const Camera & camera);
 
 		void Draw();
 

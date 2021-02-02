@@ -42,11 +42,11 @@ namespace llr
 			
 		void SetVertexArrayBuffer(const llr::VertexArrayBuffer vao);
 
-		void SetConstantBuffer(const ConstantBuffer buffer, const int location);
+		void SetConstantBuffer(const ConstantBuffer buffer, CI32 location);
 
-		void SetTexture2D(const Texture2D texture, const int location);
+		void SetTexture2D(const Texture2D texture, CI32 location);
 
-		void SetVertexBuffer(const VertexBuffer buffer, const int location, const size_t stride = 0U);
+		void SetVertexBuffer(const VertexBuffer buffer, CI32 location, CSize stride = 0U);
 
 		void SetIndexBuffer(const IndexBuffer buffer);
 

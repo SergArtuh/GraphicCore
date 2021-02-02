@@ -18,12 +18,23 @@ namespace gapi {
 	class RenderPass;
 	class RenderPassStage;
 	class RenderPassInstanceArrayInput;
-	class RenderPassInput;
+	class RenderPassConstantInput;
 	class RenderPassOutput;
 	class Camera;
 	class Geometry;
 	class Texture2D;
 
+	using PContext = Context *;
+	using PScene = Scene*;
+	using PRenderPass = RenderPass*;
+	using PRenderPassStage = RenderPassStage *;
+	using PRenderPassInstanceArrayInput = RenderPassInstanceArrayInput*;
+	using PRenderPassConstantInput = RenderPassConstantInput*;
+	using PRenderPassOutput = RenderPassOutput*;
+	using PCamera = Camera*;
+	using PGeometry = Geometry*;
+	using PTexture2D = Texture2D*;
+	
 
 	class GAPI_EXPORT Gapi final {
 	public:
@@ -32,69 +43,67 @@ namespace gapi {
 
 		~Gapi();
 
-		Context* CreateContext();
+		PContext CreateContext();
 
-		void DeleteContext(Context * context);
+		void DeleteContext(PContext context);
 
-		Scene* CreateScene();
+		PScene CreateScene();
 
-		void DeleteScene(Scene*);
+		void DeleteScene(PScene );
 
 
-		Shader* CreateShader(const std::list< ShaderSource> & sources);
+		PShader CreateShader(const std::list< ShaderSource> & sources);
 
-		void DeleteShader(Shader * shader);
+		void DeleteShader(PShader shader);
 		
 
-		RenderPassInput * CreateRenderPassInput(Size size);
+		PRenderPassConstantInput CreateRenderPassInput(Size size);
 
-		void DeleteRenderPassInput(RenderPassInput * renderPassInput);
-
-
-		RenderPassInstanceArrayInput * CreateRenderPassInstanceArrayInput(CSize size, EDataType type, CSize count);
-
-		void DeleteRenderPassInstanceArrayInput(RenderPassInstanceArrayInput * instanceArrayInput);
+		void DeleteRenderPassInput(PRenderPassConstantInput renderPassInput);
 
 
-		RenderPassOutput* CreateRenderPassOutput();
+		PRenderPassInstanceArrayInput CreateRenderPassInstanceArrayInput(CSize size, EDataType type, CSize count);
 
-		void DeleteRenderPassOutput(RenderPassOutput* renderPassOutput);
-
-
-		Texture2D* CreateTexture2d(CSize width, CSize height, ETextureFormat format);
-
-		void DeleteTexture2d(Texture2D * texture2d);
+		void DeleteRenderPassInstanceArrayInput(PRenderPassInstanceArrayInput instanceArrayInput);
 
 
-		RenderPassStage * CreateRenderPassStage();
+		PRenderPassOutput CreateRenderPassOutput();
 
-		void DeleteRenderPassStage(RenderPassStage * stage);
-
-		void SetRenderPassStageInput(RenderPassStage* renderPass, RenderPassInput* renderPassInput, UI32 location);
+		void DeleteRenderPassOutput(PRenderPassOutput renderPassOutput);
 
 
-		RenderPass* CreateRenderPass(Shader * shader);
+		PTexture2D CreateTexture2d(CSize width, CSize height, ETextureFormat format);
 
-		void DeleteRenderPass(RenderPass * renderPass);
-
-		void AddRenderPassStage(RenderPass* renderPass, RenderPassStage* stage);
+		void DeleteTexture2d(PTexture2D texture2d);
 
 
-		void ContextAddRenderPass(Context* context, RenderPass* renderPass);
+		PRenderPassStage CreateRenderPassStage();
 
-		void ContextRemoveRenderPass(Context* context, RenderPass* renderPass);
+		void DeleteRenderPassStage(PRenderPassStage stage);
+
+
+		PRenderPass CreateRenderPass(PShader shader);
+
+		void DeleteRenderPass(PRenderPass renderPass);
+
+		void AddRenderPassStage(PRenderPass renderPass, PRenderPassStage stage);
+
+
+		void ContextAddRenderPass(PContext context, PRenderPass renderPass);
+
+		void ContextRemoveRenderPass(PContext context, PRenderPass renderPass);
 
 		[[deprecated]]
 		Camera* CreateCamera(float fow, float aspect, float near, float far);
 
 		[[deprecated]]
-		void DeleteCamera(Camera * camera);
+		void DeleteCamera(PCamera camera);
 
-		Geometry* CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes);
+		PGeometry CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes);
 
-		void DeleteGeometry(Geometry*);
+		void DeleteGeometry(PGeometry);
 
-		void Draw(Context* context, Scene* scene);
+		void Draw(PContext context, PScene scene);
 
 	private:
 		llr::Llr m_llr;

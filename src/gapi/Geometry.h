@@ -31,4 +31,6 @@ namespace gapi {
 		llr::VertexArrayBuffer m_vao;
 		bool m_isAddedScene = false;
 	};
+
+	using PGeometry = Geometry *;
 }

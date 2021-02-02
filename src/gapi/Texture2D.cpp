@@ -6,7 +6,7 @@ namespace gapi {
 	Texture2D::Texture2D(CSize width, CSize height, ETextureFormat format) : m_texture(width, height, static_cast<ETextureFormat>(format)) {
 	}
 
-	void Texture2D::Write(CSize xMin, const CSize xMax, CSize yMin, CSize yMax, const void* data) {
+	void Texture2D::Write(CSize xMin, const CSize xMax, CSize yMin, CSize yMax, const Data data) {
 		m_texture.Write(xMin, xMax, yMin, yMax, data);
 	}
 

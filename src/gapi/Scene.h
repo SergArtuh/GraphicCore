@@ -7,7 +7,6 @@ namespace gapi {
 	class Geometry;
 	class Camera;
 
-	using CCamera = const Camera;
 
 	class GAPI_EXPORT Scene final {
 		friend class Gapi;
@@ -20,7 +19,7 @@ namespace gapi {
 		void SetCamera(Camera * );
 
 		[[deprecated]]
-		CCamera * GetCamera() const;
+		const Camera * GetCamera() const;
 
 		void AddGeometry(Geometry * geometry);
 
@@ -32,4 +31,6 @@ namespace gapi {
 		std::list< Geometry* > m_geometries;
 		Camera * m_camera = nullptr;
 	};
+
+	using PScene = Scene *;
 }

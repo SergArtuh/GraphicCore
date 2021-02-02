@@ -18,17 +18,17 @@ namespace llr
 
 		VertexBuffer& operator=(const VertexBuffer& r);
 
-		size_t GetSizeInBytes() const;
+		Size GetSizeInBytes() const;
 
-		size_t GetSize() const;
+		Size GetSize() const;
 
-		size_t GetCount() const;
+		Size GetCount() const;
 
 		EDataType GetDataType() const;
 
-		void Write(const size_t offset, const size_t size, const void* data);
+		void Write(CSize offset, CSize size, const Data data);
 
-		void Read(const size_t offset, const size_t size, void* o_data);
+		void Read(CSize offset, CSize size, Data o_data);
 
 		GLuint GetId() const { return m_bufferId; }
 
@@ -45,8 +45,8 @@ namespace llr
 
 		GLuint m_bufferId = ((GLuint)UNUSED);
 
-		size_t m_size = 0;
-		size_t m_count = 0;
+		Size m_size = 0;
+		Size m_count = 0;
 		EDataType m_dataType = EDataType::NONE;
 
 		bool m_isInsnansable = false;

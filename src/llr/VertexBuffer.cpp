@@ -68,13 +68,13 @@ namespace llr
 		}
 	}
 
-	void VertexBuffer::Write(CSize offset, CSize size, const void * data) {
+	void VertexBuffer::Write(CSize offset, CSize size, const Data data) {
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId); GL_CHECK
 		glBufferSubData(GL_ARRAY_BUFFER, offset, size * helper::getDataTypeSize(m_dataType), data); GL_CHECK
 		glBindBuffer(GL_ARRAY_BUFFER, 0); GL_CHECK
 	}
 
-	void VertexBuffer::Read(CSize offset, CSize size, void * o_data) {
+	void VertexBuffer::Read(CSize offset, CSize size, Data o_data) {
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferId); GL_CHECK
 		glGetBufferSubData(GL_ARRAY_BUFFER, offset, size * helper::getDataTypeSize(m_dataType), o_data); GL_CHECK
 		glBindBuffer(GL_ARRAY_BUFFER, 0); GL_CHECK

@@ -14,7 +14,6 @@ namespace gapi {
 	class Geometry;
 
 	class Camera;
-	using CCamera = const Camera;
 
 	using RenderPassStages = std::list<RenderPassStage*>;
 	using CRenderPassStages = const RenderPassStages;
@@ -36,9 +35,6 @@ namespace gapi {
 
 		RenderPassStages& GetRenderPassStage();
 
-		[[deprecated]]
-		void SetCamera(CCamera * geometry);
-
 		void OnRender(wnd::Window& window) override;
 
 		bool IsValid() const;
@@ -47,4 +43,6 @@ namespace gapi {
 		Shader * m_shader = nullptr;
 		RenderPassStages m_stages;
 	};
+
+	using PRenderPass = RenderPass *;
 }

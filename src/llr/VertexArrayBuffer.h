@@ -22,7 +22,7 @@ namespace llr
 
 		void Unbind();
 
-		void SetVertexBuffer(const VertexBuffer &, const int location);
+		void SetVertexBuffer(const VertexBuffer &, CI32 location);
 
 		void SetIndexBuffer(const IndexBuffer&);
 
@@ -37,7 +37,7 @@ namespace llr
 	private:
 		ReferenceCounter m_referenceCounter;
 
-		size_t m_idxSize = 0;
+		Size m_idxSize = 0;
 		EDataType m_idxDataType = EDataType::NONE;
 
 		GLuint m_bufferId = ((GLuint)UNUSED);

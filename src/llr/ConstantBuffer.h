@@ -11,18 +11,18 @@ namespace llr
 	class  ConstantBuffer final {
 	public:
 		ConstantBuffer();
-		ConstantBuffer(size_t size);
+		ConstantBuffer(Size size);
 
 		ConstantBuffer(const ConstantBuffer&);
 		~ConstantBuffer();
 
 		ConstantBuffer& operator=(const ConstantBuffer& r);
 
-		size_t GetSize() const;
+		Size GetSize() const;
 
-		void Write(const size_t offset, const size_t size, const void* data);
+		void Write(CSize offset, CSize size, const Data data);
 
-		void Read(const size_t offset, const size_t size, void* o_data);
+		void Read(CSize offset, CSize size, Data o_data);
 
 		GLuint GetId() const { return m_bufferId; }
 
@@ -33,7 +33,7 @@ namespace llr
 
 		GLuint m_bufferId = ((GLuint)UNUSED);
 
-		size_t m_size = 0;
+		Size m_size = 0;
 	};
 }
 

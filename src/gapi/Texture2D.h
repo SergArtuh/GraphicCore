@@ -7,9 +7,6 @@
 
 namespace gapi {
 	class GAPI_EXPORT Texture2D {
-		using Data = std::vector<char>;
-		using CData = const Data;
-
 		friend class Gapi;
 		friend class RenderPassOutput;
 
@@ -21,7 +18,7 @@ namespace gapi {
 	public:
 		//bool operator==(const RenderPassInput& r);
 
-		void Write(CSize xMin, const CSize xMax, CSize yMin, CSize yMax, const void* data);
+		void Write(CSize xMin, const CSize xMax, CSize yMin, CSize yMax, const Data data);
 
 		void Save(const std::string & path);
 

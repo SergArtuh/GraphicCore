@@ -28,7 +28,6 @@ namespace gapi {
 
 
 	void Context::SetupRenderPass(const Scene* scene, RenderPass * renderPass) {
-		renderPass->SetCamera(scene->GetCamera());
 		for (auto stage : renderPass->GetRenderPassStage()) {
 
 			auto geometryTarget = stage->GetGeometryTarget();

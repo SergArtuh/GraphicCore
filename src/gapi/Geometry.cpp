@@ -14,7 +14,6 @@ namespace gapi {
 
 		m_vao.SetIndexBuffer(indexBuffer);
 
-		//TODO: use constant
 		m_vao.SetVertexBuffer(vertexBuffer, 0);
 	}
 	bool Geometry::operator==(const Geometry& r)

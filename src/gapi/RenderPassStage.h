@@ -4,7 +4,7 @@
 #include <map>
 #include <list>
 
-#include "RenderPassInput.h"
+#include "RenderPassConstantInput.h"
 #include "RenderPassInstanceArrayInput.h"
 #include "RenderPassOutput.h"
 #include "Texture2D.h"
@@ -13,15 +13,12 @@ namespace gapi {
 
 	class Geometry;
 
-	using RenderPassInputs = std::map<int, PRenderPassInput>;
+	using RenderPassInputs = std::map<int, PRenderPassConstantInput>;
 	using RenderPassInstanceArrayInputs= std::map<int, PRenderPassInstanceArrayInput>;
-	using CRenderPassInputs = const RenderPassInputs;
 
 	using Geometries = std::list<Geometry*>;
-	using CGeometries = const Geometries;
 
 	using Textures = std::map<int, PTexture2D>;
-	using CTextures = const Textures;
 
 	class GAPI_EXPORT RenderPassStage {
 		friend class Gapi;
@@ -32,9 +29,9 @@ namespace gapi {
 	public:
 		bool operator==(const RenderPassStage& r);
 		
-		void SetInput(PRenderPassInput input, I32 location = 0);
+		void SetConstantInput(PRenderPassConstantInput input, I32 location = 0);
 
-		CRenderPassInputs GetRenderPassInputs() const;
+		const RenderPassInputs GetRenderPassInputs() const;
 
 
 		void SetRenderPassOutput(PRenderPassOutput output);
@@ -44,7 +41,7 @@ namespace gapi {
 
 		void SetTexture2D(PTexture2D texture, I32 location = 0);
 
-		CTextures& GetTextures2D();
+		const Textures& GetTextures2D();
 
 
 		void SetGeometryTarget(ERenderPassInputGeometryTarget target);
@@ -57,7 +54,7 @@ namespace gapi {
 
 		void RemoveGeomerty(Geometry* geometry);
 
-		CGeometries & GetGeometries();
+		const Geometries & GetGeometries();
 
 		void SetRenderPassInstanceArray(PRenderPassInstanceArrayInput, CI32 location = 0);
 

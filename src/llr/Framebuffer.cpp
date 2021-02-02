@@ -61,7 +61,7 @@ namespace llr
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void Framebuffer::SetTextures2d(const Texture2D& texture, const int location) {
+	void Framebuffer::SetTextures2d(const Texture2D& texture, CI32 location) {
 		m_textures2d.emplace(location, texture);
 		Update();
 	}

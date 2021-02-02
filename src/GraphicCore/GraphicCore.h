@@ -8,7 +8,7 @@
 #include "gapi/Shader.h"
 #include "gapi/RenderPass.h"
 #include "gapi/RenderPassStage.h"
-#include "gapi/RenderPassInput.h"
+#include "gapi/RenderPassConstantInput.h"
 #include "gapi/RenderPassInstanceArrayInput.h"
 #include "gapi/RenderPassOutput.h"
 #include "gapi/Texture2D.h"
@@ -73,13 +73,13 @@ extern "C" {
 	void LoadTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d, CStr path);
 
 
-	gapi::PRenderPassInput CreateRenderPassInput(gapi::PGapi gapi, CSize size);
+	gapi::PRenderPassConstantInput CreateRenderPassConstantInput(gapi::PGapi gapi, CSize size);
 
-	void DeleteRenderPassInput(gapi::PGapi gapi, gapi::PRenderPassInput renderPassInput);
+	void DeleteRenderPassConstantInput(gapi::PGapi gapi, gapi::PRenderPassConstantInput renderPassInput);
 
-	void * GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput);
+	void * GetRenderPassConstantInputDataNativePtr(gapi::PRenderPassConstantInput renderPassInput);
 
-	void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput);
+	void MarkDirtyRenderPassConstantInput(gapi::PRenderPassConstantInput renderPassInput);
 
 
 	gapi::PRenderPassInstanceArrayInput CreateRenderPassInstanceArrayInput(gapi::PGapi gapi, CSize size, I32 type, CSize count);
@@ -100,7 +100,7 @@ extern "C" {
 
 	void DeleteRenderPassStage(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage);
 
-	void SetRenderPassStageInput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::RenderPassInput* renderPassInput, UI32 location);
+	void SetRenderPassStageConstantInput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::PRenderPassConstantInput renderPassInput, UI32 location);
 
 	void SetRenderPassStageOutput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::PRenderPassOutput output);
 

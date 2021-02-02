@@ -1,12 +1,12 @@
 #pragma once
 #include "api.h"
-#include "RenderPassInput.h"
+#include "RenderPassConstantInput.h"
 
 #include "common/Matrix.h"
 #include "common/Vector.h"
 
 namespace gapi {
-	class GAPI_EXPORT Camera final : public RenderPassInput{
+	class GAPI_EXPORT Camera final : public RenderPassConstantInput{
 		friend class Gapi;
 	private:
 		Camera(float fow, float aspect, float near, float far);
@@ -19,4 +19,6 @@ namespace gapi {
 		Mat4f m_viewMat;
 		Vec4f m_posVec;
 	};
+
+	using PCamera = Camera*;
 }

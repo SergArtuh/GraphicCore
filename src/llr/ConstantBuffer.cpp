@@ -7,7 +7,7 @@ namespace llr
 	ConstantBuffer::ConstantBuffer() {
 	}
 
-	ConstantBuffer::ConstantBuffer(size_t size) : m_size(size) {
+	ConstantBuffer::ConstantBuffer(Size size) : m_size(size) {
 		glGenBuffers(1, &m_bufferId); GL_CHECK
 		glBindBuffer(GL_UNIFORM_BUFFER, m_bufferId); GL_CHECK
 		glBufferData(GL_UNIFORM_BUFFER, m_size, nullptr, GL_STATIC_DRAW); GL_CHECK
@@ -31,17 +31,17 @@ namespace llr
 		return *this;
 	}
 
-	size_t ConstantBuffer::GetSize() const {
+	Size ConstantBuffer::GetSize() const {
 		return m_size;
 	}
 
-	void ConstantBuffer::Write(const size_t offset, const size_t size, const void* data) {
+	void ConstantBuffer::Write(CSize offset, CSize size, const Data data) {
 		glBindBuffer(GL_UNIFORM_BUFFER, m_bufferId);
 		glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
-	void ConstantBuffer::Read(const size_t offset, const size_t size, void* o_data) {
+	void ConstantBuffer::Read(CSize offset, CSize size, Data o_data) {
 		glBindBuffer(GL_UNIFORM_BUFFER, m_bufferId);
 		glGetBufferSubData(GL_UNIFORM_BUFFER, offset, size, o_data);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);

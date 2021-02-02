@@ -215,10 +215,10 @@ void simpleShaderTest(const char * vertShader, const char* fragShader, const std
 	const size_t dataIndexSizeInBytes = dataIndex.size() * sizeof(dataIndex[0]);
 
 	llr::VertexBuffer vb(dataVertex.size(), EDataType::FLOAT, 3);
-	vb.Write(0, dataVertex.size(), dataVertex.data());
+	vb.Write(0, dataVertex.size(), (Data)dataVertex.data());
 
 	llr::IndexBuffer ib(dataIndex.size(), EDataType::UINT);
-	ib.Write(0, dataIndex.size(), dataIndex.data());
+	ib.Write(0, dataIndex.size(), (Data)dataIndex.data());
 
 	float colorConstantDefault[4]{};
 	float colorConstantData[]{ 0.2f, 0.4f, 0.6f, 0.8f };
@@ -303,7 +303,7 @@ void texture2dTest(const size_t width, const size_t heigth, ETextureFormat forma
 	llr::Texture2D texture = llr::Texture2D(width, heigth, format);
 	llr::Texture2D textureCheck = llr::Texture2D(width, heigth, format);
 
-	texture.Write(0, width, 0, heigth, dataVertex.data());
+	texture.Write(0, width, 0, heigth, (Data)dataVertex.data());
 
 	if (isSaveMode) {
 		texture.Save(saveFile);
@@ -445,15 +445,20 @@ TEST(llr_tests, ConstantBuffer) {
 }
 
 TEST(llr_tests, Shader) {
-	// TODO: Fix test case. Use different resolution
-	simpleShaderTest(g_testShader0V, g_testShader0F
-		, { -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f }
-		, { 0, 1, 2 }
-		, 600, 600, [](const size_t w, const size_t h, const float checkPizel[4], const float* data) {
+	const size_t width0 = 600;
+	const size_t height0 = 600;
+
+	const size_t width1 = 1200;
+	const size_t height1 = 200;
+
+	const size_t width2 = 200;
+	const size_t height2 = 800;
+
+	auto checkFunk = [](const size_t w, const size_t h, const float checkPizel[4], const float* data) {
 		float controllSum = 0.f;
 		for (int i = 0; i < h; i++) {
 			for (int j = 0; j < w; ++j) {
-				const float* pixel = data + ((w * j + h - i - 1) * 4);
+				const float* pixel = data + ((w * i + j - 1) * 4);
 				if (j < i) {
 					controllSum += checkPizel[0] - pixel[0];
 					controllSum += checkPizel[1] - pixel[1];
@@ -469,7 +474,22 @@ TEST(llr_tests, Shader) {
 			}
 		}
 		EXPECT_TRUE(controllSum < CONTROLL_SUM_EPSILON);
-	});
+	};
+
+	simpleShaderTest(g_testShader0V, g_testShader0F
+		, { -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f }
+		, { 0, 1, 2 }
+		, width0, height0, checkFunk);
+
+	simpleShaderTest(g_testShader0V, g_testShader0F
+		, { -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f }
+		, { 0, 1, 2 }
+	, width1, height1, checkFunk);
+
+	simpleShaderTest(g_testShader0V, g_testShader0F
+		, { -1.f, -1.f, 0.f, -1., 1.f, 0.f, 1.f, -1.f, 0.f }
+		, { 0, 1, 2 }
+	, width2, height2, checkFunk);
 
 }
 

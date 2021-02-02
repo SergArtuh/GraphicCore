@@ -26,7 +26,7 @@ namespace llr
 			
 	public:
 
-		virtual void SetTextures2d(const Texture2D & texture, const int location);
+		virtual void SetTextures2d(const Texture2D & texture, CI32 location);
 
 		GLuint GetId() const {return m_bufferId; }
 

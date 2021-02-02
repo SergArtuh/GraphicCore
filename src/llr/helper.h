@@ -6,6 +6,6 @@
 
 namespace llr {
 	namespace helper {
-		size_t getDataTypeSize(EDataType type);
+		Size getDataTypeSize(EDataType type);
 	}
 }

@@ -14,9 +14,9 @@ namespace llr
 	{
 		public:
 
-			Texture2D(const size_t width, const size_t heigth);
+			Texture2D(CSize width, CSize heigth);
 
-			Texture2D(const size_t width, const size_t heigth, const ETextureFormat usageFormat);
+			Texture2D(CSize width, CSize heigth, const ETextureFormat usageFormat);
 
 			Texture2D() = default;
 
@@ -28,9 +28,9 @@ namespace llr
 
 			bool operator==(const Texture2D& r);
 
-			void Write(const size_t xMin, const size_t xMax, size_t yMin, size_t yMax, const void * data);
+			void Write(CSize xMin, CSize xMax, Size yMin, Size yMax, const Data data);
 
-			void Read(const size_t xMin, const size_t xMax, size_t yMin, size_t yMax, void * o_data);
+			void Read(CSize xMin, CSize xMax, Size yMin, Size yMax, Data o_data);
 
 			void Save(const std::string & path);
 
@@ -40,7 +40,7 @@ namespace llr
 
 			GLuint GetId() const;
 		private:
-			void Init(const size_t width, const size_t heigth, const ETextureFormat usageFormat);
+			void Init(CSize width, CSize heigth, const ETextureFormat usageFormat);
 			void Deinit();
 
 			ReferenceCounter m_referenceCounter;

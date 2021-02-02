@@ -38,13 +38,6 @@ namespace gapi {
 		return m_stages;
 	}
 
-	void RenderPass::SetCamera(CCamera* camera) {
-		if (!(camera && camera->IsValid())) {
-			return;
-		}
-		m_shader->SetCamera(*camera);
-	}
-
 	void RenderPass::OnRender(wnd::Window& window)
 	{
 		window.makeContextCurrent();

@@ -27,5 +27,5 @@ namespace gapi {
 		llr::Framebuffer m_framebuffer;
 	};
 
-	using PTexture2D = Texture2D *;
+	using PFramebuffer = Framebuffer *;
 }

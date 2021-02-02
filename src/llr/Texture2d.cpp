@@ -114,10 +114,10 @@ namespace llr
 
 
 
-	Texture2D::Texture2D(const size_t width, const size_t heigth) : Texture2D(width, heigth, ETextureFormat::RGBA) {
+	Texture2D::Texture2D(CSize width, CSize heigth) : Texture2D(width, heigth, ETextureFormat::RGBA) {
 	}
 
-	Texture2D::Texture2D(const size_t width, const size_t height, const ETextureFormat format) {
+	Texture2D::Texture2D(CSize width, CSize height, const ETextureFormat format) {
 		Init(width, height, format);
 	}
 
@@ -143,7 +143,7 @@ namespace llr
 		}
 	}
 
-	void Texture2D::Init(const size_t width, const size_t height, const ETextureFormat format) {
+	void Texture2D::Init(CSize width, CSize height, const ETextureFormat format) {
 		m_dataType = TextureFormatDataType(format);
 		m_format = format;
 
@@ -175,13 +175,13 @@ namespace llr
 		m_textureId = UNUSED;
 	}
 
-	void Texture2D::Write(const size_t xMin, const size_t xMax, size_t yMin, size_t yMax, const void* data) {
+	void Texture2D::Write(CSize xMin, CSize xMax, size_t yMin, size_t yMax, const Data data) {
 		glBindTexture(GL_TEXTURE_2D, m_textureId);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, (GLint)xMin, (GLint)yMin, (GLsizei)(xMax - xMin), (GLsizei)(yMax - yMin), TextureFormat2GLenum(m_format), DataType2GLenum(m_dataType), data);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void Texture2D::Read(const size_t xMin, const size_t xMax, size_t yMin, size_t yMax, void* o_data) {
+	void Texture2D::Read(CSize xMin, CSize xMax, size_t yMin, size_t yMax, Data o_data) {
 		glBindTexture(GL_TEXTURE_2D, m_textureId);
 		glGetTexImage(GL_TEXTURE_2D, 0, TextureFormat2GLenum(m_format), DataType2GLenum(m_dataType), o_data);
 		glBindTexture(GL_TEXTURE_2D, 0);

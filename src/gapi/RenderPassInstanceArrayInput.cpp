@@ -11,7 +11,7 @@ namespace gapi {
 		return m_vertexBuffer;
 	}
 	
-	void RenderPassInstanceArrayInput::Write(const size_t offset, const size_t size, const void* data) {
+	void RenderPassInstanceArrayInput::Write(CSize offset, CSize size, const Data data) {
 		m_vertexBuffer.Write(offset, size, data);
 	}
 

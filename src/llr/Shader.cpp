@@ -141,7 +141,7 @@ namespace llr
 		m_vao = vao;
 	}
 
-	void Shader::SetConstantBuffer(const ConstantBuffer buffer, const int location) {
+	void Shader::SetConstantBuffer(const ConstantBuffer buffer, CI32 location) {
 
 		if (!buffer.IsValid()) {
 			LOG_WARNING("Try to set to a shader(Program ID: %d) Invali ConstantBuffer", m_programId);
@@ -155,7 +155,7 @@ namespace llr
 		glUseProgram(0);
 	}
 
-	void Shader::SetTexture2D(const Texture2D texture, const int location) {
+	void Shader::SetTexture2D(const Texture2D texture, CI32 location) {
 		if (!texture.IsValid()) {
 			LOG_WARNING("Try to set to a shader(Program ID: %d) Invali Texture2d", m_programId);
 			return;
@@ -164,7 +164,7 @@ namespace llr
 		m_textures2d[location] = texture;
 	}
 
-	void Shader::SetVertexBuffer(const VertexBuffer buffer, const int location, const size_t stride)
+	void Shader::SetVertexBuffer(const VertexBuffer buffer, CI32 location, CSize stride)
 	{
 		if (!buffer.IsValid()) {
 			LOG_WARNING("Try to set to a shader(Program ID: %d) Invali VertexBuffer", m_programId);

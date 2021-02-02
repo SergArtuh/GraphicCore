@@ -7,7 +7,7 @@
 #include "Shader.h"
 #include "RenderPass.h"
 #include "RenderPassStage.h"
-#include "RenderPassInput.h"
+#include "RenderPassConstantInput.h"
 #include "RenderPassInstanceArrayInput.h"
 #include "RenderPassOutput.h"
 #include "Camera.h"
@@ -24,58 +24,58 @@ namespace gapi {
 
 	Gapi::~Gapi() {}
 
-	Context* Gapi::CreateContext()
+	PContext Gapi::CreateContext()
 	{
 		return new Context(m_llr.GetWindow());
 	}
 
-	void Gapi::DeleteContext(Context* context)
+	void Gapi::DeleteContext(PContext context)
 	{
 		if (context) {
 			delete context;
 		}
 	}
 
-	Scene* Gapi::CreateScene() {
+	PScene Gapi::CreateScene() {
 		return new Scene;
 	}
 
-	void Gapi::DeleteScene(Scene * scene) {
+	void Gapi::DeleteScene(PScene scene) {
 		if (scene) {
 			delete scene;
 		}
 	}
 
-	Shader* Gapi::CreateShader(const std::list<ShaderSource> & sources) {
+	PShader Gapi::CreateShader(const std::list<ShaderSource> & sources) {
 		return new Shader(sources);
 	}
 
-	void Gapi::DeleteShader(Shader* shader) {
+	void Gapi::DeleteShader(PShader shader) {
 		if (shader) {
 			delete shader;
 		}
 	}
 
-	RenderPass* Gapi::CreateRenderPass(Shader * shader) {
+	PRenderPass Gapi::CreateRenderPass(PShader shader) {
 		return new RenderPass(shader);
 	}
 
-	void Gapi::DeleteRenderPass(RenderPass* renderPass) {
+	void Gapi::DeleteRenderPass(PRenderPass renderPass) {
 		if (renderPass) {
 			delete renderPass;
 		}
 	}
 
-	void Gapi::AddRenderPassStage(RenderPass* renderPass, RenderPassStage* stage) {
+	void Gapi::AddRenderPassStage(PRenderPass renderPass, PRenderPassStage stage) {
 		renderPass->AddRenderPassStage(stage);
 	}
 
-	RenderPassInput * Gapi::CreateRenderPassInput(Size size)
+	PRenderPassConstantInput Gapi::CreateRenderPassInput(Size size)
 	{
-		return new RenderPassInput(size);
+		return new RenderPassConstantInput(size);
 	}
 
-	void Gapi::DeleteRenderPassInput(RenderPassInput * renderPassInput) {
+	void Gapi::DeleteRenderPassInput(PRenderPassConstantInput renderPassInput) {
 		if (renderPassInput) {
 			delete renderPassInput;
 		}
@@ -91,11 +91,11 @@ namespace gapi {
 		}
 	}
 
-	RenderPassOutput* Gapi::CreateRenderPassOutput() {
+	PRenderPassOutput Gapi::CreateRenderPassOutput() {
 		return new RenderPassOutput;
 	}
 
-	void Gapi::DeleteRenderPassOutput(RenderPassOutput* renderPassOutput) {
+	void Gapi::DeleteRenderPassOutput(PRenderPassOutput renderPassOutput) {
 		if (renderPassOutput) {
 			delete renderPassOutput;
 		}
@@ -105,60 +105,55 @@ namespace gapi {
 		return new Texture2D(width, height, format);
 	}
 
-	void Gapi::DeleteTexture2d(Texture2D* texture2d) {
+	void Gapi::DeleteTexture2d(PTexture2D texture2d) {
 		if (texture2d) {
 			delete texture2d;
 		}
 	}
 
-	RenderPassStage* Gapi::CreateRenderPassStage()
+	PRenderPassStage Gapi::CreateRenderPassStage()
 	{
 		return new RenderPassStage();
 	}
 
-	void Gapi::DeleteRenderPassStage(RenderPassStage* stage)
+	void Gapi::DeleteRenderPassStage(PRenderPassStage stage)
 	{
 		if (stage) {
 			delete stage;
 		}
 	}
 
-	void Gapi::SetRenderPassStageInput(RenderPassStage* stage, RenderPassInput* renderPassInput, UI32 location)
-	{
-		stage->SetInput(renderPassInput, location);
-	}
-
-	void Gapi::ContextAddRenderPass(Context* context, RenderPass* renderPass)
+	void Gapi::ContextAddRenderPass(PContext context, PRenderPass renderPass)
 	{
 		context->AddRenderPass(renderPass);
 	}
 
-	void Gapi::ContextRemoveRenderPass(Context* context, RenderPass* renderPass)
+	void Gapi::ContextRemoveRenderPass(PContext context, PRenderPass renderPass)
 	{
 		context->RemoveRenderPass(renderPass);
 	}
 
 
-	Camera* Gapi::CreateCamera(float fow, float aspect, float near, float far) {
+	PCamera Gapi::CreateCamera(float fow, float aspect, float near, float far) {
 		return new Camera(fow, aspect, near, far);
 	}
 
-	void Gapi::DeleteCamera(Camera* camera) {
+	void Gapi::DeleteCamera(PCamera camera) {
 		if (camera) {
 			delete camera;
 		}
 	}
 
-	Geometry* Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes) {
+	PGeometry Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes) {
 		return new Geometry(vertices3f, indexes);
 	}
 
-	void Gapi::DeleteGeometry(Geometry* geometry) {
+	void Gapi::DeleteGeometry(PGeometry geometry) {
 		if (geometry) {
 			delete geometry;
 		}
 	}
-	void Gapi::Draw(Context* context, Scene* scene)
+	void Gapi::Draw(PContext context, PScene scene)
 	{
 		context->Draw(scene);
 	}

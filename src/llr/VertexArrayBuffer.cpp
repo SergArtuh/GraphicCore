@@ -42,7 +42,7 @@ namespace llr
 	void VertexArrayBuffer::Unbind() {
 		glBindVertexArray(0); GL_CHECK
 	}
-	void VertexArrayBuffer::SetVertexBuffer(const VertexBuffer & buffer, const int location) {
+	void VertexArrayBuffer::SetVertexBuffer(const VertexBuffer & buffer, CI32 location) {
 		Bind();
 		glEnableVertexAttribArray(location);  GL_CHECK
 		glBindBuffer(GL_ARRAY_BUFFER, buffer.GetId()); GL_CHECK

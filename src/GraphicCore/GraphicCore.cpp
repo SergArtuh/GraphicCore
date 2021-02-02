@@ -135,19 +135,19 @@ void LoadTexture2D(gapi::PGapi gapi, gapi::PTexture2D texture2d, CStr path) {
 	texture2d->Load(pathStr);
 }
 
-gapi::RenderPassInput* CreateRenderPassInput(gapi::PGapi gapi, CSize size) {
+gapi::PRenderPassConstantInput CreateRenderPassConstantInput(gapi::PGapi gapi, CSize size) {
 	return gapi->CreateRenderPassInput(size);
 }
 
-void DeleteRenderPassInput(gapi::PGapi gapi, gapi::RenderPassInput* renderPassInput) {
+void DeleteRenderPassConstantInput(gapi::PGapi gapi, gapi::PRenderPassConstantInput renderPassInput) {
 	gapi->DeleteRenderPassInput(renderPassInput);
 }
 
-void* GetRenderPassInputDataNativePtr(gapi::RenderPassInput* renderPassInput) {
+void* GetRenderPassConstantInputDataNativePtr(gapi::PRenderPassConstantInput renderPassInput) {
 	return renderPassInput->GetData().data();
 }
 
-void MarkDirtyRenderPassInput(gapi::RenderPassInput* renderPassInput) {
+void MarkDirtyRenderPassConstantInput(gapi::PRenderPassConstantInput renderPassInput) {
 	renderPassInput->Update();
 }
 
@@ -191,9 +191,9 @@ void DeleteRenderPassStage(gapi::PGapi gapi, gapi::PRenderPassStage renderPassSt
 	gapi->DeleteRenderPassStage(renderPassStage);
 }
 
-void SetRenderPassStageInput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::RenderPassInput* renderPassInput, UI32 location)
+void SetRenderPassStageConstantInput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::PRenderPassConstantInput renderPassInput, UI32 location)
 {
-	gapi->SetRenderPassStageInput(renderPassStage, renderPassInput, location);
+	renderPassStage->SetConstantInput(renderPassInput, location);
 }
 
 void SetRenderPassStageOutput(gapi::PGapi gapi, gapi::PRenderPassStage renderPassStage, gapi::PRenderPassOutput output) {

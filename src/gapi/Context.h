@@ -33,4 +33,6 @@ namespace gapi {
 
 		RenderPasses m_renderPasses;
 	};
+
+	using PContext = Context*;
 }

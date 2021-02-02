@@ -35,5 +35,5 @@ enum class EShaderSourceType {
 	COMPUTE,
 
 	FIRST = VERTEX,
-	LAST = FRAGMENT
+	LAST = COMPUTE
 };
