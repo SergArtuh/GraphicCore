@@ -1,4 +1,5 @@
 #include "GlAdapter.h"
+#include "common/Logger.h"
 
 #include "api.h"
 
@@ -17,7 +18,7 @@ namespace llr {
 					m_type = GL_INT;
 					break;
 			default:
-				LLR_ERROR("Unknown data type enum");
+				LOG_ERROR("Unknown data type enum");
 				m_type = UNUSED;
 				break;
 			}

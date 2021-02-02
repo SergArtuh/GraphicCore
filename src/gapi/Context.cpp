@@ -1,5 +1,6 @@
 #include "Context.h"
 #include "RenderPass.h"
+#include "RenderPassStage.h"
 #include "Scene.h"
 
 #include <algorithm>
@@ -7,7 +8,7 @@
 namespace gapi {
 	Context::Context(wnd::Window& window) : m_window(window) {}
 
-	void Context::AddRenderPass(RenderPass* renderPass, int priority) {
+	void Context::AddRenderPass(RenderPass* renderPass, I32 priority) {
 		if (!(renderPass && renderPass->IsValid())) {
 			return;
 		}
@@ -24,6 +25,31 @@ namespace gapi {
 			m_renderPasses.erase(finded);
 		}
 	}
+
+
+	void Context::SetupRenderPass(const Scene* scene, RenderPass * renderPass) {
+		for (auto stage : renderPass->GetRenderPassStage()) {
+
+			auto geometryTarget = stage->GetGeometryTarget();
+
+			if (ERenderPassInputGeometryTarget::ALL_SCENE == geometryTarget) {
+				stage->CleanGeomerties();
+				for (auto geom : scene->GetGeometries()) {
+					stage->AddGeomerty(geom);
+				}
+			}
+			else if (ERenderPassInputGeometryTarget::NDC_RECT == geometryTarget){
+				//TODO:
+			}
+			else if (ERenderPassInputGeometryTarget::NONE == geometryTarget) {
+				stage->CleanGeomerties();
+			}
+			else if (ERenderPassInputGeometryTarget::CUSTOM == geometryTarget) {
+				//no-op
+			}
+		}
+	}
+
 	void Context::Draw(const Scene * scene)
 	{
 		if (!scene) {
@@ -33,9 +59,8 @@ namespace gapi {
 		m_window.clearRenderers();
 		for (auto rp : m_renderPasses) {
 			RenderPass* renderPass = rp.second;
-			for (auto geom : scene->GetGeometries()) {
-				renderPass->SetGeometry(geom);
-			}
+			SetupRenderPass(scene, renderPass);
+
 			m_window.addRenderer(renderPass);
 		}
 

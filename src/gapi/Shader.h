@@ -1,28 +1,35 @@
 #pragma once
 #include "api.h"
 
-#include "llr/enum.h"
 #include "llr/Shader.h"
 
 #include <list>
 
 namespace gapi {
+	class Geometry;
+	class Camera;
+
+	enum class ReservedShaderInputConstant : I32{
+		CAMERA = 0
+	};
+
+
 	class ShaderSourceType {
 	public:
 		ShaderSourceType() {}
-		ShaderSourceType(int type) {
-			if (type < static_cast<int>(llr::EShaderSourceType::FIRST)
-				|| type > static_cast<int>(llr::EShaderSourceType::LAST)) {
+		ShaderSourceType(I32 type) {
+			if (type < static_cast<I32>(EShaderSourceType::FIRST)
+				|| type > static_cast<I32>(EShaderSourceType::LAST)) {
 				
 				return;
 			}
-			m_type = static_cast<llr::EShaderSourceType>(type);
+			m_type = static_cast<EShaderSourceType>(type);
 		}
-		operator llr::EShaderSourceType() { return m_type; }
-		operator const llr::EShaderSourceType() const { return m_type; }
+		operator EShaderSourceType() { return m_type; }
+		operator const EShaderSourceType() const { return m_type; }
 
 	private:
-		llr::EShaderSourceType m_type = llr::EShaderSourceType::NONE;
+		EShaderSourceType m_type = EShaderSourceType::NONE;
 	};
 
 	struct ShaderSource {
@@ -46,8 +53,17 @@ namespace gapi {
 		llr::Shader& GetShaderLLr();
 		const llr::Shader& GetShaderLLr() const;
 
+		void SetGeometry(const Geometry & geometry);
+
+		[[deprecated]]
+		void SetCamera(const Camera & camera);
+
+		void Draw();
+
 		bool IsValid() const;
 	private:
 		llr::Shader m_shader;
 	};
+
+	using PShader = Shader*;
 }

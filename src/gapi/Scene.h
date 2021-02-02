@@ -5,7 +5,8 @@
 
 namespace gapi {
 	class Geometry;
-	class RenderPass;
+	class Camera;
+
 
 	class GAPI_EXPORT Scene final {
 		friend class Gapi;
@@ -15,6 +16,11 @@ namespace gapi {
 		Scene& operator=(const Scene&) = default;
 
 	public:
+		void SetCamera(Camera * );
+
+		[[deprecated]]
+		const Camera * GetCamera() const;
+
 		void AddGeometry(Geometry * geometry);
 
 		void RemoveGeometry(Geometry* geometry);
@@ -23,5 +29,8 @@ namespace gapi {
 
 	private:
 		std::list< Geometry* > m_geometries;
+		Camera * m_camera = nullptr;
 	};
+
+	using PScene = Scene *;
 }

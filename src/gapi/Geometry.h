@@ -1,8 +1,7 @@
 #pragma once
 #include "api.h"
 
-#include "llr/VertexBuffer.h"
-#include "llr/IndexBuffer.h"
+#include "llr/VertexArrayBuffer.h"
 
 #include <vector>
 
@@ -10,8 +9,9 @@
 namespace gapi {
 	class GAPI_EXPORT Geometry final {
 		friend class Gapi;
+		friend class Scene;
 	private:
-		Geometry(std::vector<float> vertices3f, std::vector<unsigned int> indexes);
+		Geometry(std::vector<float> vertices3f, std::vector<UI32> indexes);
 		Geometry() = default;
 		Geometry(const Geometry&) = default;
 		Geometry& operator=(const Geometry&) = default;
@@ -19,13 +19,18 @@ namespace gapi {
 	public:
 		bool operator==(const Geometry & r);
 
-		const llr::VertexBuffer GetVertexBuffer() const;
-
-		const llr::IndexBuffer GetIndexBuffer() const;
+		const llr::VertexArrayBuffer GetVertexArrayBuffer() const;
 
 		bool IsValid() const;
+
+		bool IsAddedToScene() const;
 	private:
-		llr::VertexBuffer m_vertexBuffer;
-		llr::IndexBuffer m_indexBuffer;
+
+		void SetIsAddedToScene(bool isInScene);
+
+		llr::VertexArrayBuffer m_vao;
+		bool m_isAddedScene = false;
 	};
+
+	using PGeometry = Geometry *;
 }

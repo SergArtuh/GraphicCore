@@ -2,3 +2,9 @@ bin/
 lib/
 prj/
 include/
+
+devnote.txt
+
+build/run_build.bat
+build/run_build_install.bat
+build/run_headers.bat
