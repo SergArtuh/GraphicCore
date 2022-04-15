@@ -2,6 +2,7 @@
 #include "api.h"
 #include "types.h"
 #include <vector>
+#include <string>
 
 
 namespace imgio {
