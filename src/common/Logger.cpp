@@ -16,6 +16,11 @@ namespace common {
 		}
 	}
 
+	Logger& Logger::Get() {
+		static Logger logger;
+		return logger;
+	}
+
 	void Logger::SetStrategy(ILoggerStrategy * strategy) {
 		if (m_logStrategy) {
 			delete m_logStrategy;

@@ -28,10 +28,7 @@ namespace common {
 
 		~Logger();
 	public:
-		static Logger & Get() {
-			static Logger logger;
-			return logger;
-		}
+		static Logger& Get();
 
 		void SetStrategy(ILoggerStrategy*);
 
