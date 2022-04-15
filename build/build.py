@@ -141,7 +141,7 @@ def RunCMake(sourcePath = "", installDir = "", prjPath = "", options = None, bui
     if visualStudioVersion is None:
         raise Exception( "Please run build.py script in Visual Studio Developer Command Prompt")
 
-    print 'VS version "{ver}"'.format(ver=visualStudioVersion)
+    print('VS version "{ver}"'.format(ver=visualStudioVersion))
 
 
     if visualStudioVersion is 16:
@@ -203,7 +203,7 @@ for currentArgument, currentValue in arguments:
     elif currentArgument == "--tests":
         isBuildTests = True
     elif currentArgument == "--install-dir":
-        if currentValue[-1] is not '\\' or not '/':
+        if currentValue[-1] != '\\' or not '/':
                 BIN_DIR = currentValue + '\\'
         else:
                 BIN_DIR = currentValue
