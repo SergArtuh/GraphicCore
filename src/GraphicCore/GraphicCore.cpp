@@ -240,14 +240,74 @@ void DeleteCamera(gapi::PGapi gapi, gapi::Camera * camere) {
 	gapi->DeleteCamera(camere);
 }
 
-gapi::Geometry* CreateGeometry(gapi::PGapi gapi, float* vertices, CSize vertexN, UI32 * indexes, CSize indexN) {
-	std::vector<float> vertexV(vertexN);
+gapi::Geometry* CreateGeometry(gapi::PGapi gapi,
+	float* vertices, CSize vertexCount,
+	UI32* indexes, CSize indexN,
+	float* normals,
+	float* uvs,
+	float* tangents,
+	float* bitangents
+) {
+
+	CSize vertexVecLen = 3;
+	CSize normalVecLen = 3;
+	CSize uvVecLen = 2;
+	CSize tangentVecLen = 3;
+	CSize bitangentVecLen = 3;
+
+
+	std::vector<float> vertexV(vertexCount * vertexVecLen);
 	std::memcpy(vertexV.data(), vertices, vertexV.size() * sizeof(vertexV[0]));
 
 	std::vector<unsigned int> indexV(indexN);
 	std::memcpy(indexV.data(), indexes, indexV.size() * sizeof(indexV[0]));
 
-	return gapi->CreateGeometry(vertexV, indexV);
+
+	// Normals
+	std::vector<float> normalV(vertexCount * normalVecLen);
+
+	if (normals) {
+		std::memcpy(normalV.data(), normals, normalV.size() * sizeof(normalV[0]));
+	}
+	else {
+		std::fill(normalV.begin(), normalV.end(), 0.f);
+	}
+
+
+	// UV
+	std::vector<float> uvV(vertexCount * uvVecLen);
+
+	if (uvs) {
+		std::memcpy(uvV.data(), uvs, uvV.size() * sizeof(uvV[0]));
+	}
+	else {
+		std::fill(uvV.begin(), uvV.end(), 0.f);
+	}
+
+
+
+	// Tangent
+	std::vector<float> tangentV(vertexCount * tangentVecLen);
+
+	if (tangents) {
+		std::memcpy(tangentV.data(), tangents, tangentV.size() * sizeof(tangentV[0]));
+	}
+	else {
+		std::fill(tangentV.begin(), tangentV.end(), 0.f);
+	}
+
+
+	// Bitangent
+	std::vector<float> bitangentV(vertexCount * bitangentVecLen);
+
+	if (bitangents) {
+		std::memcpy(bitangentV.data(), bitangents, bitangentV.size() * sizeof(bitangentV[0]));
+	}
+	else {
+		std::fill(bitangentV.begin(), bitangentV.end(), 0.f);
+	}
+
+	return gapi->CreateGeometry(vertexV, indexV, normalV, uvV, tangentV, bitangentV);
 }
 
 void DeleteGeometry(gapi::PGapi gapi, gapi::Geometry * geometry) {

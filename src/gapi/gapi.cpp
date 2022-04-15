@@ -144,8 +144,8 @@ namespace gapi {
 		}
 	}
 
-	PGeometry Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes) {
-		return new Geometry(vertices3f, indexes);
+	PGeometry Gapi::CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes, std::vector<float> normals3f, std::vector<float> uv2f, std::vector<float> tangent3f, std::vector<float> bitangent3f) {
+		return new Geometry(vertices3f, indexes, normals3f, uv2f, tangent3f, bitangent3f);
 	}
 
 	void Gapi::DeleteGeometry(PGeometry geometry) {

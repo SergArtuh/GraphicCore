@@ -99,7 +99,7 @@ namespace gapi {
 		[[deprecated]]
 		void DeleteCamera(PCamera camera);
 
-		PGeometry CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes);
+		PGeometry CreateGeometry(std::vector<float> vertices3f, std::vector<UI32> indexes, std::vector<float> normals3f, std::vector<float> uv2f, std::vector<float> tangent3f, std::vector<float> bitangent3f);
 
 		void DeleteGeometry(PGeometry);
 

@@ -129,7 +129,17 @@ extern "C" {
 	[[deprecated]]
 	void DeleteCamera(gapi::PGapi gapi, gapi::Camera*);
 
-	gapi::Geometry * CreateGeometry(gapi::PGapi gapi, float * vertices, CSize vertexN, UI32 * indexes, CSize indexN);
+
+	gapi::Geometry * CreateGeometry(gapi::PGapi gapi,
+		float * vertices, CSize vertexCount,
+		UI32 * indexes, CSize indexN,
+		float* normals,
+		float* uvs, 
+		float* tangents,
+		float* bitangents
+	);
+
+
 
 	void DeleteGeometry(gapi::PGapi gapi, gapi::Geometry*);
 
