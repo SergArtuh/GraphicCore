@@ -72,16 +72,31 @@ namespace llr
 	
 		std::list<GLint> shaderIDs;
 
+		bool createShadersSuccess = true;
 		for (auto ss : shaderSources) {
-			shaderIDs.push_back(CreateShader(ss));
+			GLint id = CreateShader(ss);
+			if (id == UNUSED) {
+				createShadersSuccess = false;
+				break;
+			}
+			shaderIDs.push_back(id);
+		}
+			
+		if(!createShadersSuccess) {
+			for (auto id : shaderIDs) {
+				glDeleteShader(id); GL_CHECK
+			}
+			m_programId = UNUSED;
+			return;
 		}
 
 		m_programId = glCreateProgram(); GL_CHECK
 
+		
+
 		for (auto id : shaderIDs) {
-			if (id != UNUSED) {
-				glAttachShader(m_programId, id); GL_CHECK
-			}
+			
+			glAttachShader(m_programId, id); GL_CHECK
 		}
 
 		glLinkProgram(m_programId); GL_CHECK
@@ -149,10 +164,6 @@ namespace llr
 		}
 
 		m_constantBuffer[location] = buffer;
-
-		glBindBufferBase(GL_UNIFORM_BUFFER, location, buffer.GetId());
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		glUseProgram(0);
 	}
 
 	void Shader::SetTexture2D(const Texture2D texture, CI32 location) {
@@ -201,10 +212,11 @@ namespace llr
 
 
 		if (m_framebuffer.IsValid()) {
-			glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer.GetId());
+			glBindFramebuffer(GL_FRAMEBUFFER, m_framebuffer.GetId()); GL_CHECK
 		}
 
 		glUseProgram(m_programId); GL_CHECK
+		glEnable(GL_DEPTH_TEST);
 
 		for (auto uniformBlock : m_constantBuffer)
 		{
@@ -279,6 +291,7 @@ namespace llr
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); GL_CHECK
 		}
 		
+		glDisable(GL_DEPTH_TEST);
 		glUseProgram(0); GL_CHECK
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
