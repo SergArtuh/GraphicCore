@@ -23,10 +23,14 @@ namespace llr
 
 		Framebuffer(const Framebuffer&);
 		Framebuffer& operator=(const Framebuffer& r);
+
+		static Framebuffer MakeDefault();
 			
 	public:
 
 		virtual void SetTextures2d(const Texture2D & texture, CI32 location);
+
+		void Clear();
 
 		GLuint GetId() const {return m_bufferId; }
 

@@ -27,6 +27,13 @@ namespace llr
 		return *this;
 	}
 
+	Framebuffer Framebuffer::MakeDefault()
+	{
+		Framebuffer fb;
+		fb.m_bufferId = 0;
+		return fb;
+	}
+
 	void Framebuffer::Init() {
 		glGenFramebuffers(1, &m_bufferId);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_bufferId);
@@ -36,6 +43,14 @@ namespace llr
 		glDeleteBuffers(1, &m_bufferId); GL_CHECK
 			m_bufferId = UNUSED;
 	}
+
+
+	void Framebuffer::Clear() {
+		glBindFramebuffer(GL_FRAMEBUFFER, GetId());
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glBindFramebuffer(GL_FRAMEBUFFER, GetId());
+	}
+
 	void Framebuffer::Update() {
 		if (!IsValid()) {
 			Init();

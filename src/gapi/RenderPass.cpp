@@ -46,12 +46,13 @@ namespace gapi {
 
 			llr::Shader & llrShader = m_shader->GetShaderLLr();
 			PRenderPassOutput out = stage->GetRenderPassOutput();
-			if (out && out->IsValid()) {
-				llrShader.SetFramebuffer(out->GetFramebuffer().GetFramebufferLlr());
-			}
-			else {
-				llrShader.SetFramebuffer( llr::Framebuffer());
-			}
+
+			llr::Framebuffer fb = (out && out->IsValid())
+				? out->GetFramebuffer().GetFramebufferLlr()
+				: llr::Framebuffer::MakeDefault(); // Default framebuffer
+
+			fb.Clear();
+			llrShader.SetFramebuffer(fb);
 
 			for (const auto input : stage->GetRenderPassInputs()) {
 				const auto location = input.first;
