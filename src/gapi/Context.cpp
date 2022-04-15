@@ -32,12 +32,15 @@ namespace gapi {
 
 			auto geometryTarget = stage->GetGeometryTarget();
 
+			// Add all geometries in scene.
+			// Required for Gbeffer
 			if (ERenderPassInputGeometryTarget::ALL_SCENE == geometryTarget) {
 				stage->CleanGeomerties();
 				for (auto geom : scene->GetGeometries()) {
 					stage->AddGeomerty(geom);
 				}
 			}
+			// Add full screan rect for rendering Gbuffer
 			else if (ERenderPassInputGeometryTarget::NDC_RECT == geometryTarget){
 				//TODO:
 			}
